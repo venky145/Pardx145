@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" id="iN0-l3-epB" customClass="PRActivityIndicator">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Pzp-c8-djE">
+                    <rect key="frame" x="142" y="265" width="37" height="37"/>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="Pzp-c8-djE" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Wk8-UT-JC1"/>
+                <constraint firstItem="Pzp-c8-djE" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="y3p-zx-0Gi"/>
+            </constraints>
+            <connections>
+                <outlet property="activityIndicator" destination="Pzp-c8-djE" id="DdN-g2-s1i"/>
+            </connections>
+            <point key="canvasLocation" x="403" y="240"/>
+        </view>
+    </objects>
+</document>

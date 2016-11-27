@@ -1,0 +1,25 @@
+//
+//  Parodize_Prefix.pch
+//  Parodize
+//
+//  Created by VenkateshX Mandapati on 25/02/16.
+//  Copyright © 2016 Parodize. All rights reserved.
+//
+
+#ifndef Parodize_Prefix_pch
+#define Parodize_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <AWSServiceName/AWSServiceName.h>
+#import <AWSCore/AWSCore.h>
+#import <AWSS3/AWSS3.h>
+#import <AWSDynamoDB/AWSDynamoDB.h>
+#import <AWSSQS/AWSSQS.h>
+#import <AWSSNS/AWSSNS.h>
+#import <AWSCognito/AWSCognito.h>
+
+#import "SDWebImage/UIImageView+WebCache.h"
+
+#endif /* Parodize_Prefix_pch */

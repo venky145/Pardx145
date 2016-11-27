@@ -1,0 +1,466 @@
+2016-05-17 17:55:07.524 Titan Juxt Pro[3630:554895] -[PriorityCallManager newImageGenerationWithUserName:andAddress:andMap:] [Line 567] image size 320.000000 568.000000
+2016-05-17 17:55:07.939 Titan Juxt Pro[3630:554895] BLEReconnection | Paired before, checking for connection status
+2016-05-17 17:55:07.944 Titan Juxt Pro[3630:554895] BLEReconnection | NOT Connected, trying to connect
+2016-05-17 17:55:07.951 Titan Juxt Pro[3630:554895] BLEReconnection | Known peripheral array :(
+    "<CBPeripheral: 0x15542ef0, identifier = 474D2A5A-03EB-D434-AAB8-39249131DFD9, name = TITAN Juxt Pro JPFTS010, state = disconnected>"
+)
+2016-05-17 17:55:07.952 Titan Juxt Pro[3630:554895] BLEReconnection | Connecting to the peripheral
+2016-05-17 17:55:07.961 Titan Juxt Pro[3630:554895] Its still connecting
+2016-05-17 17:55:07.963 Titan Juxt Pro[3630:554895] applicationDidBecomeActive
+2016-05-17 17:55:07.977 Titan Juxt Pro[3630:554895] self.peripheralManager powered on.
+2016-05-17 17:55:07.982 Titan Juxt Pro[3630:554895] available devices : GCiPhone
+2016-05-17 17:55:07.984 Titan Juxt Pro[3630:554895] available devices : GCiPhone
+2016-05-17 17:55:07.991 Titan Juxt Pro[3630:555054] TITAN : PushCredentials: <38dab5d0 df00d96f 87ede3ff 957c4d05 f750c181 858e7593 3b475150 bd8dfef2>
+2016-05-17 17:55:07.992 Titan Juxt Pro[3630:555054] PushCredentials: <38dab5d0 df00d96f 87ede3ff 957c4d05 f750c181 858e7593 3b475150 bd8dfef2>
+2016-05-17 17:55:07.993 Titan Juxt Pro[3630:554895] available devices : GCiPhone
+2016-05-17 17:55:07.995 Titan Juxt Pro[3630:554895] available devices : eeeeee
+2016-05-17 17:55:07.996 Titan Juxt Pro[3630:554895] available devices : curie_84_ab_cc
+2016-05-17 17:55:07.997 Titan Juxt Pro[3630:554895] available devices : Q DREAMER
+2016-05-17 17:55:08.001 Titan Juxt Pro[3630:554895] available devices : Charge HR
+2016-05-17 17:55:08.004 Titan Juxt Pro[3630:554895] available devices : Charge
+2016-05-17 17:55:08.005 Titan Juxt Pro[3630:554895] available devices : Ravi ClarkPvt
+2016-05-17 17:55:08.007 Titan Juxt Pro[3630:554895] Connected to <CBPeripheral: 0x15542ef0, identifier = 474D2A5A-03EB-D434-AAB8-39249131DFD9, name = TITAN Juxt Pro JPFTS010, state = connected>
+2016-05-17 17:55:08.008 Titan Juxt Pro[3630:554895] BLEReconnection | Attempting to extend background running time
+2016-05-17 17:55:08.011 Titan Juxt Pro[3630:555060] BLEReconnection | Background task started
+2016-05-17 17:55:08.016 Titan Juxt Pro[3630:555060] Discovered service <CBService: 0x155b6aa0, isPrimary = YES, UUID = 389E2246-8686-458E-A65A-D86931C76668>
+2016-05-17 17:55:08.019 Titan Juxt Pro[3630:555060] DidDiscover
+2016-05-17 17:55:13.020 Titan Juxt Pro[3630:554895] Services available (
+    "<CBService: 0x155b6aa0, isPrimary = YES, UUID = 389E2246-8686-458E-A65A-D86931C76668>"
+)
+2016-05-17 17:55:13.021 Titan Juxt Pro[3630:554895] Characteristics (
+    "<CBCharacteristic: 0x1556f650, UUID = 547856C4-3F0C-4706-8194-096C7A09ED5D, properties = 0x12, value = <30>, notifying = NO>",
+    "<CBCharacteristic: 0x155b03a0, UUID = 9CEFA0FC-9B25-4193-85F7-5241F64304CC, properties = 0xA, value = (null), notifying = NO>"
+)
+2016-05-17 17:55:13.021 Titan Juxt Pro[3630:554895] Characteristics available (
+    "<CBCharacteristic: 0x1556f650, UUID = 547856C4-3F0C-4706-8194-096C7A09ED5D, properties = 0x12, value = <30>, notifying = NO>",
+    "<CBCharacteristic: 0x155b03a0, UUID = 9CEFA0FC-9B25-4193-85F7-5241F64304CC, properties = 0xA, value = (null), notifying = NO>"
+)
+2016-05-17 17:55:13.023 Titan Juxt Pro[3630:554895] Content: {
+    a = rs;
+    ai = 107409167704622889517;
+    s = success;
+}
+2016-05-17 17:55:13.024 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:13.024 Titan Juxt Pro[3630:554895] sending json: {"a":"rs","s":"success","ai":"107409167704622889517"}
+2016-05-17 17:55:13.070 Titan Juxt Pro[3630:554895] Date: 2016-05-17 12:25:13 +0000
+2016-05-17 17:55:13.073 Titan Juxt Pro[3630:554895] DateString : 2016-05-17-17-55-13
+2016-05-17 17:55:13.073 Titan Juxt Pro[3630:554895] Thezone name : Asia/Kolkata
+2016-05-17 17:55:13.073 Titan Juxt Pro[3630:554895] DateStringZone : 2016-05-17-17-55-13-Asia/Kolkata
+2016-05-17 17:55:13.074 Titan Juxt Pro[3630:554895] Content: {
+    action = 42;
+    time = "2016-05-17-17-55-13-Asia/Kolkata";
+}
+2016-05-17 17:55:13.075 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:13.075 Titan Juxt Pro[3630:554895] sending json: {"action":"42","time":"2016-05-17-17-55-13-Asia\/Kolkata"}
+2016-05-17 17:55:13.078 Titan Juxt Pro[3630:554895] BLESend | Unique ID: 36
+2016-05-17 17:55:13.083 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:13.084 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:13.084 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:13.089 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <BLESend: 0x156e75c0> (entity: BLESend; id: 0x15595c60 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/BLESend/p36> ; data: {
+    destId = 131;
+    key = "";
+    message = "{\"a\":\"rs\",\"s\":\"success\",\"ai\":\"107409167704622889517\"}";
+    path = "";
+    priority = 6;
+    response = Added;
+    sessionId = 0;
+    sourceId = 318;
+    uniqueId = 36;
+})
+)}
+2016-05-17 17:55:13.090 Titan Juxt Pro[3630:554895] New Data to send 
+2016-05-17 17:55:13.092 Titan Juxt Pro[3630:554895] BLESend | array count: 1
+2016-05-17 17:55:13.092 Titan Juxt Pro[3630:554895] BLESend | Creating JSon for Sending UniqueID: 36
+2016-05-17 17:55:13.093 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:13.094 Titan Juxt Pro[3630:554895] sending json: {"d":131,"p":6,"s":318,"m":"{\"a\":\"rs\",\"s\":\"success\",\"ai\":\"107409167704622889517\"}"}
+2016-05-17 17:55:13.095 Titan Juxt Pro[3630:554895] BLESend | context save = 1 | UniqueId: 36
+2016-05-17 17:55:13.095 Titan Juxt Pro[3630:555054] executeBLETransfer for uniqueId :36
+2016-05-17 17:55:13.096 Titan Juxt Pro[3630:554895] BLESend | sendAccountStatusInfo | SUCCESS
+2016-05-17 17:55:13.099 Titan Juxt Pro[3630:554895] BLESend | Unique ID: 37
+2016-05-17 17:55:13.101 Titan Juxt Pro[3630:555054] BLESend | AppHandler SourceId: 318
+2016-05-17 17:55:13.101 Titan Juxt Pro[3630:555054] BLESend | Deleting uniqueId: 36
+2016-05-17 17:55:13.102 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:13.103 Titan Juxt Pro[3630:554895] Updated Objects Count: 1
+2016-05-17 17:55:13.103 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:13.104 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <BLESend: 0x1555e6b0> (entity: BLESend; id: 0x155c26f0 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/BLESend/p37> ; data: {
+    destId = 115;
+    key = "";
+    message = "{\"action\":\"42\",\"time\":\"2016-05-17-17-55-13-Asia\\/Kolkata\"}";
+    path = "";
+    priority = 5;
+    response = Added;
+    sessionId = 0;
+    sourceId = 313;
+    uniqueId = 37;
+})
+)}
+2016-05-17 17:55:13.105 Titan Juxt Pro[3630:554895] New Data to send 
+2016-05-17 17:55:13.108 Titan Juxt Pro[3630:554895] BLESend | array count: 1
+2016-05-17 17:55:13.109 Titan Juxt Pro[3630:554895] BLESend | Creating JSon for Sending UniqueID: 37
+2016-05-17 17:55:13.109 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:13.110 Titan Juxt Pro[3630:554895] sending json: {"d":115,"p":5,"s":313,"m":"{\"action\":\"42\",\"time\":\"2016-05-17-17-55-13-Asia\\\/Kolkata\"}"}
+2016-05-17 17:55:13.111 Titan Juxt Pro[3630:555054] executeBLETransfer for uniqueId :37
+2016-05-17 17:55:13.111 Titan Juxt Pro[3630:554895] BLESend | context save = 1 | UniqueId: 37
+2016-05-17 17:55:13.111 Titan Juxt Pro[3630:554895] BLESend | sendCurrentTimeInfo | SUCCESS
+2016-05-17 17:55:13.114 Titan Juxt Pro[3630:555054] BLESend | AppHandler SourceId: 313
+2016-05-17 17:55:13.115 Titan Juxt Pro[3630:555054] BLESend | Deleting uniqueId: 37
+2016-05-17 17:55:13.116 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:13.116 Titan Juxt Pro[3630:554895] Updated Objects Count: 1
+2016-05-17 17:55:13.116 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:13.119 Titan Juxt Pro[3630:554895] BLESend | Record 36 deleted
+2016-05-17 17:55:13.122 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:13.122 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:13.123 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:13.123 Titan Juxt Pro[3630:554895] BLESend | Record 37 deleted
+2016-05-17 17:55:13.309 Titan Juxt Pro[3630:555060] Characterstic value greekcanyon-UTF-8
+2016-05-17 17:55:13.309 Titan Juxt Pro[3630:555060] Date: 2016-05-17 12:25:13 +0000
+2016-05-17 17:55:13.313 Titan Juxt Pro[3630:555060] DateString : 2016-05-17-17-55-13
+2016-05-17 17:55:13.313 Titan Juxt Pro[3630:555060] Thezone name : Asia/Kolkata
+2016-05-17 17:55:13.314 Titan Juxt Pro[3630:555060] DateStringZone : 2016-05-17-17-55-13-Asia/Kolkata
+2016-05-17 17:55:13.314 Titan Juxt Pro[3630:555060] Content: {
+    a = di;
+    pt = ios;
+    time = "2016-05-17-17-55-13-Asia/Kolkata";
+}
+2016-05-17 17:55:13.315 Titan Juxt Pro[3630:555060] isJSon = 1
+2016-05-17 17:55:13.315 Titan Juxt Pro[3630:555060] sending json: {"a":"di","pt":"ios","time":"2016-05-17-17-55-13-Asia\/Kolkata"}
+2016-05-17 17:55:13.317 Titan Juxt Pro[3630:554895] BLESend | Unique ID: 38
+2016-05-17 17:55:13.319 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:13.319 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:13.319 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:13.320 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <BLESend: 0x1555e6b0> (entity: BLESend; id: 0x155c2470 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/BLESend/p38> ; data: {
+    destId = 131;
+    key = action;
+    message = "{\"a\":\"di\",\"pt\":\"ios\",\"time\":\"2016-05-17-17-55-13-Asia\\/Kolkata\"}";
+    path = "";
+    priority = 5;
+    response = Added;
+    sessionId = 0;
+    sourceId = 311;
+    uniqueId = 38;
+})
+)}
+2016-05-17 17:55:13.321 Titan Juxt Pro[3630:554895] New Data to send 
+2016-05-17 17:55:13.322 Titan Juxt Pro[3630:554895] BLESend | array count: 1
+2016-05-17 17:55:13.323 Titan Juxt Pro[3630:554895] BLESend | Creating JSon for Sending UniqueID: 38
+2016-05-17 17:55:13.324 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:13.324 Titan Juxt Pro[3630:554895] sending json: {"d":131,"p":5,"s":311,"m":"{\"a\":\"di\",\"pt\":\"ios\",\"time\":\"2016-05-17-17-55-13-Asia\\\/Kolkata\"}"}
+2016-05-17 17:55:13.325 Titan Juxt Pro[3630:555051] executeBLETransfer for uniqueId :38
+2016-05-17 17:55:13.325 Titan Juxt Pro[3630:554895] BLESend | context save = 1 | UniqueId: 38
+2016-05-17 17:55:13.326 Titan Juxt Pro[3630:554895] BLE DEVICE INFO | sendResponseToWatchWithActionValue | SUCCESS
+2016-05-17 17:55:13.331 Titan Juxt Pro[3630:555051] BLESend | AppHandler SourceId: 311
+2016-05-17 17:55:13.331 Titan Juxt Pro[3630:555051] BLESend | Deleting uniqueId: 38
+2016-05-17 17:55:13.334 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:13.334 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:13.335 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:13.335 Titan Juxt Pro[3630:554895] BLESend | Record 38 deleted
+2016-05-17 17:55:13.788 Titan Juxt Pro[3630:555060] Characterstic value 1
+2016-05-17 17:55:13.789 Titan Juxt Pro[3630:555060] Characterstic value {"s":131,"d":311,"p"
+2016-05-17 17:55:13.790 Titan Juxt Pro[3630:555060] Characterstic value :5,"m":{"device_ccid
+2016-05-17 17:55:13.790 Titan Juxt Pro[3630:555060] Characterstic value ":"GRKCYN0078FF5764A
+2016-05-17 17:55:13.817 Titan Juxt Pro[3630:555051] Characterstic value 465","device_model":
+2016-05-17 17:55:13.818 Titan Juxt Pro[3630:555051] Characterstic value "Titan Watch","sv":"
+2016-05-17 17:55:13.847 Titan Juxt Pro[3630:555060] Characterstic value Titan OS 1.0","devic
+2016-05-17 17:55:13.848 Titan Juxt Pro[3630:555060] Characterstic value e_name":"TITAN Juxt 
+2016-05-17 17:55:13.850 Titan Juxt Pro[3630:555051] Characterstic value Pro JPFTS010","devic
+2016-05-17 17:55:13.851 Titan Juxt Pro[3630:555060] Characterstic value e_mac":"78:FF:57:64:
+2016-05-17 17:55:13.878 Titan Juxt Pro[3630:555051] Characterstic value A4:65"}}
+2016-05-17 17:55:13.879 Titan Juxt Pro[3630:555051] Characterstic value 0
+2016-05-17 17:55:13.879 Titan Juxt Pro[3630:555051] responseString: {"s":131,"d":311,"p":5,"m":{"device_ccid":"GRKCYN0078FF5764A465","device_model":"Titan Watch","sv":"Titan OS 1.0","device_name":"TITAN Juxt Pro JPFTS010","device_mac":"78:FF:57:64:A4:65"}}
+2016-05-17 17:55:13.880 Titan Juxt Pro[3630:555051] End Time : 2016-05-17 12:25:13 +0000
+2016-05-17 17:55:13.881 Titan Juxt Pro[3630:555051] destination = 311
+2016-05-17 17:55:13.881 Titan Juxt Pro[3630:555051] didReceiveBTPairingRequest
+2016-05-17 17:55:13.882 Titan Juxt Pro[3630:555051] Date: 2016-05-17 12:25:13 +0000
+2016-05-17 17:55:13.884 Titan Juxt Pro[3630:555051] DateString : 2016-05-17-17-55-13
+2016-05-17 17:55:13.884 Titan Juxt Pro[3630:555051] Thezone name : Asia/Kolkata
+2016-05-17 17:55:13.885 Titan Juxt Pro[3630:555051] DateStringZone : 2016-05-17-17-55-13-Asia/Kolkata
+2016-05-17 17:55:13.885 Titan Juxt Pro[3630:555051] Content: {
+    action = 42;
+    time = "2016-05-17-17-55-13-Asia/Kolkata";
+}
+2016-05-17 17:55:13.885 Titan Juxt Pro[3630:555051] isJSon = 1
+2016-05-17 17:55:13.886 Titan Juxt Pro[3630:555051] sending json: {"action":"42","time":"2016-05-17-17-55-13-Asia\/Kolkata"}
+2016-05-17 17:55:13.887 Titan Juxt Pro[3630:554895] BLESend | Unique ID: 39
+2016-05-17 17:55:13.888 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:13.889 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:13.889 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:13.891 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <BLESend: 0x156ec3c0> (entity: BLESend; id: 0x156ec4f0 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/BLESend/p39> ; data: {
+    destId = 115;
+    key = "";
+    message = "{\"action\":\"42\",\"time\":\"2016-05-17-17-55-13-Asia\\/Kolkata\"}";
+    path = "";
+    priority = 5;
+    response = Added;
+    sessionId = 0;
+    sourceId = 313;
+    uniqueId = 39;
+})
+)}
+2016-05-17 17:55:13.892 Titan Juxt Pro[3630:554895] New Data to send 
+2016-05-17 17:55:13.893 Titan Juxt Pro[3630:554895] BLESend | array count: 1
+2016-05-17 17:55:13.894 Titan Juxt Pro[3630:554895] BLESend | Creating JSon for Sending UniqueID: 39
+2016-05-17 17:55:13.894 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:13.895 Titan Juxt Pro[3630:554895] sending json: {"d":115,"p":5,"s":313,"m":"{\"action\":\"42\",\"time\":\"2016-05-17-17-55-13-Asia\\\/Kolkata\"}"}
+2016-05-17 17:55:13.895 Titan Juxt Pro[3630:554895] BLESend | context save = 1 | UniqueId: 39
+2016-05-17 17:55:13.896 Titan Juxt Pro[3630:554895] BLESend | sendCurrentTimeInfo | SUCCESS
+2016-05-17 17:55:13.896 Titan Juxt Pro[3630:555051] executeBLETransfer for uniqueId :39
+2016-05-17 17:55:13.899 Titan Juxt Pro[3630:555051] BLESend | AppHandler SourceId: 313
+2016-05-17 17:55:13.900 Titan Juxt Pro[3630:555051] BLESend | Deleting uniqueId: 39
+2016-05-17 17:55:13.903 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:13.903 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:13.904 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:13.904 Titan Juxt Pro[3630:554895] BLESend | Record 39 deleted
+2016-05-17 17:55:15.410 Titan Juxt Pro[3630:555060] Characterstic value 1
+2016-05-17 17:55:15.410 Titan Juxt Pro[3630:555060] Characterstic value {"s":101,"d":303,"p"
+2016-05-17 17:55:15.411 Titan Juxt Pro[3630:555060] Characterstic value :3,"m":{"plug":0,"le
+2016-05-17 17:55:15.587 Titan Juxt Pro[3630:555051] Characterstic value vel":44}}
+2016-05-17 17:55:15.587 Titan Juxt Pro[3630:555051] Characterstic value 0
+2016-05-17 17:55:15.588 Titan Juxt Pro[3630:555051] responseString: {"s":101,"d":303,"p":3,"m":{"plug":0,"level":44}}
+2016-05-17 17:55:15.588 Titan Juxt Pro[3630:555051] End Time : 2016-05-17 12:25:15 +0000
+2016-05-17 17:55:15.589 Titan Juxt Pro[3630:555051] destination = 303
+2016-05-17 17:55:15.592 Titan Juxt Pro[3630:554895] ClockFace | Unique ID: 14
+2016-05-17 17:55:15.598 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:15.599 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:15.599 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:15.603 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <ClockFace: 0x156ecc20> (entity: ClockFace; id: 0x15555360 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/ClockFace/p14> ; data: {
+    destId = 303;
+    key = "";
+    message = "{\n    level = 44;\n    plug = 0;\n}";
+    path = "";
+    priority = 3;
+    response = Added;
+    sessionId = 0;
+    sourceId = 101;
+    uniqueId = 14;
+})
+)}
+2016-05-17 17:55:15.604 Titan Juxt Pro[3630:554895] Calling clockFaceHandler
+2016-05-17 17:55:15.605 Titan Juxt Pro[3630:554895] ClockFace | newWorkArray count: 1
+2016-05-17 17:55:15.606 Titan Juxt Pro[3630:554895] ClockFace | Adding to queue with uniqueId: 14
+2016-05-17 17:55:15.606 Titan Juxt Pro[3630:554895] ClockFace | addToOperationQueue
+2016-05-17 17:55:15.607 Titan Juxt Pro[3630:554895] ClockFace | context save = 1 | UniqueId: 14
+2016-05-17 17:55:15.607 Titan Juxt Pro[3630:555095] Clockface | Processing uniqueId: 14
+2016-05-17 17:55:15.608 Titan Juxt Pro[3630:554895] ClockFace | newWork added Success
+2016-05-17 17:55:15.608 Titan Juxt Pro[3630:555095] isCharging: 0, batteryLevel: 44
+2016-05-17 17:55:15.609 Titan Juxt Pro[3630:555095] Clockface | Deleting uniqueId: 14
+2016-05-17 17:55:15.610 Titan Juxt Pro[3630:554895] {
+    level = 44;
+    plug = 0;
+}
+2016-05-17 17:55:15.611 Titan Juxt Pro[3630:554895] {
+    level = 44;
+    plug = 0;
+}
+2016-05-17 17:55:15.622 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:15.625 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:15.626 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:15.626 Titan Juxt Pro[3630:554895] Clockface | Data deleted successfully
+2016-05-17 17:55:16.187 Titan Juxt Pro[3630:555051] Characterstic value 1
+2016-05-17 17:55:16.190 Titan Juxt Pro[3630:555051] Characterstic value {"s":113,"d":314,"p"
+2016-05-17 17:55:16.190 Titan Juxt Pro[3630:555051] Characterstic value :4,"m":{"v":"xmm6321
+2016-05-17 17:55:16.191 Titan Juxt Pro[3630:555051] Characterstic value _IndianRun:eng.aarok
+2016-05-17 17:55:16.191 Titan Juxt Pro[3630:555051] Characterstic value iax.20160514.044508"
+2016-05-17 17:55:16.192 Titan Juxt Pro[3630:555051] Characterstic value ,"a":1}}
+2016-05-17 17:55:16.192 Titan Juxt Pro[3630:555051] Characterstic value 0
+2016-05-17 17:55:16.193 Titan Juxt Pro[3630:555051] responseString: {"s":113,"d":314,"p":4,"m":{"v":"xmm6321_IndianRun:eng.aarokiax.20160514.044508","a":1}}
+2016-05-17 17:55:16.193 Titan Juxt Pro[3630:555051] End Time : 2016-05-17 12:25:16 +0000
+2016-05-17 17:55:16.194 Titan Juxt Pro[3630:555051] destination = 314
+2016-05-17 17:55:17.357 Titan Juxt Pro[3630:555095] Characterstic value 1
+2016-05-17 17:55:17.388 Titan Juxt Pro[3630:555051] Characterstic value {"s":102,"d":304,"p"
+2016-05-17 17:55:17.418 Titan Juxt Pro[3630:555095] Characterstic value :3,"m":{"jsonArray":
+2016-05-17 17:55:17.448 Titan Juxt Pro[3630:555051] Characterstic value [{"startTime":"14634
+2016-05-17 17:55:17.449 Titan Juxt Pro[3630:555051] Characterstic value 84314325L","calories
+2016-05-17 17:55:17.450 Titan Juxt Pro[3630:555051] Characterstic value ":0,"distance":0,"st
+2016-05-17 17:55:17.508 Titan Juxt Pro[3630:555095] Characterstic value eps":0,"endTime":"14
+2016-05-17 17:55:17.510 Titan Juxt Pro[3630:555095] Characterstic value 63487914325L","speed
+2016-05-17 17:55:17.510 Titan Juxt Pro[3630:555095] Characterstic value ":0}]}}
+2016-05-17 17:55:17.537 Titan Juxt Pro[3630:555051] Characterstic value 0
+2016-05-17 17:55:17.538 Titan Juxt Pro[3630:555051] responseString: {"s":102,"d":304,"p":3,"m":{"jsonArray":[{"startTime":"1463484314325L","calories":0,"distance":0,"steps":0,"endTime":"1463487914325L","speed":0}]}}
+2016-05-17 17:55:17.539 Titan Juxt Pro[3630:555051] End Time : 2016-05-17 12:25:17 +0000
+2016-05-17 17:55:17.540 Titan Juxt Pro[3630:555051] destination = 304
+2016-05-17 17:55:17.543 Titan Juxt Pro[3630:554895] Pedometer | Unique ID: 1
+2016-05-17 17:55:17.548 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:17.549 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:17.550 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:17.554 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <Pedometer: 0x156ed080> (entity: Pedometer; id: 0x156ee200 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/Pedometer/p1> ; data: {
+    destId = 304;
+    key = "";
+    message = "{\n    jsonArray =     (\n                {\n            calories = 0;\n            distance = 0;\n            endTime = 1463487914325L;\n            speed = 0;\n            startTime = 1463484314325L;\n            steps = 0;\n        }\n    );\n}";
+    path = "";
+    priority = 3;
+    response = Added;
+    sessionId = 0;
+    sourceId = 102;
+    uniqueId = 1;
+})
+)}
+2016-05-17 17:55:17.556 Titan Juxt Pro[3630:554895] Pedometer | pedometerArray count: 1
+2016-05-17 17:55:17.557 Titan Juxt Pro[3630:554895] Pedometer | Adding to queue with uniqueId: 1
+2016-05-17 17:55:17.557 Titan Juxt Pro[3630:554895] Pedometer | addToOperationQueue
+2016-05-17 17:55:17.558 Titan Juxt Pro[3630:554895] Pedometer | context save = 1 | UniqueId: 1
+2016-05-17 17:55:17.558 Titan Juxt Pro[3630:554895] Pedometer | newWork added SUCCESS
+2016-05-17 17:55:17.559 Titan Juxt Pro[3630:555060] pedometerMessage Recieved: (
+        {
+        calories = 0;
+        distance = 0;
+        endTime = 1463487914325L;
+        speed = 0;
+        startTime = 1463484314325L;
+        steps = 0;
+    }
+)
+2016-05-17 17:55:17.559 Titan Juxt Pro[3630:555060] Pedometer | Processing uniqueId: 1
+2016-05-17 17:55:17.563 Titan Juxt Pro[3630:555060]  Autherization Header required
+2016-05-17 17:55:17.563 Titan Juxt Pro[3630:555060] Authorization Value = Bearer 304daea02dc184e0ab4cb91cc891df9e388db5dd0af0f78a3849a9306d1019865d610cd6fb9e0f6d75443fc3174a142b
+2016-05-17 17:55:17.837 Titan Juxt Pro[3630:555060] Characterstic value 1
+2016-05-17 17:55:17.867 Titan Juxt Pro[3630:555095] Characterstic value {"s":102,"d":304,"p"
+2016-05-17 17:55:17.898 Titan Juxt Pro[3630:555060] Characterstic value :3,"m":{"jsonArray":
+2016-05-17 17:55:17.900 Titan Juxt Pro[3630:555060] Characterstic value [{"startTime":"14634
+2016-05-17 17:55:17.901 Titan Juxt Pro[3630:555060] Characterstic value 84314325L","calories
+2016-05-17 17:55:17.901 Titan Juxt Pro[3630:555060] Characterstic value ":0,"distance":0,"st
+2016-05-17 17:55:17.902 Titan Juxt Pro[3630:555060] Characterstic value eps":0,"endTime":"14
+2016-05-17 17:55:17.902 Titan Juxt Pro[3630:555060] Characterstic value 63487914325L","speed
+2016-05-17 17:55:17.928 Titan Juxt Pro[3630:555095] Characterstic value ":0},{"startTime":"1
+2016-05-17 17:55:17.930 Titan Juxt Pro[3630:555095] Characterstic value 463484314812L","calo
+2016-05-17 17:55:17.931 Titan Juxt Pro[3630:555095] Characterstic value ries":0,"distance":0
+2016-05-17 17:55:17.931 Titan Juxt Pro[3630:555095] Characterstic value ,"steps":0,"endTime"
+2016-05-17 17:55:17.932 Titan Juxt Pro[3630:555095] Characterstic value :"1463487914812L","s
+2016-05-17 17:55:17.932 Titan Juxt Pro[3630:555095] Characterstic value peed":0}]}}
+2016-05-17 17:55:17.957 Titan Juxt Pro[3630:555060] Characterstic value 0
+2016-05-17 17:55:17.958 Titan Juxt Pro[3630:555060] responseString: {"s":102,"d":304,"p":3,"m":{"jsonArray":[{"startTime":"1463484314325L","calories":0,"distance":0,"steps":0,"endTime":"1463487914325L","speed":0},{"startTime":"1463484314812L","calories":0,"distance":0,"steps":0,"endTime":"1463487914812L","speed":0}]}}
+2016-05-17 17:55:17.959 Titan Juxt Pro[3630:555060] End Time : 2016-05-17 12:25:17 +0000
+2016-05-17 17:55:17.960 Titan Juxt Pro[3630:555060] destination = 304
+2016-05-17 17:55:17.961 Titan Juxt Pro[3630:554895] Pedometer | Unique ID: 2
+2016-05-17 17:55:17.965 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:17.965 Titan Juxt Pro[3630:554895] Updated Objects Count: 1
+2016-05-17 17:55:17.965 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:17.967 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <Pedometer: 0x156f1cf0> (entity: Pedometer; id: 0x155d21c0 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/Pedometer/p2> ; data: {
+    destId = 304;
+    key = "";
+    message = "{\n    jsonArray =     (\n                {\n            calories = 0;\n            distance = 0;\n            endTime = 1463487914325L;\n            speed = 0;\n            startTime = 1463484314325L;\n            steps = 0;\n        },\n                {\n            calories = 0;\n            distance = 0;\n            endTime = 1463487914812L;\n            speed = 0;\n            startTime = 1463484314812L;\n            steps = 0;\n        }\n    );\n}";
+    path = "";
+    priority = 3;
+    response = Added;
+    sessionId = 0;
+    sourceId = 102;
+    uniqueId = 2;
+})
+)}
+2016-05-17 17:55:17.969 Titan Juxt Pro[3630:554895] Pedometer | pedometerArray count: 1
+2016-05-17 17:55:17.970 Titan Juxt Pro[3630:554895] Pedometer | Adding to queue with uniqueId: 2
+2016-05-17 17:55:17.971 Titan Juxt Pro[3630:555054] pedometerMessage Recieved: (
+        {
+        calories = 0;
+        distance = 0;
+        endTime = 1463487914325L;
+        speed = 0;
+        startTime = 1463484314325L;
+        steps = 0;
+    },
+        {
+        calories = 0;
+        distance = 0;
+        endTime = 1463487914812L;
+        speed = 0;
+        startTime = 1463484314812L;
+        steps = 0;
+    }
+)
+2016-05-17 17:55:17.971 Titan Juxt Pro[3630:555054] Pedometer | Processing uniqueId: 2
+2016-05-17 17:55:17.971 Titan Juxt Pro[3630:554895] Pedometer | context save = 1 | UniqueId: 2
+2016-05-17 17:55:17.972 Titan Juxt Pro[3630:554895] Pedometer | newWork added SUCCESS
+2016-05-17 17:55:17.974 Titan Juxt Pro[3630:555054]  Autherization Header required
+2016-05-17 17:55:17.974 Titan Juxt Pro[3630:555054] Authorization Value = Bearer 304daea02dc184e0ab4cb91cc891df9e388db5dd0af0f78a3849a9306d1019865d610cd6fb9e0f6d75443fc3174a142b
+2016-05-17 17:55:19.653 Titan Juxt Pro[3630:554895] requestType: 6
+2016-05-17 17:55:19.653 Titan Juxt Pro[3630:554895] uniqueId: 1
+2016-05-17 17:55:19.653 Titan Juxt Pro[3630:554895] TWFitnessHandler | data from cloud: {
+    message = PedometerData;
+}
+2016-05-17 17:55:19.654 Titan Juxt Pro[3630:554895] Pedometer | Deleting uniqueId: 1
+2016-05-17 17:55:19.655 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:19.656 Titan Juxt Pro[3630:554895] sending json: {"res":200}
+2016-05-17 17:55:19.658 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:19.658 Titan Juxt Pro[3630:554895] Updated Objects Count: 1
+2016-05-17 17:55:19.659 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:19.659 Titan Juxt Pro[3630:554895] Pedometer | Data deleted successfully
+2016-05-17 17:55:19.660 Titan Juxt Pro[3630:554895] BLESend | Unique ID: 40
+2016-05-17 17:55:19.661 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:19.662 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:19.662 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:19.663 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <BLESend: 0x155d2f00> (entity: BLESend; id: 0x1556cb80 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/BLESend/p40> ; data: {
+    destId = 102;
+    key = "";
+    message = "{\"res\":200}";
+    path = "";
+    priority = 3;
+    response = Added;
+    sessionId = 0;
+    sourceId = 304;
+    uniqueId = 40;
+})
+)}
+2016-05-17 17:55:19.664 Titan Juxt Pro[3630:554895] New Data to send 
+2016-05-17 17:55:19.666 Titan Juxt Pro[3630:554895] BLESend | array count: 1
+2016-05-17 17:55:19.667 Titan Juxt Pro[3630:554895] BLESend | Creating JSon for Sending UniqueID: 40
+2016-05-17 17:55:19.667 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:19.668 Titan Juxt Pro[3630:554895] sending json: {"d":102,"p":3,"s":304,"m":"{\"res\":200}"}
+2016-05-17 17:55:19.668 Titan Juxt Pro[3630:554895] BLESend | context save = 1 | UniqueId: 40
+2016-05-17 17:55:19.668 Titan Juxt Pro[3630:555054] executeBLETransfer for uniqueId :40
+2016-05-17 17:55:19.669 Titan Juxt Pro[3630:554895] Pedometer | sendPedomterCloudUpdateResponseToWatch | SUCCESS
+2016-05-17 17:55:19.671 Titan Juxt Pro[3630:555054] BLESend | AppHandler SourceId: 304
+2016-05-17 17:55:19.671 Titan Juxt Pro[3630:555054] BLESend | Deleting uniqueId: 40
+2016-05-17 17:55:19.674 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:19.676 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:19.676 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:19.677 Titan Juxt Pro[3630:554895] BLESend | Record 40 deleted
+2016-05-17 17:55:20.488 Titan Juxt Pro[3630:554895] requestType: 6
+2016-05-17 17:55:20.489 Titan Juxt Pro[3630:554895] uniqueId: 2
+2016-05-17 17:55:20.489 Titan Juxt Pro[3630:554895] TWFitnessHandler | data from cloud: {
+    message = PedometerData;
+}
+2016-05-17 17:55:20.489 Titan Juxt Pro[3630:554895] Pedometer | Deleting uniqueId: 2
+2016-05-17 17:55:20.491 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:20.491 Titan Juxt Pro[3630:554895] sending json: {"res":200}
+2016-05-17 17:55:20.493 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:20.493 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:20.494 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:20.494 Titan Juxt Pro[3630:554895] Pedometer | Data deleted successfully
+2016-05-17 17:55:20.495 Titan Juxt Pro[3630:554895] BLESend | Unique ID: 41
+2016-05-17 17:55:20.497 Titan Juxt Pro[3630:554895] Inserted Objects Count: 1
+2016-05-17 17:55:20.497 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:20.497 Titan Juxt Pro[3630:554895] Deleted Objects Count: 0
+2016-05-17 17:55:20.498 Titan Juxt Pro[3630:554895] insertObjects: {(
+    <BLESend: 0x156f2d00> (entity: BLESend; id: 0x156ef4e0 <x-coredata://32E3F0B4-83A4-43A4-9C72-FA7EC938E646/BLESend/p41> ; data: {
+    destId = 102;
+    key = "";
+    message = "{\"res\":200}";
+    path = "";
+    priority = 3;
+    response = Added;
+    sessionId = 0;
+    sourceId = 304;
+    uniqueId = 41;
+})
+)}
+2016-05-17 17:55:20.499 Titan Juxt Pro[3630:554895] New Data to send 
+2016-05-17 17:55:20.500 Titan Juxt Pro[3630:554895] BLESend | array count: 1
+2016-05-17 17:55:20.500 Titan Juxt Pro[3630:554895] BLESend | Creating JSon for Sending UniqueID: 41
+2016-05-17 17:55:20.501 Titan Juxt Pro[3630:554895] isJSon = 1
+2016-05-17 17:55:20.501 Titan Juxt Pro[3630:554895] sending json: {"d":102,"p":3,"s":304,"m":"{\"res\":200}"}
+2016-05-17 17:55:20.502 Titan Juxt Pro[3630:555051] executeBLETransfer for uniqueId :41
+2016-05-17 17:55:20.502 Titan Juxt Pro[3630:554895] BLESend | context save = 1 | UniqueId: 41
+2016-05-17 17:55:20.503 Titan Juxt Pro[3630:554895] Pedometer | sendPedomterCloudUpdateResponseToWatch | SUCCESS
+2016-05-17 17:55:20.505 Titan Juxt Pro[3630:555051] BLESend | AppHandler SourceId: 304
+2016-05-17 17:55:20.505 Titan Juxt Pro[3630:555051] BLESend | Deleting uniqueId: 41
+2016-05-17 17:55:20.508 Titan Juxt Pro[3630:554895] Inserted Objects Count: 0
+2016-05-17 17:55:20.509 Titan Juxt Pro[3630:554895] Updated Objects Count: 0
+2016-05-17 17:55:20.509 Titan Juxt Pro[3630:554895] Deleted Objects Count: 1
+2016-05-17 17:55:20.509 Titan Juxt Pro[3630:554895] BLESend | Record 41 deleted

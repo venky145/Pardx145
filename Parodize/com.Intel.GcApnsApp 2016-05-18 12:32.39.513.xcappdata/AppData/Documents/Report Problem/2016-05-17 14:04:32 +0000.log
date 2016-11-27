@@ -1,0 +1,4 @@
+2016-05-17 19:34:33.106 Titan Juxt Pro[4063:573807] -[PriorityCallManager newImageGenerationWithUserName:andAddress:andMap:] [Line 567] image size 320.000000 568.000000
+2016-05-17 19:34:33.431 Titan Juxt Pro[4063:573807] self.peripheralManager powered on.
+2016-05-17 19:34:33.438 Titan Juxt Pro[4063:573818] TITAN : PushCredentials: <38dab5d0 df00d96f 87ede3ff 957c4d05 f750c181 858e7593 3b475150 bd8dfef2>
+2016-05-17 19:34:33.442 Titan Juxt Pro[4063:573818] PushCredentials: <38dab5d0 df00d96f 87ede3ff 957c4d05 f750c181 858e7593 3b475150 bd8dfef2>

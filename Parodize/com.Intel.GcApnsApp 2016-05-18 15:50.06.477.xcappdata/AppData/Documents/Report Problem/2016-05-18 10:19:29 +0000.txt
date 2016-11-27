@@ -1,0 +1,29 @@
+2016-05-18 15:49:36.995 Titan Juxt Pro[6241:819285] centralManagerDidUpdateState | current (5) previous(0)
+2016-05-18 15:49:36.996 Titan Juxt Pro[6241:819285] CoreBluetooth BLE hardware is powered on and ready
+2016-05-18 15:49:37.799 Titan Juxt Pro[6241:819247] Connection Successful
+2016-05-18 15:49:38.023 Titan Juxt Pro[6241:819247] -[PriorityCallManager newImageGenerationWithUserName:andAddress:andMap:] [Line 567] image size 320.000000 568.000000
+2016-05-18 15:49:38.401 Titan Juxt Pro[6241:819247] BLEReconnection | Paired before, checking for connection status
+2016-05-18 15:49:38.402 Titan Juxt Pro[6241:819247] BLEReconnection | NOT Connected, trying to connect
+2016-05-18 15:49:38.423 Titan Juxt Pro[6241:819247] BLEReconnection | Known peripheral array :(
+    "<CBPeripheral: 0x16698d00, identifier = 474D2A5A-03EB-D434-AAB8-39249131DFD9, name = TITAN Juxt Pro JPFTS010, state = disconnected>"
+)
+2016-05-18 15:49:38.424 Titan Juxt Pro[6241:819247] BLEReconnection | Connecting to the peripheral
+2016-05-18 15:49:38.425 Titan Juxt Pro[6241:819247] Its still connecting
+2016-05-18 15:49:38.425 Titan Juxt Pro[6241:819247] applicationDidBecomeActive
+2016-05-18 15:49:38.445 Titan Juxt Pro[6241:819247] available devices : GCiPhone
+2016-05-18 15:49:38.446 Titan Juxt Pro[6241:819247] available devices : chanchal
+2016-05-18 15:49:38.447 Titan Juxt Pro[6241:819247] self.peripheralManager powered on.
+2016-05-18 15:49:38.450 Titan Juxt Pro[6241:819247] available devices : GCiPhone
+2016-05-18 15:49:38.454 Titan Juxt Pro[6241:819247] available devices : curie_2d_6f_7d
+2016-05-18 15:49:38.454 Titan Juxt Pro[6241:819247] available devices : MI1A
+2016-05-18 15:49:38.456 Titan Juxt Pro[6241:819247] available devices : TITAN SmartWatch
+2016-05-18 15:49:38.461 Titan Juxt Pro[6241:819278] TITAN : PushCredentials: <38dab5d0 df00d96f 87ede3ff 957c4d05 f750c181 858e7593 3b475150 bd8dfef2>
+2016-05-18 15:49:38.464 Titan Juxt Pro[6241:819278] PushCredentials: <38dab5d0 df00d96f 87ede3ff 957c4d05 f750c181 858e7593 3b475150 bd8dfef2>
+2016-05-18 15:49:38.465 Titan Juxt Pro[6241:819247] available devices : Q GRANT
+2016-05-18 15:49:38.467 Titan Juxt Pro[6241:819247] available devices : Charge HR
+2016-05-18 15:49:38.468 Titan Juxt Pro[6241:819247] Connected to <CBPeripheral: 0x16698d00, identifier = 474D2A5A-03EB-D434-AAB8-39249131DFD9, name = TITAN Juxt Pro JPFTS010, state = connected>
+2016-05-18 15:49:38.468 Titan Juxt Pro[6241:819247] BLEReconnection | Attempting to extend background running time
+2016-05-18 15:49:38.469 Titan Juxt Pro[6241:819276] BLEReconnection | Background task started
+2016-05-18 15:49:38.570 Titan Juxt Pro[6241:819285] Discovered service <CBService: 0x1656de10, isPrimary = YES, UUID = 389E2246-8686-458E-A65A-D86931C76668>
+2016-05-18 15:49:38.572 Titan Juxt Pro[6241:819276] DidDiscover
+2016-05-18 15:49:45.503 Titan Juxt Pro[6241:819247] <7b0a2020 226d6573 73616765 223a2022 496e7465 726e616c 20536572 76657220 4572726f 72222c0a 20202272 65717565 73744964 223a2022 62493972 6a4b3449 220a7d>

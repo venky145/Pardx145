@@ -1,0 +1,31 @@
+//
+//  Parodize-Prefix.pch
+//  Parodize
+//
+//  Created by administrator on 28/10/15.
+//  Copyright © 2015 Parodize. All rights reserved.
+//
+
+
+
+#ifndef Parodize_Prefix_pch
+#define Parodize_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+#endif /* Parodize_Prefix_pch */
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "CommonParodize.h"
+#import "SBJson.h"
+#import "ActivityBaseViewController.h"
+#import "AFHTTPRequestOperationManager.h"
+#import "SDWebImageManager.h"
+#import "UIImageView+WebCache.h"
+#import "DataManager.h"
+#import "Context.h"
+#endif

@@ -1,0 +1,5 @@
+2016-05-17 19:35:39.193 Titan Juxt Pro[4132:574836] *** Assertion failure in -[AFStreamingMultipartFormData appendPartWithHeaders:body:], /Users/vmandapx/Documents/TITAN/TITAN_May3/gc_ios_src/GCiPhoneApp/AFNetworking/AFURLRequestSerialization.m:753
+2016-05-17 19:35:39.195 Titan Juxt Pro[4132:574836] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'Invalid parameter not satisfying: body'
+*** First throw call stack:
+(0x2204d49f 0x2f847c8b 0x2204d375 0x22d1ed1f 0x1157ab 0x1153ed 0xf7faf 0x1113c5 0xf7aa7 0xf76c9 0xe61bd 0x25578d01 0x2576dc6f 0x257701bb 0x2577aa39 0x2576ea47 0x287de0d1 0x22013d7d 0x22013041 0x220117c3 0x21f5f3c1 0x21f5f1d3 0x255729cf 0x2556d7b1 0xece71 0x2fdc7aaf)
+libc++abi.dylib: terminating with uncaught exception of type NSException
