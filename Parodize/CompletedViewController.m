@@ -12,7 +12,13 @@
 #import "CompletedCell.h"
 #import "CompleteDetailController.h"
 
-@interface CompletedViewController ()
+@interface CompletedViewController (){
+    
+    NSString *nextReqStr;
+    NSNumber *pendingCount;
+    
+    BOOL isLastIndex;
+}
 
 @end
 
@@ -25,6 +31,8 @@
     completedArray=[[NSMutableArray alloc]init];
     
     pendingArray=[[NSMutableArray alloc]init];
+    
+    nextReqStr=@"0";
     
     [self getCompletedChallenges];
 }
@@ -39,7 +47,15 @@
     self.statusLabel.hidden=NO;
     self.activityIndicator.hidden=NO;
     
-    [[DataManager sharedDataManager] requestCompletedChallenges:nil forSender:self];
+    [self requestCompletedList];
+}
+
+-(void)requestCompletedList{
+    
+    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:nextReqStr,@"next", nil];
+    
+    [[DataManager sharedDataManager] requestCompletedChallenges:dict forSender:self];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,7 +77,7 @@
 {
     if (section==0)
     {
-       return pendingArray.count;
+       return 1;
     }
     else if(section==1)
     {
@@ -75,17 +91,7 @@
 }
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section==0) {
-        
-        if (pendingArray.count>0) {
-            
-            return @"Pending";
-        }else
-        {
-            return @"No Pending Challenges";
-        }
-        
-    }else if(section == 1)
+    if(section == 1)
     {
         if (completedArray.count>0) {
             
@@ -109,34 +115,15 @@
     {
         cellIdentifier=@"pendingCell";
         
-        completeModel=[pendingArray objectAtIndex:indexPath.row];
-        
-        PendingCell *cell=(PendingCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        UITableViewCell *cell=(UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell==nil)
         {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PendingCell" owner:self options:nil];
-            cell = [nib objectAtIndex:0];
+            //NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PendingCell" owner:self options:nil];
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         }
         
-        cell.pendingLabel.text=@"Your challenge is pending responses";
-        
-        if (completeModel.message.length>0) {
-            cell.messageText.text=completeModel.message;
-        }else
-        {
-            cell.messageText.text=@"No message";
-        }
-        
-        
-        if (completeModel.challengeThumbnail.length>0) {
-            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.challengeThumbnail];
-            cell.mockImage.image = [UIImage imageWithData:imageData];
-        }else{
-            cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
-        }
-        
-        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        cell.detailTextLabel.text=[NSString stringWithFormat:@"%@",pendingCount];
         
         return cell;
         
@@ -162,19 +149,26 @@
         cell.textDesc.text=[NSString stringWithFormat:@"%@ challenged you",[userDict objectForKey:@"firstname"]];
         cell.messagelabel.text=completeModel.message;
         
-        if ([userDict objectForKey:@"thumbnail"]) {
-            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:[userDict objectForKey:@"thumbnail"]];
-            cell.profileImage.image = [UIImage imageWithData:imageData];
+//        if ([userDict objectForKey:@"thumbnail"]) {
+//            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:[userDict objectForKey:@"thumbnail"]];
+//            cell.profileImage.image = [UIImage imageWithData:imageData];
+//        }else{
+//            
+//            cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
+//        }
+        
+        if (completeModel.responseThumbnail.length>0) {
+            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.responseThumbnail];
+            cell.mockImage.image = [UIImage imageWithData:imageData];
         }else{
-            
-            cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
+            cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
         }
         
         if (completeModel.challengeThumbnail.length>0) {
             NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.challengeThumbnail];
-            cell.mockImage.image = [UIImage imageWithData:imageData];
+            cell.profileImage.image = [UIImage imageWithData:imageData];
         }else{
-            cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
+            cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
         }
         
         if (completeModel.message.length>0) {
@@ -194,7 +188,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 90;
+    if (indexPath.section==1) {
+        return 240;
+    }else
+        return 44;
+    
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -208,10 +206,31 @@
         [self performSegueWithIdentifier:@"completeSegue" sender:self];
         
     }
-    
-    
-    
 }
+
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(UITableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!isLastIndex&&indexPath.row==completedArray.count-1) {
+        
+        isLastIndex=YES;
+        
+        if (![nextReqStr isEqualToString:@"0"]) {
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                [self requestCompletedList];
+            });
+            
+            
+        }
+        
+    }
+    // check if indexPath.row is last row
+    // Perform operation to load new Cell's.
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"completeSegue"]) {
         
@@ -252,33 +271,18 @@
     
         NSDictionary *successDict=[dataDictionary objectForKey:@"success"];
         
-        NSArray *compArray=[successDict objectForKey:@"completed"];
-        NSArray *pendArray=[successDict objectForKey:@"pending"];
+        NSArray *compArray=[successDict objectForKey:@"challenge"];
+        nextReqStr=[successDict objectForKey:@"next"];
+        if (nextReqStr == nil) {
+            nextReqStr=@"0";
+        }
+        pendingCount=[successDict objectForKey:@"pending_count"];
         
-        if (compArray.count>0||pendArray.count>0) {
+        if (compArray.count>0) {
             
             self.statusLabel.hidden=YES;
             self.completedTableView.hidden=NO;
             
-            for(NSDictionary *arrDict in pendArray)
-            {
-                CompletedModelClass *pend=[[CompletedModelClass alloc]init];
-                
-                for (NSString *key in arrDict) {
-                    
-                    NSLog(@"%@",[arrDict valueForKey:key]);
-                    
-                    if ([pend respondsToSelector:NSSelectorFromString(key)]) {
-                        
-                        if ([arrDict valueForKey:key] != NULL) {
-                            [pend setValue:[arrDict valueForKey:key] forKey:key];
-                        }else
-                            [pend setValue:@"" forKey:key];
-                    }
-                }
-                
-                [pendingArray addObject:pend];
-            }
             for(NSDictionary *arrDict in compArray)
             {
                 CompletedModelClass *comp=[[CompletedModelClass alloc]init];
@@ -323,7 +327,5 @@
     
     
 }
-
-
 
 @end

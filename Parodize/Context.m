@@ -101,7 +101,7 @@ static Context *contextManager_instance = nil;
     imgView.layer.cornerRadius=imgView.frame.size.height/2;
    
     imgView.layer.borderColor=[self colorWithRGBHex:PROFILE_COLOR].CGColor;
-    imgView.layer.borderWidth=5.0f;
+    imgView.layer.borderWidth=1.0f;
      imgView.layer.masksToBounds=YES;
     imgView.clipsToBounds=YES;
 }
@@ -142,7 +142,7 @@ static Context *contextManager_instance = nil;
 
 #pragma mark DateTime interval
 
-
+/*
 -(NSString*)setDateInterval:(NSString*)string
 {
     NSString *formatDate;
@@ -191,6 +191,65 @@ static Context *contextManager_instance = nil;
     }
     
     return formatDate;
+}*/
+-(NSString*)setDateInterval:(NSString *)dateValueStr
+{
+    NSString *formatDate;
+    
+    double unixValue = [dateValueStr doubleValue];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc]init];
+    [dateFormat setDateFormat:@"EEE MM dd HH:mm:ss yyyy"];
+    [dateFormat setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:unixValue];
+    
+    // Convert date object to desired output format
+    [dateFormat setDateFormat:@"EEE MMM d, YYYY"];
+    NSString* dateStr = [dateFormat stringFromDate:date];
+    
+    NSDate *currentDate=[NSDate date];
+    
+    NSTimeInterval interval = [currentDate timeIntervalSinceDate:date];
+    
+    long seconds = lroundf(interval); // Modulo (%) operator below needs int or long
+    
+    int hour = (seconds%3600);
+    int mins = (seconds%3600)/60;
+    int secs = seconds%60;
+    
+    if (hour==0)
+    {
+        if (mins==0)
+        {
+            formatDate=[NSString stringWithFormat:@"%d Seconds ago",secs];
+        }
+        else
+        {
+            formatDate=[NSString stringWithFormat:@"%d minutes ago",mins];
+        }
+    }
+    else if(hour<=24)
+    {
+        formatDate=[NSString stringWithFormat:@"Today"];
+    }
+    else if(hour<=48)
+    {
+        formatDate=[NSString stringWithFormat:@"Yesterday"];
+    }
+    else
+    {
+        formatDate=dateStr;
+    }
+    
+    return formatDate;
+}
+-(NSString *)setFirstLetterCapital:(NSString *)string{
+    
+    NSString *firstStr=[[string substringToIndex:1] capitalizedString];
+    NSString *cappedString = [string stringByReplacingCharactersInRange:NSMakeRange(0,1)
+                                                             withString:firstStr];
+    
+    return cappedString;
 }
 #pragma mark Clear UserDefaults
 

@@ -18,6 +18,7 @@
 
 @property (nonatomic,retain) UIImage *getImage;
 @property (nonatomic,retain) UIImage *getMockImage;
+@property (weak, nonatomic) IBOutlet UILabel *sendLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *sendView;
 

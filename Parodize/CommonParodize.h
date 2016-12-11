@@ -34,11 +34,21 @@
 #define PROFILE_PICTURE        @"user/update/profilepicture"
 #define INFORMATION_API        @"user/update/information"
 #define PROFILE_DETAILS        @"user/profile"
-#define FRIENDS_LIST           @"user/friends/list"
+//#define FRIENDS_LIST           @"user/friends/list"
+#define FRIENDS_LIST           @"user/friends/list/lazy"
 #define NEW_CHALLENGE          @"challenge/new"
-#define ACCEPT_CHALLENGE       @"challenge/accept"
+//#define ACCEPT_CHALLENGE       @"challenge/accept"
+#define ACCEPT_CHALLENGE       @"challenge/accept/lazy"
 #define ACCEPT_RESPONSE        @"challenge/accept/response"
-#define COMPLETED_RESPONSE     @"completed"
+//#define COMPLETED_RESPONSE     @"completed"
+#define COMPLETED_RESPONSE     @"completed/lazy"
+#define PENDING_REQUEST        @"pending/lazy"
+#define SEARCH_FRIEND          @"user/search/"
+#define ACCEPT_FRIEND          @"user/friendrequest/accept"
+#define NEW_FRIEND_REQUEST     @"user/friendrequest/new"
+
+//user/friendrequest/accept
+
 #define DEVICE_TOKEN_REQUEST   @"user/update/device/token"
 #define FRIEND_DETAILS         @"user/friends/profile/view"
 
@@ -62,8 +72,9 @@ typedef enum _RequestType
     eCloudNewChallengeRequestPost,
     eCloudAcceptChallengeRequestGet,
     eCloudCompletedChallengeRequestGet,
+    eCloudPendingChallengeRequestGet,
     eCloudDeviceTokenPost,
-    eCloudFriendDetailsGet
+    eCloudFriendDetailsPost
     
 } eRequestType;
 

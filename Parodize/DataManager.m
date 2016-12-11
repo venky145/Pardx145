@@ -69,7 +69,10 @@
 {
     [[ServerRequest sharedServerManager] requestCompletedChallenges:details forSender:sender];
 }
-
+-(void)requestPendingChallenges:(NSDictionary *)details forSender:(id)sender{
+    
+    [[ServerRequest sharedServerManager] requestPendingChallenges:details forSender:sender];
+}
 -(void)postDeviceToken:(NSDictionary *)details forSender:(id)sender
 {
     [[ServerRequest sharedServerManager] postDeviceToken:details forSender:sender];
@@ -131,6 +134,11 @@
 {
     if([sender respondsToSelector:@selector(didGetCompletedChallenges:)])
         [sender didGetCompletedChallenges:dataDictionaray];
+}
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetPendingChallenges:(NSMutableDictionary *) dataDictionaray{
+    
+    if([sender respondsToSelector:@selector(didGetPendingChallenges:)])
+        [sender didGetPendingChallenges:dataDictionaray];
 }
 
 - (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didPostDeviceToken:(NSMutableDictionary *) dataDictionaray

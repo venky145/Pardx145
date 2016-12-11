@@ -31,6 +31,8 @@
 
 -(NSString*)setDateInterval:(NSString*)string;
 
+-(NSString *)setFirstLetterCapital:(NSString *)string;
+
 //-(void)addIndicatorView:(UIView *)presentView
 //-(void)removeIndicatorView
 

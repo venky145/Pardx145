@@ -17,6 +17,8 @@
     BOOL isKeypadShown;
     
     UIVisualEffectView *bluredView;
+    
+    AFHTTPRequestOperation *afOperation;
 }
 
 @end
@@ -53,19 +55,20 @@
     self.sendButton.layer.cornerRadius=5.0f;
     self.sendButton.layer.masksToBounds=YES;
     
-    if (isAccept)
-    {
-        sendView.hidden=NO;
-        self.title=@"Send";
-    }
-    else
-    {
-        sendView.hidden=YES;
-        self.title=@"Completed";
-    }
+//    if (isAccept)
+//    {
+//        sendView.hidden=NO;
+//        self.title=@"Send";
+//    }
+//    else
+//    {
+//        sendView.hidden=YES;
+//        self.title=@"Completed";
+//    }
     
     self.progressStatus.hidden=YES;
     self.cancelButton.hidden=YES;
+    self.sendLabel.hidden=YES;
     
 }
 #pragma mark UITextFieldDelegate
@@ -164,6 +167,7 @@
     
     self.progressStatus.hidden=NO;
     self.cancelButton.hidden=NO;
+    self.sendLabel.hidden=NO;
     
     UIBlurEffect *effect = [UIBlurEffect effectWithStyle:1.8];
     
@@ -176,6 +180,8 @@
     [self.view bringSubviewToFront:self.progressStatus];
     
     [self.view bringSubviewToFront:self.cancelButton];
+    
+    [self.view bringSubviewToFront:self.sendLabel];
 
     NSMutableDictionary *acceptDict=[[NSMutableDictionary alloc]init];
     
@@ -199,14 +205,13 @@
 
 
 - (IBAction)cancelAction:(id)sender {
-    
+    [afOperation cancel];
+
     [self doneWithSendingView];
 }
 -(void)completedAcceptChallenge:(NSDictionary *)acceptDict
 {
     NSString *requestMethod = @"POST";
-    
-    
     
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,ACCEPT_RESPONSE];
     
@@ -248,6 +253,9 @@
     
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    afOperation=operation;
+    
     // operation.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
@@ -274,14 +282,6 @@
                  //            tabView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
                  [self presentViewController:tabView animated:NO completion:nil];
                  
-//                 NSMutableArray *allViewControllers = [NSMutableArray arrayWithArray:[self.navigationController viewControllers]];
-//                 for (UIViewController *aViewController in allViewControllers) {
-//                     if ([aViewController isKindOfClass:[RequiredViewController class]]) {
-//                         [self.navigationController popToViewController:aViewController animated:NO];
-//                     }
-//                 }
-
-                 
              }
          }
          
@@ -294,9 +294,7 @@
          [alert show];
          
      }];
-    
-    
-    
+
     [manager.operationQueue addOperation:operation];
     
     [operation setUploadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -314,6 +312,7 @@
    
     self.progressStatus.hidden=YES;
     self.cancelButton.hidden=YES;
+    self.sendLabel.hidden=YES;
     
     [bluredView removeFromSuperview];
     

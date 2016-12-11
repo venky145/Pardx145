@@ -46,11 +46,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-//    NSArray *userArray= [User_Profile fetchDetailsFromDatabase:@"User_Profile"];
-//    
-//    NSLog(@"%@",userArray);
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileInfo:) name:@"ProfileUpdated" object:nil];
     
     [self updateProfileInfo:nil];
@@ -65,20 +60,15 @@
     
      NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
     
-//    iconImage.layer.cornerRadius=iconImage.frame.size.height/2;
-//    iconImage.layer.masksToBounds=YES;
-//    iconImage.clipsToBounds=YES;
-    
-    [[Context contextSharedManager] roundImageView:self.iconImage];
-    
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     self.navigationController.navigationBar.hidden=YES;
+    
 }
 -(void)viewDidAppear:(BOOL)animated
 {
-
+    [[Context contextSharedManager] roundImageView:self.iconImage];
 }
 -(void)updateProfileInfo:(id)sender
 {
@@ -244,7 +234,7 @@
         self.snapButton.layer.cornerRadius = self.snapButton.frame.size.width / 2.0f;
         self.snapButton.layer.borderColor = [UIColor whiteColor].CGColor;
         self.snapButton.layer.borderWidth = 2.0f;
-        self.snapButton.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.8];
+        self.snapButton.backgroundColor = [self colorWithHexString:@"33B5A1"];
         self.snapButton.layer.rasterizationScale = [UIScreen mainScreen].scale;
         self.snapButton.layer.shouldRasterize = YES;
         

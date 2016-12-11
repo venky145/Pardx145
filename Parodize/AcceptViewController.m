@@ -11,7 +11,11 @@
 #import "AcceptModelClass.h"
 #import "AcceptCustomCell.h"
 
-@interface AcceptViewController ()
+@interface AcceptViewController (){
+    
+    BOOL isLastIndex;
+    NSString *nextReqStr;
+}
 
 @end
 
@@ -25,6 +29,7 @@
     
     self.acceptTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
+    nextReqStr=@"0";
     
     
     [self findAllChallenges];
@@ -35,33 +40,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 -(void)findAllChallenges
 {
-//    PFQuery *query = [PFQuery queryWithClassName:@"Activity_table_new"];
-//    [query whereKey:@"Recipient" equalTo:[PFUser currentUser].objectId];
-//    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//        if (!error) {
-//            // The find succeeded.
-//            NSLog(@"Successfully retrieved %@ scores.", object);
-//            // Do something with the found objects
-////            for (PFObject *object in objects) {
-////                NSLog(@"%@", object.objectId);
-////            }
-//        } else {
-//            // Log details of the failure
-//            NSLog(@"Error: %@ %@", error, [error userInfo]);
-//        }
-//    }];
     
     [self.activityIndicator startAnimating];
     
@@ -70,9 +51,16 @@
     self.acceptTableView.hidden=YES;
     self.statusLabel.hidden=NO;
     self.activityIndicator.hidden=NO;
+
+    [self requestAcceptedList];
     
+}
+
+-(void)requestAcceptedList{
     
-    [[DataManager sharedDataManager] requestAcceptChallenges:nil forSender:self];
+    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:nextReqStr,@"next", nil];
+    
+    [[DataManager sharedDataManager] requestAcceptChallenges:dict forSender:self];
     
 }
 
@@ -187,6 +175,26 @@
     
 }
 
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(UITableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!isLastIndex&&indexPath.row==self.challenges.count-1) {
+        
+        isLastIndex=YES;
+        
+        if (![nextReqStr isEqualToString:@"0"]) {
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                [self requestAcceptedList];
+            });
+        }
+        
+    }
+    // check if indexPath.row is last row
+    // Perform operation to load new Cell's.
+}
 
 
 

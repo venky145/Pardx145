@@ -132,9 +132,10 @@
 
 - (IBAction)progressCancelAction:(id)sender {
     
+    [afOperation cancel];
+
     [self doneWithSendingView];
     
-    [afOperation cancel];
 }
 - (IBAction)cancelAction:(id)sender {
     

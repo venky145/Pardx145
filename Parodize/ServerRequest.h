@@ -40,6 +40,8 @@
 
 -(void)requestCompletedChallenges:(NSDictionary *)details forSender:(id)sender;
 
+-(void)requestPendingChallenges:(NSDictionary *)details forSender:(id)sender;
+
 -(void)postDeviceToken:(NSDictionary *)details forSender:(id)sender;
 
 -(void)friendsDetails:(NSDictionary *)details forSender:(id)sender;

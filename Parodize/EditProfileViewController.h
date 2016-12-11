@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "User_Profile.h"
 
-@interface EditProfileViewController : ActivityBaseViewController<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
+@interface EditProfileViewController : ActivityBaseViewController<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UIPickerViewDelegate>
 
 - (IBAction)doneAction:(id)sender;
 
@@ -21,5 +21,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *editTableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+@property (weak, nonatomic) IBOutlet UIPickerView *genderPicker;
 
 @end

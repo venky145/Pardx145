@@ -42,13 +42,15 @@
 {
     if (friendsArray.count==0)
     {
-        [self getFriendDetails:nil];
+        [self getFriendDetails];
     }
 
 }
--(void)getFriendDetails:(NSDictionary *)details{
+-(void)getFriendDetails{
     
-    [[DataManager sharedDataManager] requestFriendsList:details forSender:self];
+    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:@"0",@"next", nil];
+    
+    [[DataManager sharedDataManager] requestFriendsList:dict forSender:self];
 }
 #pragma DataManagerDelegate  Methods
 

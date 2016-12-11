@@ -94,7 +94,8 @@
 {
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,FRIENDS_LIST];
     
-    [self sendRequestURL:requestURL forType:eCloudFreindsListRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+//    [self sendRequestURL:requestURL forType:eCloudFreindsListRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+    [self sendRequestURL:requestURL forType:eCloudFreindsListRequestGet withDetails:list forSender:sender withHttpMethod:ePOST withHeader:YES];
 }
 
 -(void)postNewChallenge:(NSDictionary *)details forSender:(id)sender
@@ -108,15 +109,25 @@
 {
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,ACCEPT_CHALLENGE];
     
-    [self sendRequestURL:requestURL forType:eCloudAcceptChallengeRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+//    [self sendRequestURL:requestURL forType:eCloudAcceptChallengeRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+    
+    [self sendRequestURL:requestURL forType:eCloudAcceptChallengeRequestGet withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
 }
 -(void)requestCompletedChallenges:(NSDictionary *)details forSender:(id)sender
 {
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,COMPLETED_RESPONSE];
     
-    [self sendRequestURL:requestURL forType:eCloudCompletedChallengeRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+//    [self sendRequestURL:requestURL forType:eCloudCompletedChallengeRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+    
+    [self sendRequestURL:requestURL forType:eCloudCompletedChallengeRequestGet withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
 }
-
+-(void)requestPendingChallenges:(NSDictionary *)details forSender:(id)sender{
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,PENDING_REQUEST];
+    
+    [self sendRequestURL:requestURL forType:eCloudPendingChallengeRequestGet withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
+    
+}
 -(void)postDeviceToken:(NSDictionary *)details forSender:(id)sender
 {
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,DEVICE_TOKEN_REQUEST];
@@ -127,16 +138,21 @@
     
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,FRIEND_DETAILS];
     
-    [self sendRequestURL:requestURL forType:eCloudFriendDetailsGet withDetails:details forSender:sender withHttpMethod:eGET withHeader:YES];
+    [self sendRequestURL:requestURL forType:eCloudFriendDetailsPost withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
     
 }
 - (void) fetchDataForURL:(NSString *) url userInfo:(NSDictionary *) userInfo postTypeMethod:(int)methodType headerAutherization:(BOOL)iSheadReqAuth
 {
     NSString *requestMethod;
-    if(methodType == ePOST)
+    NSString *userInfoKey;
+    if(methodType == ePOST){
         requestMethod = @"POST";
-    else if (methodType == eGET)
+        userInfoKey=@"postdata";
+    }
+    else if (methodType == eGET){
         requestMethod = @"GET";
+        userInfoKey=@"parameters";
+    }
     else if (methodType == ePUT)
         requestMethod = @"PUT";
     else if (methodType == eDeLETE)
@@ -156,19 +172,24 @@
     request.userInfo = userInfo;
     request.timeoutInterval = 60.0;
     
-    if ([userInfo objectForKey:@"postdata"] != nil)
+    if ([userInfo objectForKey:userInfoKey] != nil)
     {
         NSError *error = nil;
-        NSData *data = [NSJSONSerialization dataWithJSONObject:[userInfo objectForKey:@"postdata"] options:NSUTF8StringEncoding error:&error];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:[userInfo objectForKey:userInfoKey] options:NSUTF8StringEncoding error:&error];
         [request setHTTPBody:(NSMutableData *)data];
     }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    if (methodType == eGET) {
+//         [request setValue:@"multipart/form-data" forHTTPHeaderField: @"Content-Type"];
+//    }else{
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+   // }
 
     if(iSheadReqAuth) {
         NSLog(@" Autherization Header required");
         NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
         [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
+       // [request setValue:0 forHTTPHeaderField:@"next" ];
+
     }
 
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
@@ -239,12 +260,15 @@
         case eCloudCompletedChallengeRequestGet:
             [[DataManager sharedDataManager] webEngine:self sender:sender didGetCompletedChallenges: responseObject];
             break;
+        case eCloudPendingChallengeRequestGet:
+            [[DataManager sharedDataManager] webEngine:self sender:sender didGetPendingChallenges: responseObject];
+            break;
             
         case eCloudDeviceTokenPost:
             [[DataManager sharedDataManager] webEngine:self sender:sender didPostDeviceToken: responseObject];
             break;
-        case eCloudFriendDetailsGet:
-            [[DataManager sharedDataManager] webEngine:self sender:sender didPostDeviceToken: responseObject];
+        case eCloudFriendDetailsPost:
+            [[DataManager sharedDataManager] webEngine:self sender:sender didGetFriendDetails: responseObject];
             break;
         
         default:

@@ -16,7 +16,10 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
 @interface EditProfileViewController ()
 {
     NSArray *placeholderArray;
+    NSArray *genderArray;
     NSMutableDictionary *textFieldsDict;
+    
+    NSString *genderStr;
     
     //
     
@@ -47,6 +50,8 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     textFieldsDict=[[NSMutableDictionary alloc]init];
     placeholderArray=[NSArray arrayWithObjects:@"FirstName",@"LastName",@"About",@"Phone",@"Gender",nil];
 
+    genderArray=[NSArray arrayWithObjects:@"Male",@"Female", nil];
+    
     self.profileImage.image=getImage;
     
     self.editTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -61,6 +66,8 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     cameraPicker.delegate = self;
     
     self.doneButton.enabled=NO;
+    
+    [self.genderPicker setHidden:YES];
     
 }
 
@@ -124,10 +131,11 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
             cell.detailText.text=editUserProfile.about;
             
         }else if (indexPath.row==3) {
-            
+            cell.detailText.keyboardType=UIKeyboardTypeNumberPad;
             
         }else if (indexPath.row==4) {
             
+            cell.detailText.text=genderStr;
             
         }
 
@@ -226,8 +234,13 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
 {
     [textField resignFirstResponder];
     
-    if (textField.tag != 2) {
-        
+//    if (textField.tag == 3) {
+//        
+//        [self doneAction:nil];
+//        
+//    }else
+//    {
+    
         EditProfileCell *currentCell = (EditProfileCell *) textField.superview.superview;
         NSIndexPath *currentIndexPath = [self.editTableView indexPathForCell:currentCell];
         
@@ -240,10 +253,7 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
         
         [nextCell.detailText becomeFirstResponder]; //or whatever your property is called
 
-    }else
-    {
-        [self doneAction:nil];
-    }
+//    }
 
     
     
@@ -263,6 +273,9 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     NSLog(@"Editing begins");
+    if (textField.tag!=4) {
+        [self.genderPicker setHidden:YES];
+    }
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -279,14 +292,22 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     
     NSLog(@"tag %ld",(long)textField.tag);
     
-    if (previousTextField==nil)
-    {
-        previousTextField=textField;
+//    if (previousTextField==nil)
+//    {
+//        previousTextField=textField;
+//    }
+//    if (textField.tag==3)
+//        textField.returnKeyType = UIReturnKeyDone;
+//    else
+        if (textField.tag==4){
+            [previousTextField resignFirstResponder];
+            previousTextField=textField;
+        [self.genderPicker setHidden:NO];
+        return NO;
     }
-
-    if (textField.tag==2)
-        textField.returnKeyType = UIReturnKeyDone;
+    
     else
+        previousTextField=textField;
         textField.returnKeyType=UIReturnKeyNext;
     
 
@@ -418,7 +439,36 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     
     return YES;
 }
+#pragma mark UIPicker Delegate
 
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    
+    return 1;
+    
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+ 
+    return 2;
+}
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    
+    return [genderArray objectAtIndex: row];
+    
+}
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    
+    if (row==0) {
+        genderStr=@"Male";
+    }else
+        genderStr=@"Female";
+    
+    [self.genderPicker setHidden:YES];
+    [self.editTableView reloadData];
+    
+    
+}
 #pragma TWDataManagerDelegate  Methods
 
 -(void) didProfileImageUpdated:(NSMutableDictionary *) dataDictionaray; {

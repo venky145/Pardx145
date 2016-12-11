@@ -21,4 +21,5 @@
 - (IBAction)challengeAction:(id)sender;
 - (IBAction)addFriendAction:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
 @end

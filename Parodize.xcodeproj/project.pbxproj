@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		184331E81DF9500500A80FE0 /* PendingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184331E71DF9500500A80FE0 /* PendingTableViewController.m */; };
+		184331EC1DFDDEBF00A80FE0 /* FriendDetailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 184331EB1DFDDEBE00A80FE0 /* FriendDetailObject.m */; };
 		188CEEC71DD110D00093CD54 /* Release-iphone in Resources */ = {isa = PBXBuildFile; fileRef = 188CEEC61DD110D00093CD54 /* Release-iphone */; };
 		18DCE4391DD1168700166BC3 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DCE4381DD1168700166BC3 /* GPUImage.framework */; };
 		18DCE43A1DD117A400166BC3 /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188CEEC91DD111640093CD54 /* libGPUImage.a */; };
 		18DCE4431DD502E900166BC3 /* FriendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DCE4421DD502E900166BC3 /* FriendDetailViewController.m */; };
 		18DCE4471DD849EA00166BC3 /* FriendsObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DCE4461DD849EA00166BC3 /* FriendsObject.m */; };
 		18E5BA6B1DE82E3400A5FEF5 /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 188CEEC51DD1109C0093CD54 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18E8C33A1DF907DF0031FE9C /* FromClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E8C3391DF907DE0031FE9C /* FromClass.m */; };
 		18EAFE031DDABC0600A79735 /* DrawLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EAFE001DDABC0600A79735 /* DrawLine.m */; };
 		18EAFE041DDABC0600A79735 /* PenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EAFE021DDABC0600A79735 /* PenViewController.m */; };
 		590B7FB11D44E287009337DC /* CompletedModelClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 590B7FB01D44E287009337DC /* CompletedModelClass.m */; };
@@ -271,6 +274,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		184331E61DF9500500A80FE0 /* PendingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PendingTableViewController.h; sourceTree = "<group>"; };
+		184331E71DF9500500A80FE0 /* PendingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PendingTableViewController.m; sourceTree = "<group>"; };
+		184331EA1DFDDEBE00A80FE0 /* FriendDetailObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailObject.h; sourceTree = "<group>"; };
+		184331EB1DFDDEBE00A80FE0 /* FriendDetailObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDetailObject.m; sourceTree = "<group>"; };
 		188CEEBC1DD1109C0093CD54 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = "../../../Documents/GPUImage-master/framework/GPUImage.xcodeproj"; sourceTree = "<group>"; };
 		188CEEC61DD110D00093CD54 /* Release-iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Release-iphone"; path = "../../../Documents/GPUImage-master/build/Release-iphone"; sourceTree = "<group>"; };
 		188CEEC91DD111640093CD54 /* libGPUImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGPUImage.a; path = "../../../Library/Developer/Xcode/DerivedData/Parodize-eoqtieahpprbnvcfunqbicctxwnd/Build/Products/Debug-iphoneos/libGPUImage.a"; sourceTree = "<group>"; };
@@ -280,6 +287,8 @@
 		18DCE4421DD502E900166BC3 /* FriendDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDetailViewController.m; sourceTree = "<group>"; };
 		18DCE4451DD849EA00166BC3 /* FriendsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsObject.h; sourceTree = "<group>"; };
 		18DCE4461DD849EA00166BC3 /* FriendsObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsObject.m; sourceTree = "<group>"; };
+		18E8C3381DF907DE0031FE9C /* FromClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FromClass.h; sourceTree = "<group>"; };
+		18E8C3391DF907DE0031FE9C /* FromClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FromClass.m; sourceTree = "<group>"; };
 		18EAFDFF1DDABC0600A79735 /* DrawLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawLine.h; sourceTree = "<group>"; };
 		18EAFE001DDABC0600A79735 /* DrawLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawLine.m; sourceTree = "<group>"; };
 		18EAFE011DDABC0600A79735 /* PenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PenViewController.h; sourceTree = "<group>"; };
@@ -978,6 +987,8 @@
 				59EC3AEA1D2DFF4C0074191C /* AcceptModelClass.m */,
 				59EC3AEE1D2E052D0074191C /* AcceptCustomCell.h */,
 				59EC3AEF1D2E052D0074191C /* AcceptCustomCell.m */,
+				18E8C3381DF907DE0031FE9C /* FromClass.h */,
+				18E8C3391DF907DE0031FE9C /* FromClass.m */,
 			);
 			name = Accept;
 			sourceTree = "<group>";
@@ -995,6 +1006,8 @@
 				590B7FBB1D44E670009337DC /* PendingCell.m */,
 				590B7FBD1D450411009337DC /* CompleteDetailController.h */,
 				590B7FBE1D450411009337DC /* CompleteDetailController.m */,
+				184331E61DF9500500A80FE0 /* PendingTableViewController.h */,
+				184331E71DF9500500A80FE0 /* PendingTableViewController.m */,
 			);
 			name = Completed;
 			sourceTree = "<group>";
@@ -1036,6 +1049,8 @@
 				18DCE4421DD502E900166BC3 /* FriendDetailViewController.m */,
 				18DCE4451DD849EA00166BC3 /* FriendsObject.h */,
 				18DCE4461DD849EA00166BC3 /* FriendsObject.m */,
+				184331EA1DFDDEBE00A80FE0 /* FriendDetailObject.h */,
+				184331EB1DFDDEBE00A80FE0 /* FriendDetailObject.m */,
 			);
 			name = Friends;
 			sourceTree = "<group>";
@@ -1534,6 +1549,7 @@
 				C3E2CA1C1BCA6082002355B4 /* UIImageView+HighlightedWebCache.m in Sources */,
 				C3C20C5F1BD3992400625E23 /* ChooseRecipientViewController.m in Sources */,
 				C3E2C9E91BCA472B002355B4 /* SBJsonStreamWriterState.m in Sources */,
+				184331E81DF9500500A80FE0 /* PendingTableViewController.m in Sources */,
 				5986080D1CEA46F100368050 /* UserDetailViewController.m in Sources */,
 				598756BD1CF1BB660039C6E5 /* UIProgressView+AFNetworking.m in Sources */,
 				C3E2CA161BCA6082002355B4 /* SDWebImageManager.m in Sources */,
@@ -1566,6 +1582,7 @@
 				5998C1C61C9A64C6006FA800 /* PlayGroundCollectionViewCell.m in Sources */,
 				596AA2711D21BBD000068AA2 /* EAGLView.m in Sources */,
 				C3E2C9B41BC95530002355B4 /* FriendsViewController.m in Sources */,
+				18E8C33A1DF907DF0031FE9C /* FromClass.m in Sources */,
 				593E86091C280A9100CDB481 /* NewDoneViewController.m in Sources */,
 				18EAFE041DDABC0600A79735 /* PenViewController.m in Sources */,
 				598756B91CF1BB660039C6E5 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
@@ -1596,6 +1613,7 @@
 				596D819C1D0B38B4008270AF /* EditProfileViewController.m in Sources */,
 				59EC3AEB1D2DFF4C0074191C /* AcceptModelClass.m in Sources */,
 				59CA63C21D13BA42009B3073 /* UIImage+Filtrr.m in Sources */,
+				184331EC1DFDDEBF00A80FE0 /* FriendDetailObject.m in Sources */,
 				598756AA1CF1BB5A0039C6E5 /* AFURLConnectionOperation.m in Sources */,
 				C35357301BE5BF53003113D8 /* CompletedViewController.m in Sources */,
 				C3C20C5B1BD2DE5900625E23 /* ImageEditingViewController.m in Sources */,

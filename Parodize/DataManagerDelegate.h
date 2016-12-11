@@ -31,6 +31,8 @@
 
 -(void) didGetCompletedChallenges:(NSMutableDictionary *) dataDictionary;
 
+-(void) didGetPendingChallenges:(NSMutableDictionary *) dataDictionary;
+
 -(void) didPostDeviceToken:(NSMutableDictionary *) dataDictionary;
 
 

@@ -16,13 +16,19 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "FriendDetailViewController.h"
 
+#import "User_Profile.h"
 
 @interface FriendsViewController ()
 {
     NSMutableArray *fbFriendsArray;
+    NSMutableArray *searchFriendsArray;
     UISearchBar *searchBarTop;
     UIBarButtonItem *searchBarItem;
     UIBarButtonItem *inviteBarItem;
+    
+    BOOL isSearch;
+    
+    AFHTTPRequestOperation *afOperation;
     
     //NSArray *fbFriendsArray;
 }
@@ -40,6 +46,7 @@
   //  self.title=@"Friends";
     
     fbFriendsArray=[[NSMutableArray alloc]init];
+    searchFriendsArray=[[NSMutableArray alloc]init];
     
    // https://graph.facebook.com/%@/picture?type=large
     
@@ -60,10 +67,12 @@
     self.navigationItem.rightBarButtonItem = searchBarItem;
     
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:@"0",@"next", nil];
+    [self getFriendDetails:dict];
 }
 -(void)viewWillAppear:(BOOL)animated{
     
-    [self getFriendDetails:nil];
 }
 -(void)getFriendDetails:(NSDictionary *)details{
     
@@ -81,7 +90,7 @@
     
     if ([dataDictionaray objectForKey:RESPONSE_ERROR]) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                         message:[dataDictionaray objectForKey:RESPONSE_ERROR]
                                                        delegate:self
                                               cancelButtonTitle:@"OK"
@@ -150,64 +159,163 @@
     self.navigationItem.rightBarButtonItem=nil;
     self.navigationItem.leftBarButtonItem=nil;
     self.navigationItem.titleView = searchBarTop;
+    isSearch=YES;
+    [friendsTableView reloadData];
+    
+    [searchBarTop becomeFirstResponder];
 
 }
--(void)inviteFriends:(id)sender
-{
-    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-    [login
-     logInWithReadPermissions: @[@"email",@"user_friends",@"public_profile",@"user_about_me"]
-     fromViewController:self
-     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-         if (error) {
-             NSLog(@"Process error");
-         } else if (result.isCancelled) {
-             NSLog(@"Cancelled");
-         } else {
-             NSLog(@"Logged in");
-             [self getFBFriendsList];
-         }
-     }];
-}
+//-(void)inviteFriends:(id)sender
+//{
+//    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+//    [login
+//     logInWithReadPermissions: @[@"email",@"user_friends",@"public_profile",@"user_about_me"]
+//     fromViewController:self
+//     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+//         if (error) {
+//             NSLog(@"Process error");
+//         } else if (result.isCancelled) {
+//             NSLog(@"Cancelled");
+//         } else {
+//             NSLog(@"Logged in");
+//             [self getFBFriendsList];
+//         }
+//     }];
+//}
 #pragma mark UISearchBarDelegate methods
+// called when cancel button pressed
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     
     self.navigationItem.rightBarButtonItem = searchBarItem;
     self.navigationItem.leftBarButtonItem = inviteBarItem;
     self.navigationItem.titleView=nil;
     //self.navigationItem.title=@"Friends";
-    
-
-}// called when cancel button pressed
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    if (fbFriendsArray.count==0)
-//    {
-//       // [self getFBFriendsList];
-//    }
+    isSearch=NO;
+    if (!afOperation.finished) {
+        [afOperation cancel];
+    }
+    [self.friendsTableView reloadData];
+}
+//- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
+//    
+//    
+//    return YES;
 //}
+// return NO to not become first responder
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    
+    
+}
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    
+    [afOperation cancel];
+    
+//    dispatch_queue_t backgroundQueue = dispatch_queue_create("com.mycompany.myqueue", 0);
+//    
+//    dispatch_async(backgroundQueue, ^{
+        [self SearchFriend:searchText];
+//    });
+    
+    
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+}
+-(void)SearchFriend:(NSString *)searchStr{
+
+    NSString *requestMethod = @"GET";
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@", kBaseAPI,SEARCH_FRIEND,searchStr];
+    
+    
+    NSError *error;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    
+    __block NSMutableURLRequest *request = [manager.requestSerializer
+                                            multipartFormRequestWithMethod:requestMethod
+                                            URLString:requestURL
+                                            parameters:nil
+                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                            } error:&error];
+    
+    request.timeoutInterval = 60.0;
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSLog(@" Autherization Header required");
+    NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
+    [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
+    
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+
+    afOperation=operation;
+    
+    // operation.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if(responseObject)
+         {
+            // NSLog(@"%@",responseObject);
+             
+             if ([responseObject objectForKey:RESPONSE_ERROR]) {
+                 
+                 
+                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
+                 
+                 [alert show];
+                 
+             }else
+             {
+
+                 NSDictionary *successDict=[responseObject objectForKey:@"success"];
+                 
+                 NSArray *resultArray=[successDict objectForKey:@"search"];
+                 
+                 [searchFriendsArray removeAllObjects];
+                 
+                 for (NSDictionary *fDict in resultArray) {
+                     
+                     FriendsObject *fbObj=[[FriendsObject alloc]init];
+                     
+                     fbObj.firstname=[fDict objectForKey:@"firstname"];
+                     fbObj.lastname=[fDict objectForKey:@"lastname"];
+                     fbObj.f_id=[fDict objectForKey:@"id"];
+                     fbObj.thumbnail=[fDict objectForKey:@"thumbnail"];
+                     fbObj.emailAddress=[fDict objectForKey:@"email"];
+                     
+                     [searchFriendsArray addObject:fbObj];
+                     
+                 }
+//                 dispatch_async(dispatch_get_main_queue(), ^{
+                 
+                     [self.friendsTableView reloadData];
+//                 });
+                 
+                 
+             }
+         }
+         
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"Request failed");
+         
+         if (!operation.cancelled) {
+             NSLog(@"Cancelled");
+//             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
+//             
+//             [alert show];
+         }
+     }];
+    
+    [manager.operationQueue addOperation:operation];
+    
+}
 -(void)getFBFriendsList
 {
-   /* FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/friends?limit=5000" parameters:nil HTTPMethod:@"GET"];
-    
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
-                                          id result,
-                                          NSError *error) {
-        
-        
-        fbFriendsArray=[result objectForKey:@"data"];
-        
-        [friendsTableView reloadData];
-        
-        // Handle the result
-        //        NSArray *items = [FBSDKUtility dictionaryWithQueryString:<#(NSString *)#> result[@"data"]];
-        //        NSArray *recipientIDs = [items valueForKey:@"recipient_id"];
-        //        _recipientIDs = [[NSSet alloc] initWithArray:recipientIDs];
-        //        NSLog(@"%@",result[@"data"]);
-    }];
-    */
-    
-    
     NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
     [parameters setValue:@"id,name,email" forKey:@"fields"];
     
@@ -224,6 +332,9 @@
 #pragma mark UITableViewDataSource and Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (isSearch) {
+        return searchFriendsArray.count;
+    }else
     return fbFriendsArray.count;
 }
 
@@ -240,7 +351,14 @@
     }
     
     
-    FriendsObject *fbObj=[fbFriendsArray objectAtIndex:indexPath.row];
+    FriendsObject *fbObj;
+    
+    if (isSearch) {
+        fbObj=[searchFriendsArray objectAtIndex:indexPath.row];
+    }else{
+        fbObj=[fbFriendsArray objectAtIndex:indexPath.row];
+    }
+    
     
    // NSDictionary *detailDict=[fbFriendsArray objectAtIndex:indexPath.row];
     cell.profileName.text=[NSString stringWithFormat:@"%@ %@",fbObj.firstname,fbObj.lastname];
@@ -294,7 +412,12 @@
          NSIndexPath *path = [self.friendsTableView indexPathForSelectedRow];
         
         FriendDetailViewController *destViewController = segue.destinationViewController;
-        destViewController.friendObj = [fbFriendsArray objectAtIndex:path.row];
+        if (isSearch) {
+            destViewController.friendObj = [searchFriendsArray objectAtIndex:path.row];
+        }else{
+            destViewController.friendObj = [fbFriendsArray objectAtIndex:path.row];
+        }
+        
         
     }
 }

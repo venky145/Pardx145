@@ -45,6 +45,16 @@
     
     
 
+    dispatch_async(dispatch_get_main_queue(), ^(){
+        NSLog(@"A");
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"B");
+            
+        });
+        NSLog(@"C");
+    });
+    
+    NSLog(@"D");
     
     [self updateDetails:userProfile];
     
@@ -87,7 +97,7 @@
     if (userProfile.about.length>0) {
         
         self.profileSubName.text=userProfile.about;
-        self.profileSubName.textColor=[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
+       // self.profileSubName.textColor=[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
         
     }else
     {
