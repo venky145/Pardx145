@@ -81,6 +81,16 @@
     
     [[ServerRequest sharedServerManager] friendsDetails:details forSender:sender];
 }
+-(void)friendRequests:(NSDictionary *)details forSender:(id)sender{
+    
+    [[ServerRequest sharedServerManager] friendRequests:details forSender:sender];
+    
+}
+-(void)friendRequestAccept:(NSDictionary *)details forSender:(id)sender{
+    
+    [[ServerRequest sharedServerManager] friendRequestAccept:details forSender:sender];
+}
+
 #pragma mark ServerRequestDelegate Methods
 
 - (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didCloudGetUserRegisterationRequest:(NSMutableDictionary *) dataDictionaray {
@@ -150,6 +160,17 @@
     
     if([sender respondsToSelector:@selector(didGetFriendDetails:)])
         [sender didGetFriendDetails:dataDictionaray];
+}
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetFriendRequests:(NSMutableDictionary *) dataDictionaray{
+    
+    if([sender respondsToSelector:@selector(didGetFriendRequests:)])
+        [sender didGetFriendRequests:dataDictionaray];
+}
+
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didPostFriendAccept:(NSMutableDictionary *) dataDictionaray{
+    
+    if([sender respondsToSelector:@selector(didPostFriendAccept:)])
+        [sender didPostFriendAccept:dataDictionaray];
 }
 #pragma Error
 

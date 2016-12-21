@@ -58,6 +58,16 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
+//Notification Category
+
+typedef enum category_type{
+    
+    new_Challenge = 101,
+    complete_Challenge,
+    friend_Request,
+    Friend_Accept
+    
+} notificationType;
 /* Server Request Types */
 typedef enum _RequestType
 {
@@ -74,7 +84,9 @@ typedef enum _RequestType
     eCloudCompletedChallengeRequestGet,
     eCloudPendingChallengeRequestGet,
     eCloudDeviceTokenPost,
-    eCloudFriendDetailsPost
+    eCloudFriendDetailsPost,
+    eCloudFriendRequestsGet,
+    eCloudFriendRequestsPost
     
 } eRequestType;
 

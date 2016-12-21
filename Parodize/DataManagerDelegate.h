@@ -35,8 +35,11 @@
 
 -(void) didPostDeviceToken:(NSMutableDictionary *) dataDictionary;
 
-
 -(void) didGetFriendDetails:(NSMutableDictionary *) dataDictionary;
+
+-(void) didGetFriendRequests:(NSMutableDictionary *) dataDictionary;
+
+-(void) didPostFriendAccept:(NSMutableDictionary *) dataDictionary;
 
 //Failure Delegate  method
 -(void) requestDidFailWithRequest:(NSError *) error;

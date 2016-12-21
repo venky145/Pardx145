@@ -177,15 +177,54 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     UIApplicationState state = [application applicationState];
     
-    NSLog(@"received notifications");
+    NSLog(@"received notifications %@",userInfo);
     
-//    if (state == UIApplicationStateActive) {
-//        //app is in foreground
-//        //the push is in your control
-//    } else {
+    NSDictionary *notif_resp=[userInfo objectForKey:@"aps"];
+    
+    if ([notif_resp valueForKey:@"category"]!=nil){
+        
+//        NSNumber *num=[notif_resp valueForKey:@"category"];
+//        
+//        int *value=[[notif_resp valueForKey:@"category"] integerValue];
+        
+        notificationType requestType = (notificationType)[[notif_resp objectForKey:@"category"] intValue];
+        
+        switch (requestType) {
+            case new_Challenge:
+                
+                NSLog(@"New Chalenge Notification");
+                break;
+            case complete_Challenge:
+                
+                 NSLog(@"Complete challenge Notification");
+                break;
+            case friend_Request:
+                 NSLog(@"Friend Request Notification");
+                
+                break;
+            case Friend_Accept:
+                
+                 NSLog(@"Friend Accept Notification");
+                break;
+                
+            default:
+                break;
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pushNotification" object:[NSNumber numberWithLong:requestType] userInfo:nil];
+        
+    }
+    
+    if (state == UIApplicationStateActive) {
+        //app is in foreground
+        //the push is in your control
+    } else {
 //        app is in background:
 //        iOS is responsible for displaying push alerts, banner etc..
-//    }
+        
+        
+        
+    }
     
 }
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification

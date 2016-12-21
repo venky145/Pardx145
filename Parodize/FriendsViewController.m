@@ -15,16 +15,19 @@
 
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "FriendDetailViewController.h"
+#import "FriendRequestViewController.h"
 
 #import "User_Profile.h"
 
 @interface FriendsViewController ()
 {
     NSMutableArray *fbFriendsArray;
+    NSMutableArray *requestsArray;
     NSMutableArray *searchFriendsArray;
     UISearchBar *searchBarTop;
     UIBarButtonItem *searchBarItem;
     UIBarButtonItem *inviteBarItem;
+   // UIBarButtonItem *requestBarItem;
     
     BOOL isSearch;
     
@@ -47,6 +50,7 @@
     
     fbFriendsArray=[[NSMutableArray alloc]init];
     searchFriendsArray=[[NSMutableArray alloc]init];
+    requestsArray=[[NSMutableArray alloc]init];
     
    // https://graph.facebook.com/%@/picture?type=large
     
@@ -66,32 +70,83 @@
     searchBarItem.tintColor=[UIColor whiteColor];
     self.navigationItem.rightBarButtonItem = searchBarItem;
     
+//    requestBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(requestsList:)];
+//    requestBarItem.tintColor=[UIColor whiteColor];
+//    
+//    NSArray *barButtons=[NSArray arrayWithObjects:searchBarItem,requestBarItem, nil];
+//    
+//    self.navigationItem.rightBarButtonItems=barButtons;
+    
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:@"0",@"next", nil];
-    [self getFriendDetails:dict];
+    
+
 }
 -(void)viewWillAppear:(BOOL)animated{
     
+    [self requestsList];
+}
+-(void)inviteFriends:(id)sender{
+    
+}
+-(void)requestsList{
+    [self.processIndicator startAnimating];
+    
+    [[DataManager sharedDataManager] friendRequests:nil forSender:self];
 }
 -(void)getFriendDetails:(NSDictionary *)details{
-    
-    [self.processIndicator startAnimating];
     
     [[DataManager sharedDataManager] requestFriendsList:details forSender:self];
 }
 #pragma DataManagerDelegate  Methods
 
--(void) didGetFriendsList:(NSMutableDictionary *) dataDictionaray{
+-(void)didGetFriendRequests:(NSMutableDictionary *) dataDictionary{
     
-    NSLog(@"Yahooooo... \n %@",dataDictionaray);
+    NSLog(@"Yahooooo... \n %@",dataDictionary);
+
+    
+    if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
+        
+        [self.processIndicator stopAnimating];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
+    else
+    {
+        [requestsArray removeAllObjects];
+        
+        NSMutableDictionary *responseDict=[[dataDictionary valueForKey:RESPONSE_SUCCESS] mutableCopy];
+        
+        NSArray* getArray=[responseDict objectForKey:@"friendRequests"];
+        
+        for (NSDictionary *fDict in getArray) {
+        
+            [requestsArray addObject:fDict];
+        }
+        
+        NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:@"0",@"next", nil];
+        [self getFriendDetails:dict];
+        
+    }
+    
+}
+
+-(void) didGetFriendsList:(NSMutableDictionary *) dataDictionary{
+    
+    NSLog(@"Yahooooo... \n %@",dataDictionary);
     
     [self.processIndicator stopAnimating];
     
-    if ([dataDictionaray objectForKey:RESPONSE_ERROR]) {
+    if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
         
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionaray objectForKey:RESPONSE_ERROR]
+                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
                                                        delegate:self
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
@@ -102,7 +157,7 @@
     {
         [fbFriendsArray removeAllObjects];
         
-        NSMutableDictionary *responseDict=[[dataDictionaray valueForKey:RESPONSE_SUCCESS] mutableCopy];
+        NSMutableDictionary *responseDict=[[dataDictionary valueForKey:RESPONSE_SUCCESS] mutableCopy];
         
         NSArray* getArray=[responseDict objectForKey:@"friends"];
         
@@ -165,23 +220,6 @@
     [searchBarTop becomeFirstResponder];
 
 }
-//-(void)inviteFriends:(id)sender
-//{
-//    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-//    [login
-//     logInWithReadPermissions: @[@"email",@"user_friends",@"public_profile",@"user_about_me"]
-//     fromViewController:self
-//     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-//         if (error) {
-//             NSLog(@"Process error");
-//         } else if (result.isCancelled) {
-//             NSLog(@"Cancelled");
-//         } else {
-//             NSLog(@"Logged in");
-//             [self getFBFriendsList];
-//         }
-//     }];
-//}
 #pragma mark UISearchBarDelegate methods
 // called when cancel button pressed
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -196,25 +234,13 @@
     }
     [self.friendsTableView reloadData];
 }
-//- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
-//    
-//    
-//    return YES;
-//}
-// return NO to not become first responder
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    
-    
-}
+
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     
     [afOperation cancel];
-    
-//    dispatch_queue_t backgroundQueue = dispatch_queue_create("com.mycompany.myqueue", 0);
-//    
-//    dispatch_async(backgroundQueue, ^{
-        [self SearchFriend:searchText];
-//    });
+
+    [self SearchFriend:searchText];
+
     
     
 }
@@ -330,16 +356,94 @@
     
     }
 #pragma mark UITableViewDataSource and Delegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    
+    if (isSearch) {
+        return 1;
+    }else{
+        
+        if (requestsArray.count>0) {
+            return 2;
+        }else
+            return 1;
+    }
+}
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    
+    if (!isSearch) {
+        
+        if (requestsArray.count>0) {
+            if (section==0) {
+                return @"Friend Requests";
+            }else{
+                
+                return @"Friends";
+            }
+        }
+    }
+
+    return nil;
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (isSearch) {
         return searchFriendsArray.count;
-    }else
-    return fbFriendsArray.count;
+    }else{
+        if (requestsArray.count>0) {
+            if (section==0) {
+                return 1;
+            }else if (section==1){
+                return fbFriendsArray.count;
+            }
+            
+        }else{
+            return fbFriendsArray.count;
+        }
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (isSearch) {
+        
+       return [self MakeCellForTableView:tableView withData:searchFriendsArray withRow:indexPath];
+        
+    }else{
+        if (requestsArray.count>0) {
+            
+            if (indexPath.section==0) {
+               NSString* cellIdentifier=@"requestCell";
+                
+                UITableViewCell *cell=(UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+                
+                if (cell==nil)
+                {
+                    //NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PendingCell" owner:self options:nil];
+                    cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+                }
+                
+                cell.detailTextLabel.text=[NSString stringWithFormat:@"%lu",(unsigned long)requestsArray.count];
+                
+                return cell;
+
+                
+            }else{
+                 return [self MakeCellForTableView:tableView withData:fbFriendsArray withRow:indexPath];
+            }
+        }else{
+            return [self MakeCellForTableView:tableView withData:fbFriendsArray withRow:indexPath];
+        }
+       // fbObj=[fbFriendsArray objectAtIndex:indexPath.row];
+    }
+   
+    return nil;
+}
+
+-(UITableViewCell *)MakeCellForTableView:(UITableView *)tableView withData:(NSMutableArray *)dataArray withRow:(NSIndexPath *)indexPath{
+    
     static NSString *cellIdentifier=@"friendCell";
     
     FriendsCustomCell *cell=(FriendsCustomCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -352,36 +456,19 @@
     
     
     FriendsObject *fbObj;
+    fbObj=[dataArray objectAtIndex:indexPath.row];
     
-    if (isSearch) {
-        fbObj=[searchFriendsArray objectAtIndex:indexPath.row];
-    }else{
-        fbObj=[fbFriendsArray objectAtIndex:indexPath.row];
-    }
-    
-    
-   // NSDictionary *detailDict=[fbFriendsArray objectAtIndex:indexPath.row];
     cell.profileName.text=[NSString stringWithFormat:@"%@ %@",fbObj.firstname,fbObj.lastname];
-//    NSString *userImageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [detailDict objectForKey:@"id"]];
-//    
-//    
-//    
-//    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:userImageURL] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
-
-    
     if (fbObj.thumbnail.length>0) {
         NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:fbObj.thumbnail];
         cell.profileImage.image = [UIImage imageWithData:imageData];
     }else{
         cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
     }
-    
-    
-    //cell.profileName
-    
-    
     return cell;
+    
 }
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -419,6 +506,10 @@
         }
         
         
+    }else if ([segue.identifier isEqualToString:@"FRSegue"]){
+        
+        FriendRequestViewController *reqView=segue.destinationViewController;
+        [reqView setRequestArray:requestsArray];
     }
 }
 

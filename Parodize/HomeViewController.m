@@ -21,7 +21,6 @@
 #import "AcceptViewController.h"
 #import "User_Profile.h"
 
-
 @interface HomeViewController ()
 {
     UIImage  *mockImage;
@@ -56,10 +55,34 @@
     [singleTap setNumberOfTapsRequired:1];
     [self.iconImage addGestureRecognizer:singleTap];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushNotificationReceived:) name:@"pushNotification" object:nil];
+    
     
     
      NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
     
+}
+-(void)pushNotificationReceived:(NSNotification *)notify{
+    
+    if(notify.object!=nil){
+        notificationType notify_type=(notificationType)[notify.object intValue];
+        
+        switch (notify_type) {
+            case new_Challenge:
+                
+                [self acceptAction:nil];
+                
+                break;
+            case complete_Challenge:
+                
+                [self completeAction:nil];
+                
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -199,12 +222,11 @@
 
 - (IBAction)newAction:(id)sender
 {
-    //[self performSegueWithIdentifier:@"EditPhoto" sender:self];
     
-   // [self performSegueWithIdentifier:@"EditPhoto" sender:self];
-//    ImageEditingViewController *myController = [[ImageEditingViewController alloc]init];
-//    myController.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:myController animated:YES];
+//    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//    CamOverlayViewController *overlayView = [storyBoard instantiateViewControllerWithIdentifier:@"CamOverlayViewController"];
+//    
+//    [self presentViewController:overlayView animated:NO completion:nil];
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera])
     {

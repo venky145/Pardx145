@@ -46,5 +46,9 @@
 
 -(void)friendsDetails:(NSDictionary *)details forSender:(id)sender;
 
+-(void)friendRequests:(NSDictionary *)details forSender:(id)sender;
+
+-(void)friendRequestAccept:(NSDictionary *)details forSender:(id)sender;
+
 
 @end

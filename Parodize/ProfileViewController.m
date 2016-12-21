@@ -15,6 +15,8 @@
 #import "EditProfileViewController.h"
 #import "SplashViewController.h"
 #import "SWRevealViewController.h"
+#import "ProfileImageController.h"
+
 @interface ProfileViewController ()
 {
     NSMutableDictionary *userDict;
@@ -43,21 +45,25 @@
     
     self.followView.hidden=YES;
     
+    self.profileImage.userInteractionEnabled=YES;
     
-
-    dispatch_async(dispatch_get_main_queue(), ^(){
-        NSLog(@"A");
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"B");
-            
-        });
-        NSLog(@"C");
-    });
-    
-    NSLog(@"D");
+    UITapGestureRecognizer *singleTap =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileTouched:)];
+    [singleTap setNumberOfTapsRequired:1];
+    [self.profileImage addGestureRecognizer:singleTap];
     
     [self updateDetails:userProfile];
     
+}
+
+-(void)profileTouched:(id)sender
+{
+    ProfileImageController *profileView=[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ProfileImage"];
+    
+    profileView.profileData=self.profileImage.image;
+    
+    profileView.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0f, 1.0f);
+    
+    [self presentViewController:profileView animated:NO completion:nil];
 }
 -(void)viewWillAppear:(BOOL)animated
 {

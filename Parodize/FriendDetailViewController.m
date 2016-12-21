@@ -90,12 +90,18 @@
             self.infoLabel.text=@"about yourself";
         }
         
-        if ([fDetailObj.isFriend boolValue] == 1) {
+        if (fDetailObj.isFriend == 2) {
             
             _addView.hidden=YES;
             _challengeView.hidden=NO;
             
-        }else{
+        }else if (fDetailObj.isFriend == 1){
+            [_addFriendButton setTitle:@"Request Sent" forState:UIControlStateNormal];
+            _addFriendButton.enabled=NO;
+            _addView.hidden=NO;
+            _challengeView.hidden=YES;
+        }else if (fDetailObj.isFriend == 0){
+            [_addFriendButton setTitle:@"Add Friend" forState:UIControlStateNormal];
             _addView.hidden=NO;
             _challengeView.hidden=YES;
         }
@@ -131,6 +137,9 @@
 }
 
 - (IBAction)addFriendAction:(id)sender {
+    
+    if (![_addFriendButton.titleLabel.text isEqualToString:@"Request Sent"]) {
+    
     
     NSDictionary *detailDictV=[NSDictionary dictionaryWithObjectsAndKeys:fDetailObj.id,@"friend", nil];
     
@@ -183,8 +192,6 @@
              // NSLog(@"%@",responseObject);
              
              if ([responseObject objectForKey:RESPONSE_ERROR]) {
-                 
-                 
                  UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
                  
                  [alert show];
@@ -192,6 +199,7 @@
              }else
              {
                  [_addFriendButton setTitle:@"Request Sent" forState:UIControlStateNormal];
+                 _addFriendButton.enabled=NO;
              }
          }
          
@@ -208,6 +216,7 @@
      }];
     
     [manager.operationQueue addOperation:operation];
+    }
     
 }
 @end

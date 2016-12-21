@@ -141,6 +141,18 @@
     [self sendRequestURL:requestURL forType:eCloudFriendDetailsPost withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
     
 }
+-(void)friendRequests:(NSDictionary *)details forSender:(id)sender{
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,ACCEPT_FRIEND];
+    
+        [self sendRequestURL:requestURL forType:eCloudFriendRequestsGet forSender:sender withHttpMethod:eGET withHeader:YES];
+}
+-(void)friendRequestAccept:(NSDictionary *)details forSender:(id)sender{
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,ACCEPT_FRIEND];
+    
+    [self sendRequestURL:requestURL forType:eCloudFriendRequestsPost withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
+    
+}
 - (void) fetchDataForURL:(NSString *) url userInfo:(NSDictionary *) userInfo postTypeMethod:(int)methodType headerAutherization:(BOOL)iSheadReqAuth
 {
     NSString *requestMethod;
@@ -269,6 +281,13 @@
             break;
         case eCloudFriendDetailsPost:
             [[DataManager sharedDataManager] webEngine:self sender:sender didGetFriendDetails: responseObject];
+            break;
+            
+        case eCloudFriendRequestsGet:
+            [[DataManager sharedDataManager] webEngine:self sender:sender didGetFriendRequests: responseObject];
+            break;
+        case eCloudFriendRequestsPost:
+            [[DataManager sharedDataManager] webEngine:self sender:sender didPostFriendAccept: responseObject];
             break;
         
         default:

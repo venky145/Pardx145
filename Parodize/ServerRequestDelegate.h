@@ -41,6 +41,10 @@
 
 - (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetFriendDetails:(NSMutableDictionary *) dataDictionaray;
 
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetFriendRequests:(NSMutableDictionary *) dataDictionaray;
+
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didPostFriendAccept:(NSMutableDictionary *) dataDictionaray;
+
 
 
 //Did failed request

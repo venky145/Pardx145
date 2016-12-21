@@ -16,6 +16,6 @@
 @property (nonatomic) NSString *id;
 @property (nonatomic) NSString *thumbnail;
 @property (nonatomic) NSString *lastname;
-@property (nonatomic) NSString *isFriend;
+@property (nonatomic) int isFriend;
 
 @end
