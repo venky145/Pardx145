@@ -53,6 +53,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loginIndicatorView;
 
 @property (weak, nonatomic) IBOutlet UILabel *loginName;
+@property (weak, nonatomic) IBOutlet UIView *errorView;
 
 
 @end

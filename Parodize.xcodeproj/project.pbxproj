@@ -10,10 +10,13 @@
 		184331E81DF9500500A80FE0 /* PendingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184331E71DF9500500A80FE0 /* PendingTableViewController.m */; };
 		184331EC1DFDDEBF00A80FE0 /* FriendDetailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 184331EB1DFDDEBE00A80FE0 /* FriendDetailObject.m */; };
 		188CEEC71DD110D00093CD54 /* Release-iphone in Resources */ = {isa = PBXBuildFile; fileRef = 188CEEC61DD110D00093CD54 /* Release-iphone */; };
+		18AC02131E01DF0A0026B376 /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AC02121E01DF0A0026B376 /* FriendRequestViewController.m */; };
+		18AC02191E01DFA60026B376 /* FriendRequestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AC02181E01DFA60026B376 /* FriendRequestCell.m */; };
 		18DCE4391DD1168700166BC3 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DCE4381DD1168700166BC3 /* GPUImage.framework */; };
 		18DCE43A1DD117A400166BC3 /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188CEEC91DD111640093CD54 /* libGPUImage.a */; };
 		18DCE4431DD502E900166BC3 /* FriendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DCE4421DD502E900166BC3 /* FriendDetailViewController.m */; };
 		18DCE4471DD849EA00166BC3 /* FriendsObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DCE4461DD849EA00166BC3 /* FriendsObject.m */; };
+		18E58E731DFF24C10062FACC /* ProfileImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E58E721DFF24C10062FACC /* ProfileImageController.m */; };
 		18E5BA6B1DE82E3400A5FEF5 /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 188CEEC51DD1109C0093CD54 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		18E8C33A1DF907DF0031FE9C /* FromClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E8C3391DF907DE0031FE9C /* FromClass.m */; };
 		18EAFE031DDABC0600A79735 /* DrawLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EAFE001DDABC0600A79735 /* DrawLine.m */; };
@@ -281,12 +284,18 @@
 		188CEEBC1DD1109C0093CD54 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = "../../../Documents/GPUImage-master/framework/GPUImage.xcodeproj"; sourceTree = "<group>"; };
 		188CEEC61DD110D00093CD54 /* Release-iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Release-iphone"; path = "../../../Documents/GPUImage-master/build/Release-iphone"; sourceTree = "<group>"; };
 		188CEEC91DD111640093CD54 /* libGPUImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGPUImage.a; path = "../../../Library/Developer/Xcode/DerivedData/Parodize-eoqtieahpprbnvcfunqbicctxwnd/Build/Products/Debug-iphoneos/libGPUImage.a"; sourceTree = "<group>"; };
+		18AC02111E01DF0A0026B376 /* FriendRequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequestViewController.h; sourceTree = "<group>"; };
+		18AC02121E01DF0A0026B376 /* FriendRequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequestViewController.m; sourceTree = "<group>"; };
+		18AC02171E01DFA60026B376 /* FriendRequestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequestCell.h; sourceTree = "<group>"; };
+		18AC02181E01DFA60026B376 /* FriendRequestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequestCell.m; sourceTree = "<group>"; };
 		18DCE4381DD1168700166BC3 /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPUImage.framework; path = "../../../Library/Developer/Xcode/DerivedData/Parodize-eoqtieahpprbnvcfunqbicctxwnd/Build/Products/Debug-iphoneos/GPUImage.framework"; sourceTree = "<group>"; };
 		18DCE4401DD385F100166BC3 /* Parodize.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Parodize.entitlements; sourceTree = "<group>"; };
 		18DCE4411DD502E900166BC3 /* FriendDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailViewController.h; sourceTree = "<group>"; };
 		18DCE4421DD502E900166BC3 /* FriendDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDetailViewController.m; sourceTree = "<group>"; };
 		18DCE4451DD849EA00166BC3 /* FriendsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsObject.h; sourceTree = "<group>"; };
 		18DCE4461DD849EA00166BC3 /* FriendsObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsObject.m; sourceTree = "<group>"; };
+		18E58E711DFF24C10062FACC /* ProfileImageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileImageController.h; sourceTree = "<group>"; };
+		18E58E721DFF24C10062FACC /* ProfileImageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileImageController.m; sourceTree = "<group>"; };
 		18E8C3381DF907DE0031FE9C /* FromClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FromClass.h; sourceTree = "<group>"; };
 		18E8C3391DF907DE0031FE9C /* FromClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FromClass.m; sourceTree = "<group>"; };
 		18EAFDFF1DDABC0600A79735 /* DrawLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawLine.h; sourceTree = "<group>"; };
@@ -1036,6 +1045,8 @@
 				596D819B1D0B38B4008270AF /* EditProfileViewController.m */,
 				596D819D1D0B3EF8008270AF /* EditProfileCell.h */,
 				596D819E1D0B3EF8008270AF /* EditProfileCell.m */,
+				18E58E711DFF24C10062FACC /* ProfileImageController.h */,
+				18E58E721DFF24C10062FACC /* ProfileImageController.m */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1051,6 +1062,10 @@
 				18DCE4461DD849EA00166BC3 /* FriendsObject.m */,
 				184331EA1DFDDEBE00A80FE0 /* FriendDetailObject.h */,
 				184331EB1DFDDEBE00A80FE0 /* FriendDetailObject.m */,
+				18AC02111E01DF0A0026B376 /* FriendRequestViewController.h */,
+				18AC02121E01DF0A0026B376 /* FriendRequestViewController.m */,
+				18AC02171E01DFA60026B376 /* FriendRequestCell.h */,
+				18AC02181E01DFA60026B376 /* FriendRequestCell.m */,
 			);
 			name = Friends;
 			sourceTree = "<group>";
@@ -1365,7 +1380,7 @@
 		C35F4AB31BC6F64C0006CDCE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Parodize;
 				TargetAttributes = {
 					C35F4ABA1BC6F64C0006CDCE = {
@@ -1561,6 +1576,7 @@
 				596AA25C1D1DA6BE00068AA2 /* ILHuePickerView.m in Sources */,
 				598756A71CF1BB5A0039C6E5 /* AFHTTPSessionManager.m in Sources */,
 				59CA63C31D13BA42009B3073 /* UIImage+FiltrrCompositions.m in Sources */,
+				18AC02191E01DFA60026B376 /* FriendRequestCell.m in Sources */,
 				598756A81CF1BB5A0039C6E5 /* AFNetworkReachabilityManager.m in Sources */,
 				C3E2CA111BCA6082002355B4 /* SDImageCache.m in Sources */,
 				C35F4AE91BC6F9970006CDCE /* SplashViewController.m in Sources */,
@@ -1575,6 +1591,7 @@
 				596AA25A1D1DA6BE00068AA2 /* ILView.m in Sources */,
 				598608101CEA4E5900368050 /* SignUpCustomCell.m in Sources */,
 				C3E2C9E81BCA472B002355B4 /* SBJsonStreamWriterAccumulator.m in Sources */,
+				18AC02131E01DF0A0026B376 /* FriendRequestViewController.m in Sources */,
 				C353572D1BE5BF40003113D8 /* AcceptViewController.m in Sources */,
 				C3E2CA1B1BCA6082002355B4 /* UIImage+WebP.m in Sources */,
 				C3E2C9E41BCA472B002355B4 /* SBJsonStreamParserAccumulator.m in Sources */,
@@ -1589,6 +1606,7 @@
 				598756BE1CF1BB660039C6E5 /* UIRefreshControl+AFNetworking.m in Sources */,
 				598756AC1CF1BB5A0039C6E5 /* AFURLResponseSerialization.m in Sources */,
 				C36024181BD8229F000596F6 /* DistanceViewController.m in Sources */,
+				18E58E731DFF24C10062FACC /* ProfileImageController.m in Sources */,
 				596AA25D1D1DA6BE00068AA2 /* ILSaturationBrightnessPickerView.m in Sources */,
 				598608071CEA457200368050 /* SignUpPageViewController.m in Sources */,
 				5986080A1CEA459500368050 /* ProfileImageViewController.m in Sources */,
@@ -1721,8 +1739,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1766,8 +1786,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

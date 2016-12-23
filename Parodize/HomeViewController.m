@@ -223,12 +223,12 @@
 - (IBAction)newAction:(id)sender
 {
     
-//    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//    CamOverlayViewController *overlayView = [storyBoard instantiateViewControllerWithIdentifier:@"CamOverlayViewController"];
-//    
-//    [self presentViewController:overlayView animated:NO completion:nil];
+    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    CamOverlayViewController *overlayView = [storyBoard instantiateViewControllerWithIdentifier:@"CamOverlayViewController"];
+    
+    [self presentViewController:overlayView animated:NO completion:nil];
 
-    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera])
+ /*   if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera])
     {
         CGRect screenBound = [[UIScreen mainScreen] bounds];
         CGSize screenSize = screenBound.size;
@@ -371,7 +371,7 @@
             [alert show];
             
         }
-    }
+    }*/
 
 }
 

@@ -27,10 +27,12 @@
 #pragma mark Server-API's
 
 #define kBaseAPI   @"http://parodizeserverapi.com/parodize/version_one/"
+//https://parodizeserverapi.com/parodize/version_one/user/reset/password
 
 #define SIGN_UP_API            @"user/signup"
 #define FB_API                 @"user/signup/facebook"
 #define LOGIN_API              @"user/login"
+#define RESET_PASSWORD         @"user/reset/password"
 #define PROFILE_PICTURE        @"user/update/profilepicture"
 #define INFORMATION_API        @"user/update/information"
 #define PROFILE_DETAILS        @"user/profile"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="oCd-uj-s5e">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="oCd-uj-s5e">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -1360,6 +1360,9 @@
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xHs-dp-8TS">
                                         <rect key="frame" x="-5" y="234" width="385" height="29"/>
                                         <color key="backgroundColor" red="0.20392156859999999" green="0.72156862749999995" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="AJ5-eC-7cm"/>
+                                        </constraints>
                                         <segments>
                                             <segment title="Message"/>
                                             <segment title="Parodize!"/>
@@ -2279,7 +2282,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uew-OM-HiK">
-                                <rect key="frame" x="37" y="239.5" width="301" height="188"/>
+                                <rect key="frame" x="37" y="240" width="301" height="188"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yaR-YQ-Ce5">
                                         <rect key="frame" x="44" y="49" width="213" height="37"/>
@@ -2369,7 +2372,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lk1-bV-36K">
-                                <rect key="frame" x="172.5" y="536.5" width="30" height="30"/>
+                                <rect key="frame" x="173" y="537" width="30" height="30"/>
                                 <state key="normal" image="Cancel_Icon.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -2395,20 +2398,43 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BKc-zd-nxA">
+                                <rect key="frame" x="0.0" y="-40" width="375" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter email id" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7d-LI-aYE">
+                                        <rect key="frame" x="8" y="19" width="359" height="21"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.85098039219999999" green="0.30841265029999998" blue="0.31072726779999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="w7d-LI-aYE" firstAttribute="trailing" secondItem="BKc-zd-nxA" secondAttribute="trailingMargin" id="Jjx-40-2vL"/>
+                                    <constraint firstItem="w7d-LI-aYE" firstAttribute="leading" secondItem="BKc-zd-nxA" secondAttribute="leadingMargin" id="NGp-5f-hR7"/>
+                                    <constraint firstAttribute="bottom" secondItem="w7d-LI-aYE" secondAttribute="bottom" id="WsW-gB-4UT"/>
+                                    <constraint firstItem="w7d-LI-aYE" firstAttribute="top" secondItem="BKc-zd-nxA" secondAttribute="top" constant="19" id="k7o-Jk-ygt"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="BKc-zd-nxA" firstAttribute="centerX" secondItem="IL6-Vx-3cg" secondAttribute="centerX" id="6Tz-Aw-C8r"/>
                             <constraint firstItem="ux8-Xa-xWg" firstAttribute="top" secondItem="9k5-m4-tgI" secondAttribute="bottom" constant="13" id="7ez-uT-wL1"/>
                             <constraint firstItem="3BD-mR-pgi" firstAttribute="top" secondItem="GXE-Zn-N7F" secondAttribute="bottom" constant="8" symbolic="YES" id="ADX-IR-QMw"/>
                             <constraint firstItem="ux8-Xa-xWg" firstAttribute="top" secondItem="CD9-K8-1Ve" secondAttribute="bottom" id="B9D-YF-Gts"/>
+                            <constraint firstItem="BKc-zd-nxA" firstAttribute="leading" secondItem="co8-SW-RZi" secondAttribute="leading" id="C3m-KP-f4c"/>
                             <constraint firstItem="CD9-K8-1Ve" firstAttribute="top" secondItem="tlM-Ul-FyR" secondAttribute="bottom" constant="-20" id="Kjh-g2-ee9"/>
                             <constraint firstItem="lk1-bV-36K" firstAttribute="centerX" secondItem="uew-OM-HiK" secondAttribute="centerX" id="LZH-c2-9zV"/>
                             <constraint firstItem="lk1-bV-36K" firstAttribute="top" secondItem="uew-OM-HiK" secondAttribute="bottom" constant="109" id="Q04-Pu-EhM"/>
+                            <constraint firstItem="CD9-K8-1Ve" firstAttribute="top" secondItem="BKc-zd-nxA" secondAttribute="bottom" id="Q8z-XJ-S2z"/>
                             <constraint firstItem="3BD-mR-pgi" firstAttribute="trailing" secondItem="IL6-Vx-3cg" secondAttribute="trailing" id="QpM-YF-lYg"/>
                             <constraint firstItem="9k5-m4-tgI" firstAttribute="leading" secondItem="co8-SW-RZi" secondAttribute="leadingMargin" constant="79" id="S5i-yq-zv5"/>
                             <constraint firstItem="3BD-mR-pgi" firstAttribute="leading" secondItem="uew-OM-HiK" secondAttribute="leading" id="UGA-cc-9Ee"/>
                             <constraint firstItem="ux8-Xa-xWg" firstAttribute="top" secondItem="uew-OM-HiK" secondAttribute="bottom" constant="190" id="XUz-YH-xwZ"/>
                             <constraint firstItem="uew-OM-HiK" firstAttribute="centerX" secondItem="co8-SW-RZi" secondAttribute="centerX" id="cQc-uO-OzE"/>
+                            <constraint firstItem="BKc-zd-nxA" firstAttribute="top" secondItem="co8-SW-RZi" secondAttribute="topMargin" constant="-40" id="cmj-ss-2Yg"/>
                             <constraint firstItem="3BD-mR-pgi" firstAttribute="leading" secondItem="IL6-Vx-3cg" secondAttribute="leading" id="e7e-Tu-k9P"/>
                             <constraint firstItem="3BD-mR-pgi" firstAttribute="trailing" secondItem="uew-OM-HiK" secondAttribute="trailing" id="ejN-pJ-dNP"/>
                             <constraint firstItem="uew-OM-HiK" firstAttribute="top" secondItem="tlM-Ul-FyR" secondAttribute="bottom" constant="170" id="f7F-bY-KtQ"/>
@@ -2430,6 +2456,7 @@
                     <connections>
                         <outlet property="closeButton" destination="lk1-bV-36K" id="taJ-iM-U1I"/>
                         <outlet property="emailButton" destination="myT-Vl-sgL" id="nHR-3h-L0g"/>
+                        <outlet property="errorView" destination="BKc-zd-nxA" id="wqE-DS-e1d"/>
                         <outlet property="fbButton" destination="yaR-YQ-Ce5" id="5JK-yq-gnM"/>
                         <outlet property="loginIndicatorView" destination="GXE-Zn-N7F" id="g5I-p0-hrG"/>
                         <outlet property="loginName" destination="3BD-mR-pgi" id="b6H-R5-dt4"/>
@@ -2443,7 +2470,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G1y-zc-hs4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1497" y="0.0"/>
+            <point key="canvasLocation" x="-1498.4000000000001" y="-0.44977511244377816"/>
         </scene>
         <!--Reveal View Controller-->
         <scene sceneID="arZ-oF-Qbq">

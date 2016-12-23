@@ -9,6 +9,7 @@
 #import "FriendDetailViewController.h"
 #import "FriendDetailObject.h"
 #import "User_Profile.h"
+#import "CamOverlayViewController.h"
 
 @interface FriendDetailViewController (){
     
@@ -134,6 +135,11 @@
 }
 
 - (IBAction)challengeAction:(id)sender {
+    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    CamOverlayViewController *overlayView = [storyBoard instantiateViewControllerWithIdentifier:@"CamOverlayViewController"];
+    
+    [self presentViewController:overlayView animated:NO completion:nil];
+
 }
 
 - (IBAction)addFriendAction:(id)sender {

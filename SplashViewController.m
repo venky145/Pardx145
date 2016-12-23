@@ -19,6 +19,7 @@
     UIImageView *pdImage;
     BOOL side2Visible;
     NSMutableDictionary *fbDetails;
+    BOOL isError;
 }
 @end
 
@@ -302,8 +303,133 @@
 }
 - (IBAction)forgotPassAction:(id)sender
 {
+
+    if (!isError) {
+        
+        isError=YES;
+    
+    [self.userNameTextField becomeFirstResponder];
+    
+    self.errorView.hidden=NO;
+    
+    CGRect frameRect=self.errorView.frame;
+    
+    __block CGRect newRect = frameRect;
+    
+    [UIView transitionWithView:self.errorView
+                      duration:0.5
+                       options:UIViewAnimationOptionTransitionNone
+                    animations:^{
+                        
+                        
+                        
+                        newRect.origin.y=0;
+                        
+                        self.errorView.frame=newRect;
+                    }
+                    completion:^(BOOL finished) {
+                        
+                        [NSTimer scheduledTimerWithTimeInterval:0.5 target:[NSBlockOperation blockOperationWithBlock:^{
+                
+                            [UIView transitionWithView:self.errorView
+                                              duration:0.5
+                                               options:UIViewAnimationOptionTransitionNone
+                                            animations:^{
+                                                
+                                                //newRect.origin.y=self.errorView.frame.size.height;
+                                                self.errorView.frame=frameRect;
+                                            }
+                                            completion:^(BOOL finished) {
+                                                
+                                                self.errorView.hidden=YES;
+                                                isError=NO;
+                                                
+                                            }];
+
+                        
+                        }] selector:@selector(main) userInfo:nil repeats:NO];
+                    }];
+    }
     
     
+    
+   /* NSDictionary *detailDictV=[NSDictionary dictionaryWithObjectsAndKeys:fDetailObj.id,@"email", nil];
+    
+    NSString *requestMethod =@"POST";
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,RESET_PASSWORD];
+    
+    
+    NSError *error;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    
+    __block NSMutableURLRequest *request = [manager.requestSerializer
+                                            multipartFormRequestWithMethod:requestMethod
+                                            URLString:requestURL
+                                            parameters:nil
+                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                            } error:&error];
+    
+    NSDictionary *jsonDict = @{
+                               @"postdata": detailDictV
+                               };
+    request.userInfo = jsonDict;
+    
+    if ([jsonDict objectForKey:@"postdata"] != nil)
+    {
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:[jsonDict objectForKey:@"postdata"] options:NSUTF8StringEncoding error:&error];
+        [request setHTTPBody:(NSMutableData *)data];
+    }
+    
+    //request.timeoutInterval = 60.0;
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSLog(@" Autherization Header required");
+    NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
+    [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
+    
+    
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if(responseObject)
+         {
+             // NSLog(@"%@",responseObject);
+             
+             if ([responseObject objectForKey:RESPONSE_ERROR]) {
+                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
+                 
+                 [alert show];
+                 
+             }else
+             {
+                 [_addFriendButton setTitle:@"Request Sent" forState:UIControlStateNormal];
+                 _addFriendButton.enabled=NO;
+             }
+         }
+         
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"Request failed");
+         
+         if (!operation.cancelled) {
+             NSLog(@"Cancelled");
+             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
+             
+             [alert show];
+         }
+     }];
+    
+    [manager.operationQueue addOperation:operation];
+}
+*/
 }
 
 - (IBAction)loginFaceBookAction:(id)sender {

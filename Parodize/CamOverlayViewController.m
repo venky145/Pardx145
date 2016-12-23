@@ -10,6 +10,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
+#import "ImageEditingViewController.h"
+#import "AppDelegate.h"
 
 @interface CamOverlayViewController (){
     
@@ -164,9 +166,15 @@
                                                 }];
         
         
-        [self presentViewController:self.picker animated:NO completion:nil];
+        //[self presentViewController:self.picker animated:NO completion:nil];
         
 //        [self.view addSubview:self.picker];
+        
+        [self addChildViewController:self.picker];
+        [self.picker didMoveToParentViewController:self];
+        [self.view addSubview:self.picker.view];
+        
+        
     }
     else
     {
@@ -238,7 +246,16 @@
 }
 -(void)cancelCamera:(id)sender
 {
-    [self.picker dismissViewControllerAnimated:YES completion:nil];
+//    [self.picker dismissViewControllerAnimated:NO completion:^{
+//        
+//        self.picker=nil;
+//        [self dismissViewControllerAnimated:YES completion:nil];
+//    }];
+    
+    [self.picker.view removeFromSuperview];
+    [self.picker removeFromParentViewController];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 -(void)snapButtonPressed:(id)sender
 {
@@ -298,11 +315,43 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
 {
-    NSLog(@"imageDone");
-}
+    }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSLog(@"Done");
+    NSLog(@"imageDone");
+    UIImage *originalImage=info[UIImagePickerControllerOriginalImage];
+    
+    AppDelegate *appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    appDelegate.getNewImage=originalImage;
+    
+    //    UIImageWriteToSavedPhotosAlbum(getImage, nil, nil, nil);
+    //    UIImageWriteToSavedPhotosAlbum(getImage,
+    //                                   self, // send the message to 'self' when calling the callback
+    //                                   @selector(thisImage:hasBeenSavedInPhotoAlbumWithError:usingContextInfo:), // the selector to tell the method to call on completion
+    //                                   NULL); // you generally won't need a contextInfo here
+    
+    //    [self dismissViewControllerAnimated:NO completion:^{
+    
+    if (imagePicker) {
+        
+        [imagePicker dismissViewControllerAnimated:YES completion:nil];
+        imagePicker=nil;
+    }
+    
+    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    ImageEditingViewController *tabView = [storyBoard instantiateViewControllerWithIdentifier:@"editPhoto"];
+    //tabView.hidesBottomBarWhenPushed = YES;
+    
+    [self.picker presentViewController:tabView animated:YES completion:nil];
+    
+    
+    // [self performSegueWithIdentifier:@"editPhoto" sender:self];
+    
+    //   }];
+
+    
+    
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
