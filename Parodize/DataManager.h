@@ -34,6 +34,8 @@
 
 -(void)requestAcceptChallenges:(NSDictionary *)details forSender:(id)sender;
 
+-(void)requestAcceptParticular:(NSDictionary *)details forSender:(id)sender;
+
 -(void)requestCompletedChallenges:(NSDictionary *)details forSender:(id)sender;
 
 -(void)requestPendingChallenges:(NSDictionary *)details forSender:(id)sender;

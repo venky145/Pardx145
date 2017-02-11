@@ -32,12 +32,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-//    cameraButton.layer.cornerRadius=cameraButton.frame.size.height/2;
-//    cameraButton.layer.borderWidth=2.0f;
-//    cameraButton.layer.borderColor=[UIColor whiteColor].CGColor;
-//    cameraButton.layer.masksToBounds=YES;
-    
+
     
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -45,6 +40,8 @@
     [self cameraScreen];
     
 }
+
+
 -(void)cameraScreen{
     
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera])
@@ -116,7 +113,7 @@
         [self.recentImage addGestureRecognizer:singleTap];
         
         self.recentImage.clipsToBounds = YES;
-        self.recentImage.layer.cornerRadius = self.recentImage.frame.size.width / 2.0f;
+        //self.recentImage.layer.cornerRadius = self.recentImage.frame.size.width / 2.0f;
         self.recentImage.layer.borderColor = [UIColor whiteColor].CGColor;
         self.recentImage.layer.borderWidth = 2.0f;
         self.recentImage.userInteractionEnabled = YES; //disabled by default
@@ -178,25 +175,14 @@
     }
     else
     {
-        if ([UIAlertController class])
-        {
-            
+        
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Camera not found" message:nil preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
             [alertController addAction:ok];
             
             [self presentViewController:alertController animated:YES completion:nil];
-            
-        }
-        else
-        {
-            
-            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Camera Not Found" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            
-            [alert show];
-            
-        }
+        
     }
 }
 -(UIColor*)colorWithHexString:(NSString*)hex
@@ -233,7 +219,6 @@
                             blue:((float) b / 255.0f)
                            alpha:1.0f];
 }
-
 -(void)openPhotoLibrary:(UITapGestureRecognizer *)gesture
 {
     imagePicker = [[UIImagePickerController alloc] init];
@@ -241,7 +226,7 @@
     imagePicker.allowsEditing = YES;
     imagePicker.navigationBar.translucent = false;
     imagePicker.navigationBar.barTintColor = [[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
-    imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     [self.picker presentViewController:imagePicker animated:YES completion:nil];
 }
 -(void)cancelCamera:(id)sender

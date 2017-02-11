@@ -7,11 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18045DF31E46187B00A158B6 /* InitialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18045DF21E46187B00A158B6 /* InitialView.m */; };
+		184248BE1E332F620024D33E /* AcceptCompareController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184248BD1E332F620024D33E /* AcceptCompareController.m */; };
+		184248C51E34DAE80024D33E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184248C41E34DAE80024D33E /* SettingsViewController.m */; };
+		184248C81E34E1F60024D33E /* SettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 184248C71E34E1F60024D33E /* SettingsCell.m */; };
+		184248CB1E34E2090024D33E /* SettingsDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 184248CA1E34E2090024D33E /* SettingsDeleteCell.m */; };
 		184331E81DF9500500A80FE0 /* PendingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184331E71DF9500500A80FE0 /* PendingTableViewController.m */; };
 		184331EC1DFDDEBF00A80FE0 /* FriendDetailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 184331EB1DFDDEBE00A80FE0 /* FriendDetailObject.m */; };
 		188CEEC71DD110D00093CD54 /* Release-iphone in Resources */ = {isa = PBXBuildFile; fileRef = 188CEEC61DD110D00093CD54 /* Release-iphone */; };
+		189AD5931E118D1B00A79FBE /* CameraProfile_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 189AD5921E118D1B00A79FBE /* CameraProfile_1.png */; };
 		18AC02131E01DF0A0026B376 /* FriendRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AC02121E01DF0A0026B376 /* FriendRequestViewController.m */; };
 		18AC02191E01DFA60026B376 /* FriendRequestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AC02181E01DFA60026B376 /* FriendRequestCell.m */; };
+		18C406E81E3A923100DDB806 /* User_Profile+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C406E61E3A923100DDB806 /* User_Profile+CoreDataProperties.m */; };
+		18C406F71E3B486600DDB806 /* GPUImageGrayscaleFilterOne.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C406F61E3B486600DDB806 /* GPUImageGrayscaleFilterOne.m */; };
 		18DCE4391DD1168700166BC3 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DCE4381DD1168700166BC3 /* GPUImage.framework */; };
 		18DCE43A1DD117A400166BC3 /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188CEEC91DD111640093CD54 /* libGPUImage.a */; };
 		18DCE4431DD502E900166BC3 /* FriendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DCE4421DD502E900166BC3 /* FriendDetailViewController.m */; };
@@ -21,6 +29,8 @@
 		18E8C33A1DF907DF0031FE9C /* FromClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E8C3391DF907DE0031FE9C /* FromClass.m */; };
 		18EAFE031DDABC0600A79735 /* DrawLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EAFE001DDABC0600A79735 /* DrawLine.m */; };
 		18EAFE041DDABC0600A79735 /* PenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EAFE021DDABC0600A79735 /* PenViewController.m */; };
+		18F05B281E43B8640039723F /* UserMale.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F05B271E43B8640039723F /* UserMale.png */; };
+		18F05B2F1E4490040039723F /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F05B2E1E4490040039723F /* SignInViewController.m */; };
 		590B7FB11D44E287009337DC /* CompletedModelClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 590B7FB01D44E287009337DC /* CompletedModelClass.m */; };
 		590B7FB91D44E662009337DC /* CompletedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 590B7FB81D44E662009337DC /* CompletedCell.m */; };
 		590B7FBC1D44E670009337DC /* PendingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 590B7FBB1D44E670009337DC /* PendingCell.m */; };
@@ -99,7 +109,6 @@
 		598756BF1CF1BB660039C6E5 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 598756B71CF1BB660039C6E5 /* UIWebView+AFNetworking.m */; };
 		598835EE1CF233FA004E20E7 /* NSMutableURLRequest+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 598835ED1CF233FA004E20E7 /* NSMutableURLRequest+Additions.m */; };
 		5998C1C61C9A64C6006FA800 /* PlayGroundCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5998C1C51C9A64C6006FA800 /* PlayGroundCollectionViewCell.m */; };
-		59A412D61D06073400C2A666 /* User_Profile+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A412D31D06073400C2A666 /* User_Profile+CoreDataProperties.m */; };
 		59A412D71D06073400C2A666 /* User_Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A412D51D06073400C2A666 /* User_Profile.m */; };
 		59C7F09E1D19AAF800401B12 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C7F09D1D19AAF800401B12 /* CoreMedia.framework */; };
 		59C7F0A01D19AAFF00401B12 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C7F09F1D19AAFF00401B12 /* CoreVideo.framework */; };
@@ -119,7 +128,6 @@
 		C353570A1BDBF843003113D8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C35357091BDBF843003113D8 /* CFNetwork.framework */; };
 		C353570D1BDBF867003113D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C353570B1BDBF867003113D8 /* CoreGraphics.framework */; };
 		C353570E1BDBF867003113D8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C353570C1BDBF867003113D8 /* CoreLocation.framework */; };
-		C35357101BDBF883003113D8 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C353570F1BDBF883003113D8 /* StoreKit.framework */; };
 		C35357121BDBF890003113D8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C35357111BDBF890003113D8 /* Security.framework */; };
 		C35357141BDBF8A7003113D8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C35357131BDBF8A7003113D8 /* SystemConfiguration.framework */; };
 		C35357161BDBF8C9003113D8 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C35357151BDBF8C9003113D8 /* libz.tbd */; };
@@ -218,7 +226,6 @@
 		C3E2CA1C1BCA6082002355B4 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E2CA0A1BCA6082002355B4 /* UIImageView+HighlightedWebCache.m */; };
 		C3E2CA1D1BCA6082002355B4 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E2CA0C1BCA6082002355B4 /* UIImageView+WebCache.m */; };
 		C3E2CA1E1BCA6082002355B4 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E2CA0E1BCA6082002355B4 /* UIView+WebCacheOperation.m */; };
-		C3E2CA201BCA61D5002355B4 /* UserMale.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E2CA1F1BCA61D5002355B4 /* UserMale.png */; };
 		C3E2CA221BCAE608002355B4 /* Pd_Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E2CA211BCAE608002355B4 /* Pd_Icon.png */; };
 		C3E2CA261BCC4D40002355B4 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E2CA251BCC4D40002355B4 /* Accounts.framework */; };
 		C3E2CA351BCC5823002355B4 /* Twitter_Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E2CA331BCC5823002355B4 /* Twitter_Icon.png */; };
@@ -277,6 +284,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		18045DF11E46187B00A158B6 /* InitialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InitialView.h; sourceTree = "<group>"; };
+		18045DF21E46187B00A158B6 /* InitialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InitialView.m; sourceTree = "<group>"; };
+		184248BC1E332F620024D33E /* AcceptCompareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AcceptCompareController.h; sourceTree = "<group>"; };
+		184248BD1E332F620024D33E /* AcceptCompareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AcceptCompareController.m; sourceTree = "<group>"; };
+		184248C31E34DAE80024D33E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		184248C41E34DAE80024D33E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		184248C61E34E1F60024D33E /* SettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsCell.h; sourceTree = "<group>"; };
+		184248C71E34E1F60024D33E /* SettingsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsCell.m; sourceTree = "<group>"; };
+		184248C91E34E2090024D33E /* SettingsDeleteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsDeleteCell.h; sourceTree = "<group>"; };
+		184248CA1E34E2090024D33E /* SettingsDeleteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsDeleteCell.m; sourceTree = "<group>"; };
 		184331E61DF9500500A80FE0 /* PendingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PendingTableViewController.h; sourceTree = "<group>"; };
 		184331E71DF9500500A80FE0 /* PendingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PendingTableViewController.m; sourceTree = "<group>"; };
 		184331EA1DFDDEBE00A80FE0 /* FriendDetailObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailObject.h; sourceTree = "<group>"; };
@@ -284,10 +301,15 @@
 		188CEEBC1DD1109C0093CD54 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = "../../../Documents/GPUImage-master/framework/GPUImage.xcodeproj"; sourceTree = "<group>"; };
 		188CEEC61DD110D00093CD54 /* Release-iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Release-iphone"; path = "../../../Documents/GPUImage-master/build/Release-iphone"; sourceTree = "<group>"; };
 		188CEEC91DD111640093CD54 /* libGPUImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGPUImage.a; path = "../../../Library/Developer/Xcode/DerivedData/Parodize-eoqtieahpprbnvcfunqbicctxwnd/Build/Products/Debug-iphoneos/libGPUImage.a"; sourceTree = "<group>"; };
+		189AD5921E118D1B00A79FBE /* CameraProfile_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CameraProfile_1.png; sourceTree = "<group>"; };
 		18AC02111E01DF0A0026B376 /* FriendRequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequestViewController.h; sourceTree = "<group>"; };
 		18AC02121E01DF0A0026B376 /* FriendRequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequestViewController.m; sourceTree = "<group>"; };
 		18AC02171E01DFA60026B376 /* FriendRequestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendRequestCell.h; sourceTree = "<group>"; };
 		18AC02181E01DFA60026B376 /* FriendRequestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendRequestCell.m; sourceTree = "<group>"; };
+		18C406E51E3A923100DDB806 /* User_Profile+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "User_Profile+CoreDataProperties.h"; sourceTree = "<group>"; };
+		18C406E61E3A923100DDB806 /* User_Profile+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "User_Profile+CoreDataProperties.m"; sourceTree = "<group>"; };
+		18C406F51E3B486600DDB806 /* GPUImageGrayscaleFilterOne.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageGrayscaleFilterOne.h; sourceTree = "<group>"; };
+		18C406F61E3B486600DDB806 /* GPUImageGrayscaleFilterOne.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageGrayscaleFilterOne.m; sourceTree = "<group>"; };
 		18DCE4381DD1168700166BC3 /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPUImage.framework; path = "../../../Library/Developer/Xcode/DerivedData/Parodize-eoqtieahpprbnvcfunqbicctxwnd/Build/Products/Debug-iphoneos/GPUImage.framework"; sourceTree = "<group>"; };
 		18DCE4401DD385F100166BC3 /* Parodize.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Parodize.entitlements; sourceTree = "<group>"; };
 		18DCE4411DD502E900166BC3 /* FriendDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailViewController.h; sourceTree = "<group>"; };
@@ -302,6 +324,9 @@
 		18EAFE001DDABC0600A79735 /* DrawLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawLine.m; sourceTree = "<group>"; };
 		18EAFE011DDABC0600A79735 /* PenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PenViewController.h; sourceTree = "<group>"; };
 		18EAFE021DDABC0600A79735 /* PenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PenViewController.m; sourceTree = "<group>"; };
+		18F05B271E43B8640039723F /* UserMale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UserMale.png; sourceTree = "<group>"; };
+		18F05B2D1E4490040039723F /* SignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInViewController.h; sourceTree = "<group>"; };
+		18F05B2E1E4490040039723F /* SignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInViewController.m; sourceTree = "<group>"; };
 		590B7FAF1D44E287009337DC /* CompletedModelClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompletedModelClass.h; sourceTree = "<group>"; };
 		590B7FB01D44E287009337DC /* CompletedModelClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompletedModelClass.m; sourceTree = "<group>"; };
 		590B7FB71D44E662009337DC /* CompletedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompletedCell.h; sourceTree = "<group>"; };
@@ -434,8 +459,6 @@
 		598835ED1CF233FA004E20E7 /* NSMutableURLRequest+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Additions.m"; sourceTree = "<group>"; };
 		5998C1C41C9A64C6006FA800 /* PlayGroundCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayGroundCollectionViewCell.h; sourceTree = "<group>"; };
 		5998C1C51C9A64C6006FA800 /* PlayGroundCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayGroundCollectionViewCell.m; sourceTree = "<group>"; };
-		59A412D21D06073400C2A666 /* User_Profile+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "User_Profile+CoreDataProperties.h"; sourceTree = "<group>"; };
-		59A412D31D06073400C2A666 /* User_Profile+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "User_Profile+CoreDataProperties.m"; sourceTree = "<group>"; };
 		59A412D41D06073400C2A666 /* User_Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User_Profile.h; sourceTree = "<group>"; };
 		59A412D51D06073400C2A666 /* User_Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User_Profile.m; sourceTree = "<group>"; };
 		59AAF6401CF18851007C2281 /* ServerRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerRequestDelegate.h; sourceTree = "<group>"; };
@@ -466,7 +489,6 @@
 		C35357091BDBF843003113D8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		C353570B1BDBF867003113D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C353570C1BDBF867003113D8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		C353570F1BDBF883003113D8 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C35357111BDBF890003113D8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C35357131BDBF8A7003113D8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C35357151BDBF8C9003113D8 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -622,7 +644,6 @@
 		C3E2CA0C1BCA6082002355B4 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		C3E2CA0D1BCA6082002355B4 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		C3E2CA0E1BCA6082002355B4 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		C3E2CA1F1BCA61D5002355B4 /* UserMale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UserMale.png; sourceTree = "<group>"; };
 		C3E2CA211BCAE608002355B4 /* Pd_Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pd_Icon.png; sourceTree = "<group>"; };
 		C3E2CA251BCC4D40002355B4 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		C3E2CA331BCC5823002355B4 /* Twitter_Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Twitter_Icon.png; sourceTree = "<group>"; };
@@ -652,7 +673,6 @@
 				C35357141BDBF8A7003113D8 /* SystemConfiguration.framework in Frameworks */,
 				59381A5D1BF194130042BEAA /* FBSDKCoreKit.framework in Frameworks */,
 				C35357121BDBF890003113D8 /* Security.framework in Frameworks */,
-				C35357101BDBF883003113D8 /* StoreKit.framework in Frameworks */,
 				C353570D1BDBF867003113D8 /* CoreGraphics.framework in Frameworks */,
 				59381A5F1BF194290042BEAA /* FBSDKLoginKit.framework in Frameworks */,
 				C353570E1BDBF867003113D8 /* CoreLocation.framework in Frameworks */,
@@ -676,6 +696,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		184248C21E34DAD70024D33E /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				184248C31E34DAE80024D33E /* SettingsViewController.h */,
+				184248C41E34DAE80024D33E /* SettingsViewController.m */,
+				184248C61E34E1F60024D33E /* SettingsCell.h */,
+				184248C71E34E1F60024D33E /* SettingsCell.m */,
+				184248C91E34E2090024D33E /* SettingsDeleteCell.h */,
+				184248CA1E34E2090024D33E /* SettingsDeleteCell.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		188CEEBD1DD1109C0093CD54 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -683,6 +716,15 @@
 				188CEEC51DD1109C0093CD54 /* GPUImage.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		18F05B2C1E448FE30039723F /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				18F05B2D1E4490040039723F /* SignInViewController.h */,
+				18F05B2E1E4490040039723F /* SignInViewController.m */,
+			);
+			name = SignIn;
 			sourceTree = "<group>";
 		};
 		590EC5C91CEC0F080054311E /* Initial */ = {
@@ -694,6 +736,8 @@
 				C35F4AC61BC6F64C0006CDCE /* HomeViewController.m */,
 				C35357191BDC12B3003113D8 /* SignUpViewController.h */,
 				C353571A1BDC12B3003113D8 /* SignUpViewController.m */,
+				18045DF11E46187B00A158B6 /* InitialView.h */,
+				18045DF21E46187B00A158B6 /* InitialView.m */,
 			);
 			name = Initial;
 			sourceTree = "<group>";
@@ -889,6 +933,7 @@
 			isa = PBXGroup;
 			children = (
 				5937D8151C2111CB004FDCA4 /* Name-100.png */,
+				189AD5921E118D1B00A79FBE /* CameraProfile_1.png */,
 				5937D8131C2110C4004FDCA4 /* CameraProfile.png */,
 				593B2F331BFCCE02003C0762 /* Star.png */,
 				593B2F341BFCCE02003C0762 /* Star@2x.png */,
@@ -934,7 +979,7 @@
 				C3E2CA331BCC5823002355B4 /* Twitter_Icon.png */,
 				C3E2CA341BCC5823002355B4 /* Twitter_Icon@2x.png */,
 				C3E2CA211BCAE608002355B4 /* Pd_Icon.png */,
-				C3E2CA1F1BCA61D5002355B4 /* UserMale.png */,
+				18F05B271E43B8640039723F /* UserMale.png */,
 				C3E2C9BD1BC99483002355B4 /* before.png */,
 				C3E2C9BE1BC99483002355B4 /* After.png */,
 				C3E2C9B91BC98EE9002355B4 /* Settings_Icon.png */,
@@ -948,6 +993,8 @@
 		59CA63BB1D13BA25009B3073 /* Fliter */ = {
 			isa = PBXGroup;
 			children = (
+				18C406F51E3B486600DDB806 /* GPUImageGrayscaleFilterOne.h */,
+				18C406F61E3B486600DDB806 /* GPUImageGrayscaleFilterOne.m */,
 				59CA63BC1D13BA42009B3073 /* UIImage+Filtrr.h */,
 				59CA63BD1D13BA42009B3073 /* UIImage+Filtrr.m */,
 				59CA63BE1D13BA42009B3073 /* UIImage+FiltrrCompositions.h */,
@@ -992,6 +1039,8 @@
 				C35357331BE6759D003113D8 /* AcceptParodizeViewController.m */,
 				597057951BF26379000382FF /* AcceptSendViewController.h */,
 				597057961BF26379000382FF /* AcceptSendViewController.m */,
+				184248BC1E332F620024D33E /* AcceptCompareController.h */,
+				184248BD1E332F620024D33E /* AcceptCompareController.m */,
 				59EC3AE91D2DFF4C0074191C /* AcceptModelClass.h */,
 				59EC3AEA1D2DFF4C0074191C /* AcceptModelClass.m */,
 				59EC3AEE1D2E052D0074191C /* AcceptCustomCell.h */,
@@ -1074,8 +1123,6 @@
 			isa = PBXGroup;
 			children = (
 				59F17A9F1CF60D98006C2829 /* Parodize.xcdatamodeld */,
-				59A412D21D06073400C2A666 /* User_Profile+CoreDataProperties.h */,
-				59A412D31D06073400C2A666 /* User_Profile+CoreDataProperties.m */,
 				59A412D41D06073400C2A666 /* User_Profile.h */,
 				59A412D51D06073400C2A666 /* User_Profile.m */,
 			);
@@ -1099,7 +1146,6 @@
 				C35357151BDBF8C9003113D8 /* libz.tbd */,
 				C35357131BDBF8A7003113D8 /* SystemConfiguration.framework */,
 				C35357111BDBF890003113D8 /* Security.framework */,
-				C353570F1BDBF883003113D8 /* StoreKit.framework */,
 				C353570B1BDBF867003113D8 /* CoreGraphics.framework */,
 				C353570C1BDBF867003113D8 /* CoreLocation.framework */,
 				C35357091BDBF843003113D8 /* CFNetwork.framework */,
@@ -1117,6 +1163,8 @@
 		C35F4AB21BC6F64C0006CDCE = {
 			isa = PBXGroup;
 			children = (
+				18C406E51E3A923100DDB806 /* User_Profile+CoreDataProperties.h */,
+				18C406E61E3A923100DDB806 /* User_Profile+CoreDataProperties.m */,
 				188CEEC61DD110D00093CD54 /* Release-iphone */,
 				188CEEBC1DD1109C0093CD54 /* GPUImage.xcodeproj */,
 				C35357261BE0757E003113D8 /* Parodize-Prefix.pch */,
@@ -1231,7 +1279,9 @@
 		C3E2C9C11BCA3C67002355B4 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				184248C21E34DAD70024D33E /* Settings */,
 				590EC5C91CEC0F080054311E /* Initial */,
+				18F05B2C1E448FE30039723F /* SignIn */,
 				598608041CEA455400368050 /* SignUp */,
 				59D056AE1BF4E79800CB7E65 /* Friends */,
 				59D056AD1BF4E78A00CB7E65 /* Profile */,
@@ -1388,10 +1438,13 @@
 						DevelopmentTeam = 2Z2592GUA6;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
 								enabled = 0;
 							};
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -1477,7 +1530,6 @@
 				C3EF94121BDAB86400039B9F /* Drag_Marker@2x.png in Resources */,
 				C3E2CA451BCEC5A8002355B4 /* Email_Icon@2x.png in Resources */,
 				593B2F371BFCCE02003C0762 /* Star.png in Resources */,
-				C3E2CA201BCA61D5002355B4 /* UserMale.png in Resources */,
 				595440FD1C2336F800B9D5AC /* PRActivityIndicator.xib in Resources */,
 				188CEEC71DD110D00093CD54 /* Release-iphone in Resources */,
 				C35F4B1A1BC85D640006CDCE /* Icon@2x.png in Resources */,
@@ -1497,6 +1549,7 @@
 				593B2F301BFCCB00003C0762 /* MoveBack@2x.png in Resources */,
 				C3E2CA361BCC5823002355B4 /* Twitter_Icon@2x.png in Resources */,
 				C3E2C9C01BC99483002355B4 /* After.png in Resources */,
+				189AD5931E118D1B00A79FBE /* CameraProfile_1.png in Resources */,
 				C3E2C9BC1BC98EE9002355B4 /* Settings_Icon@2x.png in Resources */,
 				C3C20C6A1BD3B3D000625E23 /* Back_Filled.png in Resources */,
 				C35F4B151BC83E460006CDCE /* Friends.png in Resources */,
@@ -1504,6 +1557,7 @@
 				598608031CEA350A00368050 /* City-Blue.jpg in Resources */,
 				C3E2C9B71BC98E64002355B4 /* Settings.png in Resources */,
 				C3C20BF91BCFE8A500625E23 /* Cancel_Icon.png in Resources */,
+				18F05B281E43B8640039723F /* UserMale.png in Resources */,
 				C35F4B091BC83CC00006CDCE /* Home.png in Resources */,
 				C353572A1BE53DCA003113D8 /* Clock@2x.png in Resources */,
 				C36024111BD56A7C000596F6 /* Marker.png in Resources */,
@@ -1616,9 +1670,12 @@
 				59CA63C41D13BA42009B3073 /* UIImage+Scale.m in Sources */,
 				C3E2CA191BCA6082002355B4 /* UIImage+GIF.m in Sources */,
 				C3E2CA1E1BCA6082002355B4 /* UIView+WebCacheOperation.m in Sources */,
+				184248BE1E332F620024D33E /* AcceptCompareController.m in Sources */,
 				598756BF1CF1BB660039C6E5 /* UIWebView+AFNetworking.m in Sources */,
 				598756BB1CF1BB660039C6E5 /* UIButton+AFNetworking.m in Sources */,
 				C35F4AC41BC6F64C0006CDCE /* AppDelegate.m in Sources */,
+				18C406E81E3A923100DDB806 /* User_Profile+CoreDataProperties.m in Sources */,
+				184248CB1E34E2090024D33E /* SettingsDeleteCell.m in Sources */,
 				18DCE4471DD849EA00166BC3 /* FriendsObject.m in Sources */,
 				590EC5CD1CEC0F5C0054311E /* DataManager.m in Sources */,
 				590B7FBF1D450411009337DC /* CompleteDetailController.m in Sources */,
@@ -1628,6 +1685,7 @@
 				C3E2CA131BCA6082002355B4 /* SDWebImageDecoder.m in Sources */,
 				59CA63BA1D13B86F009B3073 /* FilterViewController.m in Sources */,
 				596D819F1D0B3EF8008270AF /* EditProfileCell.m in Sources */,
+				18F05B2F1E4490040039723F /* SignInViewController.m in Sources */,
 				596D819C1D0B38B4008270AF /* EditProfileViewController.m in Sources */,
 				59EC3AEB1D2DFF4C0074191C /* AcceptModelClass.m in Sources */,
 				59CA63C21D13BA42009B3073 /* UIImage+Filtrr.m in Sources */,
@@ -1637,12 +1695,16 @@
 				C3C20C5B1BD2DE5900625E23 /* ImageEditingViewController.m in Sources */,
 				C3E2CA101BCA6082002355B4 /* NSData+ImageContentType.m in Sources */,
 				590B7FBC1D44E670009337DC /* PendingCell.m in Sources */,
+				184248C81E34E1F60024D33E /* SettingsCell.m in Sources */,
 				594764901BFDB12B00CFD85A /* PGDetailViewController.m in Sources */,
 				598608131CEABDEF00368050 /* Context.m in Sources */,
+				18045DF31E46187B00A158B6 /* InitialView.m in Sources */,
 				598756BC1CF1BB660039C6E5 /* UIImageView+AFNetworking.m in Sources */,
 				598756BA1CF1BB660039C6E5 /* UIAlertView+AFNetworking.m in Sources */,
 				C35F4AC71BC6F64C0006CDCE /* HomeViewController.m in Sources */,
 				18EAFE031DDABC0600A79735 /* DrawLine.m in Sources */,
+				184248C51E34DAE80024D33E /* SettingsViewController.m in Sources */,
+				18C406F71E3B486600DDB806 /* GPUImageGrayscaleFilterOne.m in Sources */,
 				590B7FB91D44E662009337DC /* CompletedCell.m in Sources */,
 				C353571B1BDC12B3003113D8 /* SignUpViewController.m in Sources */,
 				59A412D71D06073400C2A666 /* User_Profile.m in Sources */,
@@ -1657,7 +1719,6 @@
 				C3E2CA0F1BCA6082002355B4 /* MKAnnotationView+WebCache.m in Sources */,
 				C3E2C9B11BC9551E002355B4 /* ProfileViewController.m in Sources */,
 				C3E2C9EB1BCA472B002355B4 /* SBJsonUTF8Stream.m in Sources */,
-				59A412D61D06073400C2A666 /* User_Profile+CoreDataProperties.m in Sources */,
 				C3E2C9EA1BCA472B002355B4 /* SBJsonTokeniser.m in Sources */,
 				C3E2C9E61BCA472B002355B4 /* SBJsonStreamParserState.m in Sources */,
 				C3E2CA141BCA6082002355B4 /* SDWebImageDownloader.m in Sources */,
@@ -1766,7 +1827,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1806,7 +1867,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -1836,7 +1897,7 @@
 					"\"$(SRCROOT)/../../../Documents/GPUImage-master/framework/Source/iOS\"",
 				);
 				INFOPLIST_FILE = Parodize/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1875,7 +1936,7 @@
 					"\"$(SRCROOT)/../../../Documents/GPUImage-master/framework/Source/iOS\"",
 				);
 				INFOPLIST_FILE = Parodize/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

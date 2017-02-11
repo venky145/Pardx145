@@ -10,24 +10,36 @@
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import "AcceptSendViewController.h"
+#import "ImageEditingViewController.h"
+#import "AppDelegate.h"
+#import "AcceptCompareController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
+#import "ProfileImageController.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @interface AcceptParodizeViewController ()
 {
+    UIImagePickerController *imagePicker;
     AVCaptureSession *avSession;
     AVCaptureStillImageOutput *stillImageOutput;
     AVCaptureDevice *captureDevice;
     CGRect camViewFrame;
     CGRect camButtonFrame;
     UIImage *stillImage;
+    AppDelegate *appDelegate;
+    BOOL isFullScreen;
+    UIImage *mockImage;
     
 }
+//@property (strong, nonatomic) UIImageView *libraryImage;
 @end
 
 @implementation AcceptParodizeViewController
 
 
 
-@synthesize cameraView,messageView,suggestionView,optionsSegment,cameraPoint,messagePoint,suggestionPoint;
+@synthesize cameraView,isNotification;
 
 @synthesize flashButton,cameraSwitchBtn,cameraButton,fullScreenBtn;
 
@@ -35,37 +47,33 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
     self.title=@"Parodize!";
-    
-    optionsSegment.selectedSegmentIndex=0;
-    
-    messageView.hidden=NO;
-    cameraView.hidden=YES;
-    suggestionView.hidden=YES;
-    
-    messagePoint.hidden=NO;
-    cameraPoint.hidden=YES;
-    suggestionPoint.hidden=YES;
     
     cameraButton.layer.cornerRadius = cameraButton.frame.size.width / 2.0f;
     cameraButton.layer.borderColor = [UIColor whiteColor].CGColor;
     cameraButton.layer.borderWidth = 2.0f;
-    cameraButton.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.8];
-    //cameraButton.layer.rasterizationScale = [UIScreen mainScreen].scale;
-    //cameraButton.layer.shouldRasterize = YES;
+   
     
-    self.timeLabel.text=self.getTimeStr;
-    
-    self.messageTextiew.text=self.getmessageText;
-    
-    
-    
-    if (self.acceptImage.length>0) {
+    self.timeLabel.text=[[Context contextSharedManager] setDateInterval:self.acceptModel.time];
+    if (self.acceptModel.caption.length>0) {
         
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.acceptImage];
-        self.acceptImageView.image= [UIImage imageWithData:imageData];
+        self.tagsLabel.text=self.acceptModel.caption;
+    }else
+    {
+        self.tagsLabel.text=@"No Caption ...";
+    }
+
+    if (isNotification) {
+        
+        [self requestAcceptParticular];
     }else{
-        self.acceptImageView.image=[UIImage imageNamed:@"UserMale.png"];
+        
+        [self.acceptImageView sd_setImageWithURL:[NSURL URLWithString:self.acceptModel.image] placeholderImage:[UIImage imageNamed:@"UserMale.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [self.loadIndicator stopAnimating];
+            mockImage=image;
+        }];
     }
     
     
@@ -75,6 +83,7 @@
     [avSession setSessionPreset:AVCaptureSessionPresetPhoto];
     
     captureDevice=[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+
     NSError *error = nil;
     AVCaptureDeviceInput *deviceInput=[AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
     
@@ -101,6 +110,13 @@
     
     [[cameraView layer] insertSublayer:previewLayer atIndex:0];
     
+    if (captureDevice.position==AVCaptureDevicePositionFront) {
+        
+        flashButton.hidden=YES;
+    }else{
+        flashButton.hidden=NO;
+    }
+    
     stillImageOutput = [[AVCaptureStillImageOutput alloc]init];
     
     NSDictionary *outputSettings=[[NSDictionary alloc]initWithObjectsAndKeys:AVVideoCodecJPEG,AVVideoCodecKey, nil];
@@ -110,125 +126,173 @@
     [avSession addOutput:stillImageOutput];
     
     [avSession startRunning];
+    
 
-   // [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(drawPath:) userInfo:nil repeats:NO];
+    [_tagsLabel setBackgroundColor:[[[Context contextSharedManager]colorWithRGBHex:PROFILE_COLOR ] colorWithAlphaComponent:0.6]];
+    
+    _pictureView.hidden=YES;
+    
+    [_doneButton setBackgroundColor:[[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR] colorWithAlphaComponent:0.8]];
+    
+    [_retakeButton setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:0.8]];
+    
+    [self makeCornersRound:_retakeButton withColor:[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR]];
+    [self makeCornersRound:_doneButton withColor:[UIColor whiteColor]];
+
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photosLibrary:)];
+    singleTap.numberOfTapsRequired = 1;
+    singleTap.numberOfTouchesRequired = 1;
+    singleTap.delegate = self;
+    [self.cameraRoll addGestureRecognizer:singleTap];
+    
+    self.cameraRoll.clipsToBounds = YES;
+  //  self.cameraRoll.layer.cornerRadius = self.cameraRoll.frame.size.width / 2.0f;
+    self.cameraRoll.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.cameraRoll.layer.borderWidth = 2.0f;
+    self.cameraRoll.userInteractionEnabled = YES; //disabled by default
+    
+    PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
+    fetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:fetchOptions];
+    PHAsset *lastAsset = [fetchResult lastObject];
+    [[PHImageManager defaultManager] requestImageForAsset:lastAsset
+                                               targetSize:self.cameraRoll.bounds.size
+                                              contentMode:PHImageContentModeAspectFill
+                                                  options:PHImageRequestOptionsVersionCurrent
+                                            resultHandler:^(UIImage *result, NSDictionary *info) {
+                                                
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    
+                                                    [[self cameraRoll] setImage:result];
+                                                    
+                                                });
+                                            }];
 }
+
 - (void)viewDidLayoutSubviews
 {
     
     camViewFrame=cameraView.frame;
     camButtonFrame=cameraButton.frame;
-
-}
--(void)viewWillAppear:(BOOL)animated
-{
-}
-
--(void)drawPath:(id)sender
-{
-    /*CGContextRef context = UIGraphicsGetCurrentContext();
-   
-    // Pick colors
-    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-    CGContextSetFillColorWithColor(context, [[UIColor redColor] CGColor]);
+    NSLog(@"frame....%f",camButtonFrame.origin.y);
     
-    // Define triangle dimensions
-    CGFloat baseWidth = 30.0;
-    CGFloat height = 20.0;
-    
-    // Define path
-    CGContextMoveToPoint(context, detailView.bounds.size.width / 2.0 - baseWidth / 2.0,
-                         detailView.bounds.size.height - height);
-    CGContextAddLineToPoint(context, detailView.bounds.size.width / 2.0 + baseWidth / 2.0,
-                            detailView.bounds.size.height - height);
-    CGContextAddLineToPoint(context, detailView.bounds.size.width / 2.0,
-                            detailView.bounds.size.height);
-    
-    // Finalize and draw using path
-    CGContextClosePath(context);
-    CGContextStrokePath(context);
-    
-    
-    CGFloat strokeWidth = 4;
-    CGFloat HEIGHTOFPOPUPTRIANGLE = 15;
-    CGFloat WIDTHOFPOPUPTRIANGLE = 15;
-    CGFloat borderRadius=10;
-    
-    CGRect currentFrame = detailView.bounds;
-    
-    CGContextSetLineJoin(context, kCGLineJoinRound);
-    CGContextSetLineWidth(context, 2);
-    CGContextSetStrokeColorWithColor(context, [[UIColor redColor] CGColor]);
-    CGContextSetFillColorWithColor(context, [[UIColor yellowColor] CGColor]);
-    
-    // Draw and fill the bubble
-    CGContextBeginPath(context);
-    CGContextMoveToPoint(context, borderRadius + strokeWidth + 0.5f, strokeWidth + HEIGHTOFPOPUPTRIANGLE + 0.5f);
-    CGContextAddLineToPoint(context, round(currentFrame.size.width / 2.0f - WIDTHOFPOPUPTRIANGLE / 2.0f) + 0.5f, HEIGHTOFPOPUPTRIANGLE + strokeWidth + 0.5f);
-    CGContextAddLineToPoint(context, round(currentFrame.size.width / 2.0f) + 0.5f, strokeWidth + 0.5f);
-    CGContextAddLineToPoint(context, round(currentFrame.size.width / 2.0f + WIDTHOFPOPUPTRIANGLE / 2.0f) + 0.5f, HEIGHTOFPOPUPTRIANGLE + strokeWidth + 0.5f);
-    CGContextAddArcToPoint(context, currentFrame.size.width - strokeWidth - 0.5f, strokeWidth + HEIGHTOFPOPUPTRIANGLE + 0.5f, currentFrame.size.width - strokeWidth - 0.5f, currentFrame.size.height - strokeWidth - 0.5f, borderRadius - strokeWidth);
-    CGContextAddArcToPoint(context, currentFrame.size.width - strokeWidth - 0.5f, currentFrame.size.height - strokeWidth - 0.5f, round(currentFrame.size.width / 2.0f + WIDTHOFPOPUPTRIANGLE / 2.0f) - strokeWidth + 0.5f, currentFrame.size.height - strokeWidth - 0.5f, borderRadius - strokeWidth);
-    CGContextAddArcToPoint(context, strokeWidth + 0.5f, currentFrame.size.height - strokeWidth - 0.5f, strokeWidth + 0.5f, HEIGHTOFPOPUPTRIANGLE + strokeWidth + 0.5f, borderRadius - strokeWidth);
-    CGContextAddArcToPoint(context, strokeWidth + 0.5f, strokeWidth + HEIGHTOFPOPUPTRIANGLE + 0.5f, currentFrame.size.width - strokeWidth - 0.5f, HEIGHTOFPOPUPTRIANGLE + strokeWidth + 0.5f, borderRadius - strokeWidth);
-    CGContextClosePath(context);
-    CGContextDrawPath(context, kCGPathFillStroke);
-    
-    // Draw a clipping path for the fill
-    CGContextBeginPath(context);
-    CGContextMoveToPoint(context, borderRadius + strokeWidth + 0.5f, round((currentFrame.size.height + HEIGHTOFPOPUPTRIANGLE) * 0.50f) + 0.5f);
-    CGContextAddArcToPoint(context, currentFrame.size.width - strokeWidth - 0.5f, round((currentFrame.size.height + HEIGHTOFPOPUPTRIANGLE) * 0.50f) + 0.5f, currentFrame.size.width - strokeWidth - 0.5f, currentFrame.size.height - strokeWidth - 0.5f, borderRadius - strokeWidth);
-    CGContextAddArcToPoint(context, currentFrame.size.width - strokeWidth - 0.5f, currentFrame.size.height - strokeWidth - 0.5f, round(currentFrame.size.width / 2.0f + WIDTHOFPOPUPTRIANGLE / 2.0f) - strokeWidth + 0.5f, currentFrame.size.height - strokeWidth - 0.5f, borderRadius - strokeWidth);
-    CGContextAddArcToPoint(context, strokeWidth + 0.5f, currentFrame.size.height - strokeWidth - 0.5f, strokeWidth + 0.5f, HEIGHTOFPOPUPTRIANGLE + strokeWidth + 0.5f, borderRadius - strokeWidth);
-    CGContextAddArcToPoint(context, strokeWidth + 0.5f, round((currentFrame.size.height + HEIGHTOFPOPUPTRIANGLE) * 0.50f) + 0.5f, currentFrame.size.width - strokeWidth - 0.5f, round((currentFrame.size.height + HEIGHTOFPOPUPTRIANGLE) * 0.50f) + 0.5f, borderRadius - strokeWidth);
-    CGContextClosePath(context);
-    CGContextClip(context);
-    */
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)segmentAction:(UISegmentedControl *)sender
-{
 
-    switch (sender.selectedSegmentIndex)
-    {
-        case 0:
-            
-            messageView.hidden=NO;
-            cameraView.hidden=YES;
-            suggestionView.hidden=YES;
-            
-            messagePoint.hidden=NO;
-            cameraPoint.hidden=YES;
-            suggestionPoint.hidden=YES;
-            break;
-        case 1:
-            messageView.hidden=YES;
-            cameraView.hidden=NO;
-            suggestionView.hidden=YES;
-            
-            messagePoint.hidden=YES;
-            cameraPoint.hidden=NO;
-            suggestionPoint.hidden=YES;
-            break;
-        case 2:
-            messageView.hidden=YES;
-            cameraView.hidden=YES;
-            suggestionView.hidden=NO;
-            
-            messagePoint.hidden=YES;
-            cameraPoint.hidden=YES;
-            suggestionPoint.hidden=NO;
-            break;
-
-            
-        default:
-            break;
-    }
+-(void)requestAcceptParticular{
     
+    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@",self.acceptModel.id],@"id", nil];
+    
+    [[DataManager sharedDataManager] requestAcceptParticular:dict forSender:self];
+}
+#pragma DataManagerDelegate  Methods
+
+-(void) didGetAcceptedParticular:(NSMutableDictionary *) dataDictionary {
+    
+    //NSLog(@"Yahooooo... \n %@",dataDictionary);
+    
+    
+    
+    if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
+        
+        [self.loadIndicator stopAnimating];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
+    else
+    {
+        
+        NSDictionary *successDict=[dataDictionary objectForKey:@"success"];
+        
+//        imageData = [[Context contextSharedManager] dataFromBase64EncodedString:[successDict objectForKey:@"image"]];
+        
+//        self.acceptImageView.image = [UIImage imageWithData:imageData];
+        
+//        [self.acceptImageView sd_setImageWithURL:[successDict objectForKey:@"image"]];
+        
+        [self.acceptImageView sd_setImageWithURL:[successDict objectForKey:@"image"] placeholderImage:[UIImage imageNamed:@"UserMale.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            
+            [self.loadIndicator stopAnimating];
+            mockImage=image;
+        }];
+        
+    }
+}
+-(void) requestDidFailWithRequest:(NSError *) error {
+    
+    NSLog(@"Error");
+    
+     [self.loadIndicator stopAnimating];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                    message:@"Server internal issue, unable to communicate "
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    
+    
+    
+}
+#pragma mark Class Methods
+-(void)makeCornersRound:(UIButton *)sender withColor:(UIColor *)color{
+    
+    sender.clipsToBounds = YES;
+    sender.layer.cornerRadius = 2.0f;
+    sender.layer.borderColor = color.CGColor;
+    sender.layer.borderWidth = 2.0f;
+}
+
+-(void)photosLibrary:(UITapGestureRecognizer *)gesture
+{
+    imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    imagePicker.allowsEditing = YES;
+    imagePicker.navigationBar.translucent = false;
+    imagePicker.navigationBar.barTintColor = [[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
+{
+}
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSLog(@"imageDone");
+     self.navigationController.navigationBar.hidden=NO;
+    stillImage=info[UIImagePickerControllerOriginalImage];
+    _pictureView.hidden=NO;
+    cameraView.hidden=YES;
+    
+//    _snapImageView.image=stillImage;
+    
+    [_snapImageView setImage:[[Context contextSharedManager] imageWithImage:stillImage scaledToSize:self.view.frame.size]];
+    
+//    if (isFullScreen) {
+//        
+//        [self cameraFullScreen:nil];
+//    }
+    if (imagePicker) {
+        
+        [imagePicker dismissViewControllerAnimated:YES completion:nil];
+        imagePicker=nil;
+    }
+}
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    NSLog(@"cancel");
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -264,48 +328,66 @@
     [stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
         if (imageDataSampleBuffer != NULL) {
             
-            // self.navigationController.navigationBar.hidden=NO;
+             self.navigationController.navigationBar.hidden=NO;
             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
             stillImage = [UIImage imageWithData:imageData];
             
-            [self performSegueWithIdentifier:@"sendSegue" sender:self];
+            _pictureView.hidden=NO;
+            cameraView.hidden=YES;
+            
+//            _snapImageView.image=stillImage;
+            
+            [_snapImageView setImage:[[Context contextSharedManager] imageWithImage:stillImage scaledToSize:self.view.frame.size]];
+        
         }
     }];
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"sendSegue"]) {
+    if ([segue.identifier isEqualToString:@"acceptEdit"]) {
         
-        AcceptSendViewController *destViewController = segue.destinationViewController;
-        destViewController.getImage = stillImage;
-        destViewController.acceptID = self.getId;
-        destViewController.getMockImage=self.acceptImageView.image;
-        destViewController.isAccept = YES;
-    }
-}
-- (IBAction)switchCamera:(id)sender
-{
+//        AcceptSendViewController *destViewController = segue.destinationViewController;
+//        destViewController.getImage = stillImage;
+//        destViewController.acceptID = self.getId;
+//        destViewController.getMockImage=self.acceptImageView.image;
+//        destViewController.isAccept = YES;
     
+        ImageEditingViewController *tabView = segue.destinationViewController;
+        tabView.isAccept=YES;
+    
+    }
+//    else
+//        if ([segue.identifier isEqualToString:@"acceptCompare"]) {
+//    
+////        AcceptCompareController *compareView = segue.destinationViewController;
+//        //compareView.getMockImage=stillImage;
+//    }
+}
+- (IBAction)switchCamera:(id)sender{
     NSArray * inputs =avSession.inputs;
     for ( AVCaptureDeviceInput * INPUT in inputs ) {
         AVCaptureDevice * Device = INPUT.device ;
         if ( [ Device hasMediaType : AVMediaTypeVideo ] ) {
             AVCaptureDevicePosition position = Device . position ; AVCaptureDevice * newCamera = nil ;
             AVCaptureDeviceInput * newInput = nil ;
-            
             if ( position == AVCaptureDevicePositionFront )
             {
-    
-                newCamera = [ self cameraWithPosition : AVCaptureDevicePositionBack ] ;
-                flashButton.hidden=NO;
+                if( [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear ])
+                {
+                    newCamera = [ self cameraWithPosition : AVCaptureDevicePositionBack ] ;
+                    flashButton.hidden=NO;
+                }
+                
             }
             else
             {
-                
-                newCamera = [ self cameraWithPosition : AVCaptureDevicePositionFront ] ;
-                flashButton.hidden=YES;
-                flashButton.selected=NO;
-                [self switchOffFlash];
-                
+                if( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront])
+                {
+                    newCamera = [ self cameraWithPosition : AVCaptureDevicePositionFront ] ;
+                    flashButton.hidden=YES;
+                    flashButton.selected=NO;
+                    [self switchOffFlash];
+                }
+               
             }
             newInput = [ AVCaptureDeviceInput deviceInputWithDevice:newCamera error:nil ] ;
             
@@ -337,32 +419,33 @@
     {
         
         button.selected=YES;
-        
-       
-        
+        isFullScreen=YES;
         cameraButton.hidden=YES;
         cameraSwitchBtn.hidden = YES;
-         cameraPoint.hidden=YES;
+        _cameraRoll.hidden=YES;
         
         [UIView animateWithDuration:.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             
             cameraView.frame=self.view.frame;
-            
-            
+   
         } completion:^(BOOL finished) {
             
             CGRect rect=cameraButton.frame;
             rect.origin.y=CGRectGetMaxY(cameraView.frame)-85;
             NSLog(@"Get Max %f",CGRectGetMaxY(cameraView.frame));
-            cameraPoint.hidden=YES;
             [cameraButton setFrame:rect];
             
             CGRect switchRect=cameraSwitchBtn.frame;
             switchRect.origin.y=cameraButton.center.y;
             [cameraSwitchBtn setFrame:switchRect];
             
+            CGRect rollRect=_cameraRoll.frame;
+            rollRect.origin.y=cameraButton.frame.origin.y;
+            [_cameraRoll setFrame:rollRect];
+            
             cameraButton.hidden=NO;
             cameraSwitchBtn.hidden = NO;
+            _cameraRoll.hidden=NO;
             
             self.navigationController.navigationBar.hidden=YES;
             
@@ -378,9 +461,11 @@
         self.navigationController.navigationBar.hidden=NO;
         
          button.selected=NO;
+        isFullScreen=NO;
         
         cameraButton.hidden=YES;
         cameraSwitchBtn.hidden = YES;
+        _cameraRoll.hidden=YES;
         
         [UIView animateWithDuration:.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             
@@ -392,16 +477,15 @@
             
         } completion:^(BOOL finished) {
             
-            cameraButton.frame=camButtonFrame;
+           // cameraButton.frame=camButtonFrame;
             
-            CGRect switchRect=cameraSwitchBtn.frame;
-            switchRect.origin.y=cameraButton.center.y;
-            [cameraSwitchBtn setFrame:switchRect];
+            //CGRect switchRect=cameraSwitchBtn.frame;
+           // switchRect.origin.y=cameraButton.center.y;
+            //[cameraSwitchBtn setFrame:switchRect];
             
             cameraButton.hidden=NO;
             cameraSwitchBtn.hidden = NO;
-            cameraPoint.hidden=NO;
-            
+            _cameraRoll.hidden=NO;
         }];
 
     }
@@ -449,4 +533,52 @@
     [captureDevice unlockForConfiguration];
 
 }
+- (IBAction)retakeAction:(id)sender {
+    
+    if (isFullScreen) {
+        
+        [self cameraFullScreen:nil];
+    }
+    
+    _pictureView.hidden=YES;
+    cameraView.hidden=NO;
+    
+}
+
+- (IBAction)doneAction:(id)sender {
+    
+    appDelegate.getNewImage=stillImage;
+    
+    self.navigationController.navigationBar.hidden=NO;
+    [self performSegueWithIdentifier:@"acceptEdit" sender:self];
+
+}
+- (IBAction)cameraGesture:(id)sender {
+    
+    NSLog(@"camera gesture");
+    if (stillImage) {
+        [self presentFullImageView:stillImage];
+    }
+    
+}
+
+- (IBAction)mockGesture:(id)sender {
+    NSLog(@"mock gesture");
+    if (mockImage) {
+        [self presentFullImageView:mockImage];
+    }
+}
+
+-(void)presentFullImageView:(UIImage *)fullImage{
+    
+    ProfileImageController *profileView=[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ProfileImage"];
+    
+    profileView.profileData=fullImage;
+    
+//    profileView.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0f, 1.0f);
+    
+    [self presentViewController:profileView animated:NO completion:nil];
+    
+}
+
 @end

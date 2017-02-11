@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FriendsObject.h"
 
 @interface Context : NSObject
 
 + (Context *) contextSharedManager;
+
+@property (assign) int pushType;
 
 -(void)setLoginUser:(BOOL)status forKey:(NSString *)key;
 -(BOOL)getLoginUserStatusForKey:(NSString *)key;
@@ -32,6 +35,17 @@
 -(NSString*)setDateInterval:(NSString*)string;
 
 -(NSString *)setFirstLetterCapital:(NSString *)string;
+
+-(BOOL) NSStringIsValidEmail:(NSString *)checkString;
+
+-(void)drawBorder:(UIImageView *)drawView;
+
+-(void)requestProfileDetails;
+
+-(UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
+
+-(NSString *)assignFriendName:(FriendsObject *)_friendObj;
+//-(void)setNotificationType:(notificationType *)notification;
 
 //-(void)addIndicatorView:(UIView *)presentView
 //-(void)removeIndicatorView

@@ -29,6 +29,8 @@
 
 -(void) didGetAcceptedChallenges:(NSMutableDictionary *) dataDictionary;
 
+-(void) didGetAcceptedParticular:(NSMutableDictionary *) dataDictionary;
+
 -(void) didGetCompletedChallenges:(NSMutableDictionary *) dataDictionary;
 
 -(void) didGetPendingChallenges:(NSMutableDictionary *) dataDictionary;

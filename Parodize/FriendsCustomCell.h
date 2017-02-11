@@ -14,4 +14,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *statusImage;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedImage;
+
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+
 @end

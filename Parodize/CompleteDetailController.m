@@ -7,6 +7,7 @@
 //
 
 #import "CompleteDetailController.h"
+#import "ProfileImageController.h"
 
 @interface CompleteDetailController ()
 
@@ -21,25 +22,50 @@
     self.twitterButton.layer.cornerRadius=25.0f;
     self.twitterButton.layer.masksToBounds=YES;
     
+    [self.originalImage sd_setImageWithURL:[NSURL URLWithString:self.completedModel.challengeImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    
+//    if (self.completedModel.challengeThumbnail.length>0) {
+//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.completedModel.challengeThumbnail];
+//        self.originalImage.image = [UIImage imageWithData:imageData];
+//    }else{
+//        self.originalImage.image=[UIImage imageNamed:@"UserMale.png"];
+//    }
+//    
+//    if (self.completedModel.responseThumbnail.length>0) {
+//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.completedModel.responseThumbnail];
+//        self.mockImage.image = [UIImage imageWithData:imageData];
+//    }else{
+//        self.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
+//    }
+    
+    [self.mockImage sd_setImageWithURL:[NSURL URLWithString:self.completedModel.responseImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    
+    UITapGestureRecognizer *challengeTap =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(challengeTouched:)];
+    [challengeTap setNumberOfTapsRequired:1];
+    [self.originalImage addGestureRecognizer:challengeTap];
+    
+    UITapGestureRecognizer *responseTap =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(responseTouched:)];
+    [responseTap setNumberOfTapsRequired:1];
+    [self.mockImage addGestureRecognizer:responseTap];
     
     
-    if (self.completedModel.challengeThumbnail.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.completedModel.challengeThumbnail];
-        self.originalImage.image = [UIImage imageWithData:imageData];
-    }else{
-        self.originalImage.image=[UIImage imageNamed:@"UserMale.png"];
-    }
+}
+
+-(void)challengeTouched:(id)sender
+{
+    [self presentFullImage:self.originalImage.image];
+}
+-(void)responseTouched:(id)sender{
+    [self presentFullImage:self.mockImage.image];
+}
+-(void)presentFullImage:(UIImage *)image{
+    ProfileImageController *profileView=[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ProfileImage"];
     
-    if (self.completedModel.responseThumbnail.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.completedModel.responseThumbnail];
-        self.mockImage.image = [UIImage imageWithData:imageData];
-    }else{
-        self.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
-    }
+    profileView.profileData=image;
     
+    profileView.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0f, 1.0f);
     
-    
-    
+    [self presentViewController:profileView animated:NO completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

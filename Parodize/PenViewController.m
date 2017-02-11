@@ -14,6 +14,8 @@
     NSMutableArray *colorsArray;
     
     UICollectionViewCell *prevCell;
+    
+    BOOL isEdited;
 }
 
 @end
@@ -24,18 +26,34 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(isDrawn:)
+                                                 name:@"PencilDraw"
+                                               object:nil];
+    
 //    DrawLine *drawScreen=[[DrawLine alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
 //    [self.view addSubview:drawScreen];
     
+    
+//    [_editImageView setImage:[[Context contextSharedManager] imageWithImage:_getImage scaledToSize:_editImageView.frame.size]];
+    
     _editImageView.image=_getImage;
     
+    
+    [_doneButton setEnabled:NO];
     
     colorsArray=[[NSMutableArray alloc]initWithObjects:[UIColor blackColor],[UIColor darkGrayColor],[UIColor lightGrayColor],[UIColor whiteColor],[UIColor grayColor],[UIColor redColor],[UIColor greenColor],[UIColor blueColor],[UIColor cyanColor],[UIColor yellowColor],[UIColor magentaColor],[UIColor orangeColor],[UIColor purpleColor],[UIColor brownColor], nil];
     
     _drawLineView.brushColor=[UIColor blackColor];
     
 }
-
+-(void)isDrawn:(NSNotification *)notification{
+    
+    isEdited=YES;
+    [_doneButton setEnabled:YES];
+    
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -54,23 +72,16 @@
     return cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     UICollectionViewCell *selectedCell=[collectionView cellForItemAtIndexPath:indexPath];
     _drawLineView.brushColor=[colorsArray objectAtIndex:indexPath.row];
-    
     if (prevCell) {
-        
         prevCell.layer.borderColor=[UIColor clearColor].CGColor;
         prevCell.layer.masksToBounds=YES;
     }
-    
     selectedCell.layer.borderColor=[UIColor whiteColor].CGColor;
     selectedCell.layer.borderWidth=2.0f;
     selectedCell.layer.masksToBounds=YES;
-    
     prevCell=selectedCell;
-    
-    
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -93,39 +104,37 @@
 }
 
 - (IBAction)doneAction:(id)sender {
-    
-   /* UIImage *drawImage=[_drawLineView getImageFromDrawView];
-    
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.view.frame.size.width, self.view.frame.size.height), YES, 0.0);
-    
-    [drawImage drawAtPoint: CGPointMake(0,0)];
-    
-    [drawImage drawAtPoint: CGPointMake(0,0)
-              blendMode: kCGBlendModeNormal // you can play with this
-                  alpha: 1]; // 0 - 1
-    
-    UIImage *answer = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    */
-    
-  /*  let rect : CGRect = CGRect() //Your view size from where you want to make UIImage
-    UIGraphicsBeginImageContext(rect.size);
-    let context : CGContextRef = UIGraphicsGetCurrentContext()
-    self.view.layer.renderInContext(context)
-    let img : UIImage  = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext();
-    */
-    
+
     [_doneButton removeFromSuperview];
     [_cancelButton removeFromSuperview];
     
     [_gridLayout removeFromSuperview];
     
-    UIGraphicsBeginImageContext(CGSizeMake(self.view.frame.size.width, self.view.frame.size.height));
-                            
+    
+//    UIGraphicsBeginImageContextWithOptions(_drawLineView.frame.size, NO, 0.0); //retina res
+//    [_drawLineView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//   // [_editImageView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    
+//    UIGraphicsBeginImageContext(_editImageView.frame.size);
+//    [_editImageView.image drawAtPoint:CGPointMake(0,0)];
+//    [image drawAtPoint:CGPointMake(0,0)];
+//    
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    
+//    UIGraphicsBeginImageContext(CGSizeMake(self.snapView.frame.size.width, self.snapView.frame.size.height));
+     UIGraphicsBeginImageContextWithOptions(_snapView.frame.size, NO, 0.0);
+    
     [self.snapView.layer renderInContext:UIGraphicsGetCurrentContext()];
      UIImage *answer = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+
+//    UIImageWriteToSavedPhotosAlbum(answer,
+//                                   nil,
+//                                   nil,
+//                                   nil);
     
     
     

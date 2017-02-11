@@ -79,6 +79,13 @@
             
             [alert show];
             
+//            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"No Picture" message:@"Do you want to continue without profile picture" preferredStyle:UIAlertControllerStyleAlert];
+//            
+//            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+//            [alertController addAction:ok];
+//            
+//            [self presentViewController:alertController animated:YES completion:nil];
+            
         }
 
     }
@@ -90,6 +97,7 @@
 
 - (IBAction)cancelAction:(id)sender
 {
+    [self.view endEditing:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)doSignUpProcess

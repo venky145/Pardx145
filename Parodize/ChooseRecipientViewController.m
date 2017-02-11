@@ -48,6 +48,8 @@
 }
 -(void)getFriendDetails{
     
+    [self.loadingIndicator startAnimating];
+    
     NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:@"0",@"next", nil];
     
     [[DataManager sharedDataManager] requestFriendsList:dict forSender:self];
@@ -57,6 +59,8 @@
 -(void) didGetFriendsList:(NSMutableDictionary *) dataDictionaray{
     
     NSLog(@"Yahooooo... \n %@",dataDictionaray);
+    
+    [self.loadingIndicator stopAnimating];
     
     [self hideActivity];
     
@@ -87,6 +91,7 @@
             fbObj.f_id=[fDict objectForKey:@"id"];
             fbObj.thumbnail=[fDict objectForKey:@"thumbnail"];
             fbObj.emailAddress=[fDict objectForKey:@"email"];
+            fbObj.username=[fDict objectForKey:@"username"];
             
             [friendsArray addObject:fbObj];
         }
@@ -100,6 +105,8 @@
 -(void) requestDidFailWithRequest:(NSError *) error {
     
     NSLog(@"Error");
+    
+    [self.loadingIndicator stopAnimating];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                     message:@"Server internal issue, unable to communicate "
@@ -232,29 +239,11 @@
         cell = [nib objectAtIndex:0];
     }
     
-//    NSDictionary *detailDict=[friendsArray objectAtIndex:indexPath.row];
-//    cell.profileName.text=[detailDict objectForKey:@"name"];
-//    NSString *userImageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [detailDict objectForKey:@"id"]];
-//    
-//    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:userImageURL] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
-    
     FriendsObject *fbObj=[friendsArray objectAtIndex:indexPath.row];
+
+    cell.profileName.text=[[Context contextSharedManager]assignFriendName:fbObj];
     
-    // NSDictionary *detailDict=[fbFriendsArray objectAtIndex:indexPath.row];
-    cell.profileName.text=[NSString stringWithFormat:@"%@ %@",fbObj.firstname,fbObj.lastname];
-    //    NSString *userImageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [detailDict objectForKey:@"id"]];
-    //
-    //
-    //
-    //    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:userImageURL] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
-    
-    
-    if (fbObj.thumbnail.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:fbObj.thumbnail];
-        cell.profileImage.image = [UIImage imageWithData:imageData];
-    }else{
-        cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
-    }
+     [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:fbObj.thumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
 
     
     cell.selectionStyle=UITableViewCellSelectionStyleNone;

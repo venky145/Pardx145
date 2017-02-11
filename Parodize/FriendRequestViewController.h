@@ -11,7 +11,7 @@
 @interface FriendRequestViewController : UIViewController
 
 
-@property(weak) NSArray *requestArray;
+@property(weak) NSMutableArray *requestArray;
 @property (weak, nonatomic) IBOutlet UITableView *requestsTableView;
 
 @end

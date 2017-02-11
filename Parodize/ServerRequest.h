@@ -50,5 +50,7 @@
 
 -(void)friendRequestAccept:(NSDictionary *)details forSender:(id)sender;
 
+-(void)requestAcceptParticular:(NSDictionary *)details forSender:(id)sender;
+
 
 @end

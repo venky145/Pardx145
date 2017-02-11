@@ -33,6 +33,8 @@
 
 - (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetAcceptedChallenges:(NSMutableDictionary *) dataDictionaray;
 
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetAcceptedParticular:(NSMutableDictionary *) dataDictionaray;
+
 - (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetCompletedChallenges:(NSMutableDictionary *) dataDictionaray;
 
 - (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetPendingChallenges:(NSMutableDictionary *) dataDictionaray;

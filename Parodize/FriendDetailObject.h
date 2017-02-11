@@ -17,5 +17,6 @@
 @property (nonatomic) NSString *thumbnail;
 @property (nonatomic) NSString *lastname;
 @property (nonatomic) int isFriend;
+@property (nonatomic) NSString* score;
 
 @end

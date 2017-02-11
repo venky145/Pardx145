@@ -22,12 +22,16 @@
 #define TW_CONSUMER_KEY     @"ec1yZpVqJoZNmMRdIfQRhb06R"
 
 #define PROFILE_COLOR  0x2ED9CE
+#define UPPER_COLOR  0x3AC4B4
+#define LOWER_COLOR 0x189689
 
 
 #pragma mark Server-API's
 
 #define kBaseAPI   @"http://parodizeserverapi.com/parodize/version_one/"
 //https://parodizeserverapi.com/parodize/version_one/user/reset/password
+
+#define DELETE_ACCOUNT @"Delete Account"
 
 #define SIGN_UP_API            @"user/signup"
 #define FB_API                 @"user/signup/facebook"
@@ -36,18 +40,20 @@
 #define PROFILE_PICTURE        @"user/update/profilepicture"
 #define INFORMATION_API        @"user/update/information"
 #define PROFILE_DETAILS        @"user/profile"
+#define USER_NAME              @"user/username/add"
 //#define FRIENDS_LIST           @"user/friends/list"
 #define FRIENDS_LIST           @"user/friends/list/lazy"
 #define NEW_CHALLENGE          @"challenge/new"
-//#define ACCEPT_CHALLENGE       @"challenge/accept"
+#define ACCEPT_PARTICULAR      @"challenge/accept"
 #define ACCEPT_CHALLENGE       @"challenge/accept/lazy"
 #define ACCEPT_RESPONSE        @"challenge/accept/response"
 //#define COMPLETED_RESPONSE     @"completed"
 #define COMPLETED_RESPONSE     @"completed/lazy"
 #define PENDING_REQUEST        @"pending/lazy"
-#define SEARCH_FRIEND          @"user/search/"
+#define SEARCH_FRIEND          @"user/search"
 #define ACCEPT_FRIEND          @"user/friendrequest/accept"
 #define NEW_FRIEND_REQUEST     @"user/friendrequest/new"
+
 
 //user/friendrequest/accept
 
@@ -67,7 +73,8 @@ typedef enum category_type{
     new_Challenge = 101,
     complete_Challenge,
     friend_Request,
-    Friend_Accept
+    friend_Accept,
+    profile_notify = 201
     
 } notificationType;
 /* Server Request Types */
@@ -88,7 +95,8 @@ typedef enum _RequestType
     eCloudDeviceTokenPost,
     eCloudFriendDetailsPost,
     eCloudFriendRequestsGet,
-    eCloudFriendRequestsPost
+    eCloudFriendRequestsPost,
+    eCloudAcceptParticularRequestPost,
     
 } eRequestType;
 

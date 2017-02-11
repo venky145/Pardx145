@@ -10,6 +10,6 @@
 
 @implementation AcceptModelClass
 
-@synthesize caption,id,time,message,thumbnail,from;
+@synthesize caption,id,time,message,thumbnail,from,image;
 
 @end

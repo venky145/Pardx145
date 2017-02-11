@@ -19,6 +19,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *iconImage;
 @property (weak, nonatomic) IBOutlet UIView *optionView;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *completeButton;
 @property (weak, nonatomic) IBOutlet UIButton *acceptButton;
@@ -36,6 +37,7 @@
 
 - (IBAction)logoutAction:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UILabel *aboutLabel;
 
 
 @end

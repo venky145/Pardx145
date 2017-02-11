@@ -9,14 +9,18 @@
 #import <UIKit/UIKit.h>
 
 
-@interface ProfileImageViewController : ActivityBaseViewController<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
+@interface ProfileImageViewController : ActivityBaseViewController
 
-@property (weak, nonatomic) IBOutlet UIImageView *profileImage;
-- (IBAction)cameraAction:(id)sender;
-- (IBAction)saveAction:(id)sender;
-- (IBAction)skipAction:(id)sender;
+@property (assign) BOOL isFacebookRegister;
 
+@property (weak, nonatomic) IBOutlet UITextField *usernameText;
 
-@property (weak, nonatomic) IBOutlet UIButton *saveButton;
-@property (weak, nonatomic) IBOutlet UIView *profileView;
+@property (weak, nonatomic) IBOutlet UILabel *warningLabel;
+
+@property (weak, nonatomic) IBOutlet UIButton *checkButton;
+
+- (IBAction)checkAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneBarButton;
+- (IBAction)doneAction:(id)sender;
+
 @end

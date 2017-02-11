@@ -35,6 +35,8 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     UIImagePickerController *cameraPicker;
     
     BOOL isInfoChanged;
+    
+    NSString *copyGender;
 }
 
 @end
@@ -69,6 +71,14 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     
     [self.genderPicker setHidden:YES];
     
+    if ([editUserProfile.gender isEqualToString:@"F"]) {
+        genderStr=@"Female";
+    }else if ([editUserProfile.gender isEqualToString:@"M"]){
+        genderStr=@"Male";
+    }
+    if (genderStr.length>0) {
+        copyGender=genderStr;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -132,11 +142,10 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
             
         }else if (indexPath.row==3) {
             cell.detailText.keyboardType=UIKeyboardTypeNumberPad;
+            cell.detailText.text=editUserProfile.phone;
             
         }else if (indexPath.row==4) {
-            
-            cell.detailText.text=genderStr;
-            
+                cell.detailText.text=genderStr;
         }
 
     
@@ -285,6 +294,21 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     
     isInfoChanged=YES;
     
+    if (textField.tag==3) {
+        NSInteger length = [textField.text length];
+        if (length>9 && ![string isEqualToString:@""]) {
+            return NO;
+        }
+        
+        // This code will provide protection if user copy and paste more then 10 digit text
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ([textField.text length]>10) {
+                textField.text = [textField.text substringToIndex:10];
+                
+            }
+        });
+    }
     return YES;
 }
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
@@ -413,8 +437,6 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
         NSLog(@"test %@ --- key %@",dataText.text,[key lowercaseString]);
         
     }
-    
-    
     [[DataManager sharedDataManager] updateInformation:jsonDictionary forSender:self];
 }
 -(BOOL)validateAllTextFields
@@ -424,16 +446,39 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
         
         if (![key isEqualToString:@"About"])
         {
-        if (dataText.text.length==0){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                            message:[NSString stringWithFormat:@"Please enter %@",key]
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            
-            return NO;
-        }
+            if (![key isEqualToString:@"Phone"]) {
+                if (dataText.text.length==0){
+//                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                                    message:[NSString stringWithFormat:@"Please enter %@",key]
+//                                                                   delegate:self
+//                                                          cancelButtonTitle:@"OK"
+//                                                          otherButtonTitles:nil];
+//                    [alert show];
+                    
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"Please enter %@",key] preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                    [alertController addAction:ok];
+                    
+                    [self presentViewController:alertController animated:YES completion:nil];
+
+                    
+                    return NO;
+                }
+
+            }else{
+                if (!(dataText.text.length==10)) {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Phone Number" message:@"Please enter 10 digit phone number" preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                    [alertController addAction:ok];
+                    
+                    [self presentViewController:alertController animated:YES completion:nil];
+                    
+                    return NO;
+                }
+                
+            }
         }
     }
     
@@ -464,6 +509,10 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     }else
         genderStr=@"Female";
     
+    if (![genderStr isEqualToString:copyGender]) {
+        self.doneButton.enabled=YES;
+        isInfoChanged=YES;
+    }
     [self.genderPicker setHidden:YES];
     [self.editTableView reloadData];
     

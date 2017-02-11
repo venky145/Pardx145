@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSString *)getParameter:(NSString *)paramValue;
 
++(void)updateValue:(NSString *)key withValue:(int)score;
+
 @end
 
 NS_ASSUME_NONNULL_END

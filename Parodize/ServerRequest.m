@@ -153,6 +153,15 @@
     [self sendRequestURL:requestURL forType:eCloudFriendRequestsPost withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
     
 }
+-(void)requestAcceptParticular:(NSDictionary *)details forSender:(id)sender{
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,ACCEPT_PARTICULAR];
+    
+    //    [self sendRequestURL:requestURL forType:eCloudAcceptChallengeRequestGet forSender:sender withHttpMethod:eGET withHeader:YES];
+    
+    [self sendRequestURL:requestURL forType:eCloudAcceptParticularRequestPost withDetails:details forSender:sender withHttpMethod:ePOST withHeader:YES];
+    
+}
 - (void) fetchDataForURL:(NSString *) url userInfo:(NSDictionary *) userInfo postTypeMethod:(int)methodType headerAutherization:(BOOL)iSheadReqAuth
 {
     NSString *requestMethod;
@@ -289,7 +298,9 @@
         case eCloudFriendRequestsPost:
             [[DataManager sharedDataManager] webEngine:self sender:sender didPostFriendAccept: responseObject];
             break;
-        
+        case eCloudAcceptParticularRequestPost:
+            [[DataManager sharedDataManager] webEngine:self sender:sender didGetAcceptedParticular: responseObject];
+            break;
         default:
             break;
     }

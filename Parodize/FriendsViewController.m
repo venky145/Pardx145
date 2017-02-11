@@ -108,13 +108,10 @@
     if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
         
         [self.processIndicator stopAnimating];
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionary objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        [self presentViewController:alertController animated:YES completion:nil];
         
     }
     else
@@ -145,69 +142,41 @@
     
     if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
         
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionary objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        [self presentViewController:alertController animated:YES completion:nil];
         
     }
     else
     {
         [fbFriendsArray removeAllObjects];
-        
         NSMutableDictionary *responseDict=[[dataDictionary valueForKey:RESPONSE_SUCCESS] mutableCopy];
-        
         NSArray* getArray=[responseDict objectForKey:@"friends"];
-        
         for (NSDictionary *fDict in getArray) {
-            
             FriendsObject *fbObj=[[FriendsObject alloc]init];
-            
             fbObj.firstname=[fDict objectForKey:@"firstname"];
             fbObj.lastname=[fDict objectForKey:@"lastname"];
             fbObj.f_id=[fDict objectForKey:@"id"];
             fbObj.thumbnail=[fDict objectForKey:@"thumbnail"];
             fbObj.emailAddress=[fDict objectForKey:@"email"];
+            fbObj.score=[fDict objectForKey:@"score"];
+            fbObj.username=[fDict objectForKey:@"username"];
             
             [fbFriendsArray addObject:fbObj];
         }
-        
         [self.friendsTableView reloadData];
-        
     }
-    
-    
 }
 -(void) requestDidFailWithRequest:(NSError *) error {
     
     NSLog(@"Error");
     
     [self.processIndicator stopAnimating];
-
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Server internal issue, unable to communicate "
-                                                   delegate:self
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-    
-    
-    
-}
-
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex==0)
-    {
-        
-    }
-    else if(buttonIndex==1)
-    {
-        
-    }
-    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Server internal issue, unable to communicate " preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:ok];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 -(void)searchBarAction:(id)sender
 {
@@ -240,18 +209,18 @@
     [afOperation cancel];
 
     [self SearchFriend:searchText];
-
-    
-    
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
 }
 -(void)SearchFriend:(NSString *)searchStr{
-
-    NSString *requestMethod = @"GET";
     
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@", kBaseAPI,SEARCH_FRIEND,searchStr];
+    NSMutableDictionary *searchDict=[[NSMutableDictionary alloc]init];
+    [searchDict setValue:searchStr forKey:@"string"];
+
+    /*NSString *requestMethod = @"POST";
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,SEARCH_FRIEND];
     
     
     NSError *error;
@@ -265,7 +234,59 @@
                                             constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
                                             } error:&error];
     
+    NSDictionary *jsonDict = @{
+                               @"postdata": searchDict
+                               };
+    
+    request.userInfo = jsonDict;
     request.timeoutInterval = 60.0;
+
+    if ([jsonDict objectForKey:@"postdata"] != nil)
+    {
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:[jsonDict objectForKey:@"postdata"] options:NSUTF8StringEncoding error:&error];
+        [request setHTTPBody:(NSMutableData *)data];
+    }
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSLog(@" Autherization Header required");
+    NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
+    [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
+     */
+    NSString *requestMethod = @"POST";
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,SEARCH_FRIEND];
+    
+    
+    NSError *error;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    
+    __block NSMutableURLRequest *request = [manager.requestSerializer
+                                            multipartFormRequestWithMethod:requestMethod
+                                            URLString:requestURL
+                                            parameters:nil
+                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                            } error:&error];
+    
+    
+    NSDictionary *jsonDict = @{
+                               @"postdata": searchDict
+                               };
+    
+    request.userInfo = jsonDict;
+   // request.timeoutInterval = 60.0;
+    
+    
+    
+    
+    if ([jsonDict objectForKey:@"postdata"] != nil)
+    {
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:[jsonDict objectForKey:@"postdata"] options:NSUTF8StringEncoding error:&error];
+        [request setHTTPBody:(NSMutableData *)data];
+    }
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
@@ -289,10 +310,10 @@
              
              if ([responseObject objectForKey:RESPONSE_ERROR]) {
                  
-                 
-                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-                 
-                 [alert show];
+                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Server request failed" preferredStyle:UIAlertControllerStyleAlert];
+                 UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                 [alertController addAction:ok];
+                 [self presentViewController:alertController animated:YES completion:nil];
                  
              }else
              {
@@ -312,6 +333,7 @@
                      fbObj.f_id=[fDict objectForKey:@"id"];
                      fbObj.thumbnail=[fDict objectForKey:@"thumbnail"];
                      fbObj.emailAddress=[fDict objectForKey:@"email"];
+                     fbObj.score=[fDict objectForKey:@"score"];
                      
                      [searchFriendsArray addObject:fbObj];
                      
@@ -327,7 +349,7 @@
          
      } failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
-         NSLog(@"Request failed");
+         NSLog(@"%@",error);
          
          if (!operation.cancelled) {
              NSLog(@"Cancelled");
@@ -447,29 +469,32 @@
     static NSString *cellIdentifier=@"friendCell";
     
     FriendsCustomCell *cell=(FriendsCustomCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
+
     if (cell==nil)
     {
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"FriendsCustomCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
     
-    
     FriendsObject *fbObj;
     fbObj=[dataArray objectAtIndex:indexPath.row];
+    cell.profileName.text=[[Context contextSharedManager]assignFriendName:fbObj];
+//    if (fbObj.thumbnail.length>0){
+//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:fbObj.thumbnail];
+//        cell.profileImage.image = [UIImage imageWithData:imageData];
+//    }else{
+//        cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
+//    }
     
-    cell.profileName.text=[NSString stringWithFormat:@"%@ %@",fbObj.firstname,fbObj.lastname];
-    if (fbObj.thumbnail.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:fbObj.thumbnail];
-        cell.profileImage.image = [UIImage imageWithData:imageData];
+    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:fbObj.thumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    if (fbObj.score == NULL) {
+        cell.scoreLabel.text=[NSString stringWithFormat:@"-"];
     }else{
-        cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
+        cell.scoreLabel.text=[NSString stringWithFormat:@"%@",fbObj.score];
     }
-    return cell;
     
+    return cell;
 }
-
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
         return 50;

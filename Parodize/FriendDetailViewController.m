@@ -22,22 +22,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    if (_friendObj.thumbnail.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:_friendObj.thumbnail];
-        self.profileImageView.image = [UIImage imageWithData:imageData];
-    }else{
-        self.profileImageView.image=[UIImage imageNamed:@"UserMale.png"];
-    }
 
+    [self.profileImageView sd_setImageWithURL:[NSURL URLWithString:_friendObj.thumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    
     [[Context contextSharedManager] roundImageView:self.profileImageView];
     
-    self.friendName.text=[NSString stringWithFormat:@"%@ %@",[[Context contextSharedManager] setFirstLetterCapital:_friendObj.firstname],[[Context contextSharedManager] setFirstLetterCapital:_friendObj.lastname]];
+    self.friendName.text=[[Context contextSharedManager]assignFriendName:_friendObj];
+
+    self.scoreLabel.text=[NSString stringWithFormat:@"%@",_friendObj.score];
     
     _addView.hidden=YES;
     _challengeView.hidden=YES;
- 
-    [self getFriendDetails];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,9 +86,8 @@
         }else{
             self.infoLabel.text=@"about yourself";
         }
-        
         if (fDetailObj.isFriend == 2) {
-            
+            self.scoreLabel.text=[NSString stringWithFormat:@"%@",fDetailObj.score];
             _addView.hidden=YES;
             _challengeView.hidden=NO;
             

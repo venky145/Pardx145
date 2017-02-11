@@ -13,10 +13,11 @@
 #import "SignUpViewController.h"
 #import "User_Profile.h"
 #import "HomeViewController.h"
+#import "ProfileImageViewController.h"
 
 @interface SplashViewController ()
 {
-    UIImageView *pdImage;
+//    UIImageView *pdImage;
     BOOL side2Visible;
     NSMutableDictionary *fbDetails;
     BOOL isError;
@@ -25,8 +26,7 @@
 
 @implementation SplashViewController
 
-@synthesize fbButton,twtrButton,emailButton,loginView,userNameTextField,passwordTextField;
-@synthesize passForgotButton,signInButton,signUpButton,closeButton,loginName,loginIndicatorView,appDelegate;
+@synthesize fbButton,twtrButton,emailButton,loginName,loginIndicatorView,appDelegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -35,131 +35,43 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabAction:) name:@"SuccessSignUp" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabAction:) name:@"UserNameUpdate" object:nil];
+    
     appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    pdImage=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.center.x, self.view.center.y, 100, 100)];
-    
-    //pdImage=[[UIImageView alloc]initWithFrame:CGRectMake(101, 117, 118, 118)];
-    
-    pdImage.center=self.view.center;
-    
-    [pdImage setImage:[UIImage imageNamed:@"Pd_Icon"]];
-    
-    pdImage.center = self.view.center;
-    
-    [self.view addSubview:pdImage];
-    
-    passwordTextField.hidden=YES;
-    userNameTextField.hidden=YES;
-    loginView.hidden=YES;
-    passForgotButton.hidden=YES;
-    signInButton.hidden=YES;
-    signUpButton.hidden=YES;
-    closeButton.hidden=YES;
+//    self.view.backgroundColor = [[Context contextSharedManager]
+//                                 setBackgroundForView:self.view withImageName:@"pd_Background"];
     
     loginName.hidden=YES;
     loginIndicatorView.hidden=YES;
+
+    loginName.hidden=YES;
+    loginName.text=@"";
+    
+    [loginIndicatorView stopAnimating];
     
     [self roundedCorners:twtrButton];
     [self roundedCorners:emailButton];
     
-    [self animateIcon];
+//    [self animateIcon];
     
     
     
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-//    loginName.text=@"";
-//    
-//    loginName.hidden=YES;
-//    loginIndicatorView.hidden=YES;
-//    [loginIndicatorView stopAnimating];
-//    
-//    loginView.hidden=YES;
-    
-    
-
-    
+ 
     [[UITabBar appearance] setBackgroundImage:[[UIImage alloc] init]];
     [[UITabBar appearance] setShadowImage:[[UIImage alloc] init]];
     
 }
--(void)viewDidAppear:(BOOL)animated
-{
-    
-//    if ([FBSDKAccessToken currentAccessToken]||[PFUser currentUser])
-//    {
-//        NSLog(@"already login");
-//        UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//        SWRevealViewController *tabView = [storyBoard instantiateViewControllerWithIdentifier:@"reveal"];
-//        tabView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//        [self presentViewController:tabView animated:YES completion:nil];
-//    }
-//    else
-//    {
- //        [self animateIcon];
- //   }
-}
--(void)animateIcon {
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:2];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(myCallback:finished:context:)];
-    
-    CGRect frame = CGRectMake(pdImage.frame.origin.x, pdImage.frame.origin.y, 100, 100);
-    frame.origin = CGPointMake(pdImage.frame.origin.x,44);
-    pdImage.frame = frame;
-    
-    [UIView commitAnimations];
-}
-
--(void)myCallback:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    
-//    CGRect frame = iconImageView.frame;
-//    frame.origin = CGPointMake(0, 0);
-//    iconImageView.frame = frame;
-//    [self animateIcon];
-    
-   /* FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
-    loginButton.center = self.view.center;
-    loginButton.readPermissions =@[@"email",@"user_birthday"];
-    [self.view addSubview:loginButton];
-    */
-    
-    //fbButton.readPermissions =@[@"email",@"user_friends",@"public_profile",@"user_about_me"];
-//    if ([DataManager sharedDataManager].isLoggedUser) {
-//        
-//        loginView.hidden=YES;
-//        loginIndicatorView.hidden=NO;
-//        loginName.hidden=NO;
-//        loginName.text=[[NSUserDefaults standardUserDefaults] objectForKey:@"fb_name"];
-//        
-//        [loginIndicatorView startAnimating];
-//        
-//    }else
-//    {
-        loginView.hidden=NO;
-        loginIndicatorView.hidden=YES;
-        loginName.hidden=YES;
-        loginName.text=@"";
-        
-        [loginIndicatorView stopAnimating];
-    //}
-    
-}
-
 -(void)roundedCorners:(UIButton *)sender
 {
     sender.layer.cornerRadius=2;
     sender.layer.masksToBounds=YES;
 }
-- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
-                error:(NSError *)error;
+- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
 {
-    
     if (error)
     {
         NSLog(@"%@",error);
@@ -203,7 +115,7 @@
 }
 - (IBAction)tabAction:(id)sender
 {
-    loginView.hidden=YES;
+//    loginView.hidden=YES;
     [self showActivityWithMessage:nil];
     [[DataManager sharedDataManager] requestProfileDetails:nil forSender:self];
     
@@ -230,7 +142,7 @@
     loginIndicatorView.hidden=NO;
     [loginIndicatorView startAnimating];
     
-    loginView.hidden=YES;
+//    loginView.hidden=YES;
     
    
 
@@ -238,200 +150,12 @@
 
 - (IBAction)emailAction:(id)sender
 {
-
-        [UIView transitionWithView:loginView
-                          duration:1.0
-                           options:UIViewAnimationOptionTransitionFlipFromLeft
-                        animations:^{ fbButton.hidden = YES; twtrButton.hidden = YES;emailButton.hidden=YES;passwordTextField.hidden=NO;userNameTextField.hidden=NO;passForgotButton.hidden=NO;signInButton.hidden=NO;signUpButton.hidden=NO; }
-                        completion:^(BOOL finished){
-                            if (finished) {
-                                side2Visible=YES;
-                                closeButton.hidden=NO;
-                            }}];
-    
-}
-- (IBAction)closeSignInAction:(id)sender
-{
-    [UIView transitionWithView:loginView
-                      duration:1.0
-                       options:UIViewAnimationOptionTransitionFlipFromLeft
-                    animations:^{ fbButton.hidden = NO; twtrButton.hidden = NO;emailButton.hidden=NO;passwordTextField.hidden=YES;userNameTextField.hidden=YES;passForgotButton.hidden=YES;signInButton.hidden=YES;signUpButton.hidden=YES;closeButton.hidden=YES; }
-                    completion:^(BOOL finished){
-                        if (finished) {
-                            side2Visible=NO;
-                            closeButton.hidden=YES;
-                        }}];
- 
-}
-
-- (IBAction)signupAction:(id)sender
-{
     UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    SignUpViewController *signUpVC = [storyBoard instantiateViewControllerWithIdentifier:@"signView"];
+    SignUpViewController *signUpVC = [storyBoard instantiateViewControllerWithIdentifier:@"SignInIdentifier"];
     UINavigationController *navigationController =
     [[UINavigationController alloc] initWithRootViewController:signUpVC];
     [self presentViewController:navigationController animated:YES completion:nil];
-    
 }
-
-- (IBAction)signInAction:(id)sender
-{
-    [self showActivityWithMessage:nil];
-    
-    if (userNameTextField.text.length>0 && passwordTextField.text.length>0)
-    {
-        NSDictionary *jsonDictionary=[[NSMutableDictionary alloc]init];
-        
-        //          [jsonDictionary setValue: @"shashank2" forKey:@"username"];
-        [jsonDictionary setValue:userNameTextField.text forKey:@"email"];
-        [jsonDictionary setValue:passwordTextField.text forKey:@"password"];
-        [[DataManager sharedDataManager] loginAccount:jsonDictionary forSender:self];
-        
-    }
-    else
-    {
-        
-        [self hideActivity];
-        
-        UIAlertView *signErrorAlert=[[UIAlertView alloc]initWithTitle:@"Failed" message:@"Please check Username/Email and Password shouldn't be empty" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        
-        [signErrorAlert show];
-    }
-    
-    
-    
-}
-- (IBAction)forgotPassAction:(id)sender
-{
-
-    if (!isError) {
-        
-        isError=YES;
-    
-    [self.userNameTextField becomeFirstResponder];
-    
-    self.errorView.hidden=NO;
-    
-    CGRect frameRect=self.errorView.frame;
-    
-    __block CGRect newRect = frameRect;
-    
-    [UIView transitionWithView:self.errorView
-                      duration:0.5
-                       options:UIViewAnimationOptionTransitionNone
-                    animations:^{
-                        
-                        
-                        
-                        newRect.origin.y=0;
-                        
-                        self.errorView.frame=newRect;
-                    }
-                    completion:^(BOOL finished) {
-                        
-                        [NSTimer scheduledTimerWithTimeInterval:0.5 target:[NSBlockOperation blockOperationWithBlock:^{
-                
-                            [UIView transitionWithView:self.errorView
-                                              duration:0.5
-                                               options:UIViewAnimationOptionTransitionNone
-                                            animations:^{
-                                                
-                                                //newRect.origin.y=self.errorView.frame.size.height;
-                                                self.errorView.frame=frameRect;
-                                            }
-                                            completion:^(BOOL finished) {
-                                                
-                                                self.errorView.hidden=YES;
-                                                isError=NO;
-                                                
-                                            }];
-
-                        
-                        }] selector:@selector(main) userInfo:nil repeats:NO];
-                    }];
-    }
-    
-    
-    
-   /* NSDictionary *detailDictV=[NSDictionary dictionaryWithObjectsAndKeys:fDetailObj.id,@"email", nil];
-    
-    NSString *requestMethod =@"POST";
-    
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,RESET_PASSWORD];
-    
-    
-    NSError *error;
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    
-    
-    __block NSMutableURLRequest *request = [manager.requestSerializer
-                                            multipartFormRequestWithMethod:requestMethod
-                                            URLString:requestURL
-                                            parameters:nil
-                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                            } error:&error];
-    
-    NSDictionary *jsonDict = @{
-                               @"postdata": detailDictV
-                               };
-    request.userInfo = jsonDict;
-    
-    if ([jsonDict objectForKey:@"postdata"] != nil)
-    {
-        NSError *error = nil;
-        NSData *data = [NSJSONSerialization dataWithJSONObject:[jsonDict objectForKey:@"postdata"] options:NSUTF8StringEncoding error:&error];
-        [request setHTTPBody:(NSMutableData *)data];
-    }
-    
-    //request.timeoutInterval = 60.0;
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    NSLog(@" Autherization Header required");
-    NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
-    [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
-    
-    
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         if(responseObject)
-         {
-             // NSLog(@"%@",responseObject);
-             
-             if ([responseObject objectForKey:RESPONSE_ERROR]) {
-                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-                 
-                 [alert show];
-                 
-             }else
-             {
-                 [_addFriendButton setTitle:@"Request Sent" forState:UIControlStateNormal];
-                 _addFriendButton.enabled=NO;
-             }
-         }
-         
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         NSLog(@"Request failed");
-         
-         if (!operation.cancelled) {
-             NSLog(@"Cancelled");
-             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-             
-             [alert show];
-         }
-     }];
-    
-    [manager.operationQueue addOperation:operation];
-}
-*/
-}
-
 - (IBAction)loginFaceBookAction:(id)sender {
     
     [self showActivityWithMessage:nil];
@@ -488,7 +212,7 @@
                   NSString *tokenString=result.token.tokenString;
                   
                   
-                  [self invokeCloudGetUserRegisteration:[NSDictionary dictionaryWithObjectsAndKeys:[results objectForKey:@"first_name"],@"firstname",[results objectForKey:@"last_name"],@"lastname",[results objectForKey:@"email"],@"email",[results objectForKey:@"id"],@"fbid",[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large",[results objectForKey:@"id"]],@"profilePictureURL",tokenString,@"fb_accesstoken", nil]];
+                  [self invokeCloudGetUserRegisteration:[NSDictionary dictionaryWithObjectsAndKeys:[results objectForKey:@"first_name"],@"firstname",[results objectForKey:@"last_name"],@"lastname",[results objectForKey:@"email"],@"email",[results objectForKey:@"id"],@"fbid",[results objectForKey:@"gender"],@"gender",[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large",[results objectForKey:@"id"]],@"profilePictureURL",tokenString,@"fb_accesstoken", nil]];
                   
               }];
              
@@ -508,41 +232,49 @@
     if ([dataDictionaray objectForKey:RESPONSE_ERROR]) {
         
         [self hideActivity];
-
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionaray objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionaray objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
         
     }
     else
     {
-        
-//        [self loginWithFirstName:[fbDetails objectForKey:@"userFirstName"] lastName:[fbDetails objectForKey:@"userLastName"] forEmail:[fbDetails objectForKey:@"userEmail"]];
         NSMutableDictionary *responseDict=[[dataDictionaray valueForKey:RESPONSE_SUCCESS] mutableCopy];
-        
-        
         
         [responseDict removeObjectForKey:@"notifications"];
         
+        NSString *userStr=[responseDict objectForKey:@"username"];
+        
         [User_Profile saveUserProfile:responseDict withCompletionBlock:^(BOOL flag,NSString *firstName,NSString *lastName,NSString *email) {
-            if (flag) {
-                
-                //[self loginWithFirstName:firstName lastName:lastName forEmail:email];
-                [appDelegate sendDeviceToken];
-                
-                [[DataManager sharedDataManager] requestProfileDetails:nil forSender:self];
-            }
-            else
-            {
-                NSLog(@"Database storage error");
-            }
-        }];
-
-        
-        
+                if (flag) {
+                    
+                    if (userStr.length>0) {
+                        //[self loginWithFirstName:firstName lastName:lastName forEmail:email];
+                        [appDelegate sendDeviceToken];
+                        
+                        [[DataManager sharedDataManager] requestProfileDetails:nil forSender:self];
+                    }else{
+                        [self hideActivity];
+                        
+                        UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                        ProfileImageViewController *profileView = [storyBoard instantiateViewControllerWithIdentifier:@"profilePage"];
+                        profileView.isFacebookRegister=YES;
+                        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileView];
+                        // profileView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+                        [self presentViewController:navigationController animated:YES completion:nil];
+                    }
+                    
+                   
+                }
+                else
+                {
+                    NSLog(@"Database storage error");
+                }
+            }];
     }
 }
 
@@ -554,12 +286,12 @@
         
         [self hideActivity];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionaray objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionaray objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
         
     }
     else
@@ -567,7 +299,7 @@
         
         NSMutableDictionary *responseDict=[[dataDictionaray valueForKey:RESPONSE_SUCCESS] mutableCopy];
         
-        
+        NSLog(@"%@",[responseDict objectForKey:@"score"]);
         
         [responseDict removeObjectForKey:@"notifications"];
         
@@ -598,12 +330,12 @@
     
     if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionary objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
         
     }
     else
@@ -611,7 +343,7 @@
         
         NSMutableDictionary *responseDict=[[dataDictionary valueForKey:RESPONSE_SUCCESS] mutableCopy];
         
-        
+        NSLog(@"%@",[responseDict objectForKey:@"score"]);
         
         [responseDict removeObjectForKey:@"notifications"];
         
@@ -632,11 +364,7 @@
                 NSLog(@"Database storage error");
             }
         }];
-        
-        
-        
     }
-
 }
 
 -(void) requestDidFailWithRequest:(NSError *) error {
@@ -645,13 +373,12 @@
     
     [self hideActivity];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Server internal issue, unable to communicate "
-                                                   delegate:self
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Server internal issue, unable to communicate " preferredStyle:UIAlertControllerStyleAlert];
     
+    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:ok];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
     
 
 }
@@ -664,14 +391,6 @@
 {
     [self.view endEditing:YES];
 }
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == userNameTextField) {
-        [textField resignFirstResponder];
-        [passwordTextField becomeFirstResponder];
-    } else if (textField == passwordTextField) {
-        [textField resignFirstResponder];
-    }
-    return YES;
-}
+
 
 @end

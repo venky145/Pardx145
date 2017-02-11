@@ -8,17 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SignUpPageViewController : ActivityBaseViewController <UITableViewDataSource,UITableViewDelegate,DataManagerDelegate>
-
-@property (nonatomic,strong) NSMutableDictionary *textDict;
-
-@property (weak, nonatomic) IBOutlet UITableView *signupTableView;
+@interface SignUpPageViewController : ActivityBaseViewController <DataManagerDelegate>
 
 - (IBAction)signupAction:(id)sender;
 
-- (IBAction)cancelAction:(id)sender;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *skipButton;
-
-
 @property (weak, nonatomic) IBOutlet UIButton *signUpButton;
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UITextField *confirmTextField;
+
 @end

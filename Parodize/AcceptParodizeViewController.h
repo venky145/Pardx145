@@ -7,26 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AcceptModelClass.h"
 
-@interface AcceptParodizeViewController : UIViewController
+@interface AcceptParodizeViewController : UIViewController<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIGestureRecognizerDelegate>
+
+@property(assign)BOOL isNotification;
 
 @property (weak, nonatomic) IBOutlet UIView *cameraView;
-
-@property (weak, nonatomic) IBOutlet UIView *messageView;
-
-@property (weak, nonatomic) IBOutlet UIView *suggestionView;
-
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-
-@property (weak, nonatomic) IBOutlet UISegmentedControl *optionsSegment;
-
-
-- (IBAction)segmentAction:(UISegmentedControl *)sender;
-
-@property (weak, nonatomic) IBOutlet UIImageView *cameraPoint;
-@property (weak, nonatomic) IBOutlet UIImageView *messagePoint;
-@property (weak, nonatomic) IBOutlet UIImageView *suggestionPoint;
-
 @property (weak, nonatomic) IBOutlet UIButton *flashButton;
 
 @property (weak, nonatomic) IBOutlet UIButton *fullScreenBtn;
@@ -41,8 +29,6 @@
 - (IBAction)cameraFullScreen:(id)sender;
 
 - (IBAction)flashCamera:(id)sender;
-
-@property (weak, nonatomic) IBOutlet UITableView *mTableView;
 @property (strong, nonatomic) IBOutlet UIImageView *acceptImageView;
 
 @property (nonatomic,strong) NSString *acceptImage;
@@ -50,11 +36,22 @@
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel *tagsLabel;
-@property (strong, nonatomic) IBOutlet UITextView *messageTextiew;
+//@property(nonatomic,strong) NSString *getTimeStr;
+//@property(nonatomic,strong) NSString *getmessageText;
+//@property(nonatomic,strong) NSNumber *getId;
+
+@property(nonatomic,retain) AcceptModelClass *acceptModel;
 
 
-@property(nonatomic,strong) NSString *getTimeStr;
-@property(nonatomic,strong) NSString *getmessageText;
-@property(nonatomic,strong) NSNumber *getId;
+@property (weak, nonatomic) IBOutlet UIView *pictureView;
+@property (weak, nonatomic) IBOutlet UIImageView *snapImageView;
+- (IBAction)retakeAction:(id)sender;
+- (IBAction)doneAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *retakeButton;
+@property (weak, nonatomic) IBOutlet UIButton *doneButton;
+@property (weak, nonatomic) IBOutlet UIImageView *cameraRoll;
+- (IBAction)cameraGesture:(id)sender;
+- (IBAction)mockGesture:(id)sender;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadIndicator;
 
 @end

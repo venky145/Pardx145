@@ -27,5 +27,6 @@
 
 - (IBAction)logoutAction:(id)sender;
 
+//@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 
 @end

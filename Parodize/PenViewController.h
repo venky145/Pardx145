@@ -21,4 +21,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIView *snapView;
 
+
+
 @end

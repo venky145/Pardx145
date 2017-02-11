@@ -64,7 +64,9 @@
 {
     [[ServerRequest sharedServerManager] requestAcceptChallenges:details forSender:sender];
 }
-
+-(void)requestAcceptParticular:(NSDictionary *)details forSender:(id)sender{
+     [[ServerRequest sharedServerManager] requestAcceptParticular:details forSender:sender];
+}
 -(void)requestCompletedChallenges:(NSDictionary *)details forSender:(id)sender
 {
     [[ServerRequest sharedServerManager] requestCompletedChallenges:details forSender:sender];
@@ -171,6 +173,10 @@
     
     if([sender respondsToSelector:@selector(didPostFriendAccept:)])
         [sender didPostFriendAccept:dataDictionaray];
+}
+- (void) webEngine:(ServerRequest *) serverRequest  sender:(id) sender didGetAcceptedParticular:(NSMutableDictionary *) dataDictionaray{
+    if([sender respondsToSelector:@selector(didGetAcceptedParticular:)])
+        [sender didGetAcceptedParticular:dataDictionaray];
 }
 #pragma Error
 

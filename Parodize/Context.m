@@ -9,6 +9,7 @@
 #import "Context.h"
 #import <CoreData/CoreData.h>
 #import "AppDelegate.h"
+#import "User_Profile.h"
 
 
 @implementation Context
@@ -100,8 +101,8 @@ static Context *contextManager_instance = nil;
 {
     imgView.layer.cornerRadius=imgView.frame.size.height/2;
    
-    imgView.layer.borderColor=[self colorWithRGBHex:PROFILE_COLOR].CGColor;
-    imgView.layer.borderWidth=1.0f;
+    imgView.layer.borderColor=[self colorWithRGBHex:UPPER_COLOR].CGColor;
+    imgView.layer.borderWidth=5.0f;
      imgView.layer.masksToBounds=YES;
     imgView.clipsToBounds=YES;
 }
@@ -251,12 +252,103 @@ static Context *contextManager_instance = nil;
     
     return cappedString;
 }
+
+//Check for email format
+-(BOOL) NSStringIsValidEmail:(NSString *)checkString
+{
+    BOOL stricterFilter = NO; // Discussion http://blog.logichigh.com/2010/09/02/validating-an-e-mail-address/
+    NSString *stricterFilterString = @"^[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$";
+    NSString *laxString = @"^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*$";
+    NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:checkString];
+}
+-(void)drawBorder:(UIImageView *)drawView{
+    
+    drawView.layer.borderColor=[self colorWithRGBHex:PROFILE_COLOR].CGColor;
+    drawView.layer.borderWidth=1.0f;
+    drawView.layer.masksToBounds=YES;
+    drawView.clipsToBounds=YES;
+}
+-(void)requestProfileDetails{
+    [[DataManager sharedDataManager] requestProfileDetails:nil forSender:self];
+}
+-(void) didGetProfileDetails:(NSMutableDictionary *) dataDictionaray
+{
+    if ([dataDictionaray objectForKey:RESPONSE_ERROR]) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[dataDictionaray objectForKey:RESPONSE_ERROR]
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
+    else
+    {
+        
+        NSMutableDictionary *responseDict=[[dataDictionaray valueForKey:RESPONSE_SUCCESS] mutableCopy];
+        
+        
+        
+        [responseDict removeObjectForKey:@"notifications"];
+        
+        [User_Profile saveUserProfile:responseDict withCompletionBlock:^(BOOL flag,NSString *firstName,NSString *lastName,NSString *email) {
+            if (flag)
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:PROFILE_UPDATE object:responseDict];
+            }
+            else
+            {
+                NSLog(@"Database storage error");
+            }
+        }];
+    }
+}
+-(UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    //UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+-(NSString *)assignFriendName:(FriendsObject *)_friendObj{
+    
+    NSString *friendName;
+    
+    if (_friendObj.firstname.length>0) {
+        if (_friendObj.lastname.length>0) {
+            friendName=[NSString stringWithFormat:@"%@ %@",[[Context contextSharedManager] setFirstLetterCapital:_friendObj.firstname],[[Context contextSharedManager] setFirstLetterCapital:_friendObj.lastname]];
+            return friendName;
+        }
+        friendName=[NSString stringWithFormat:@"%@",[[Context contextSharedManager] setFirstLetterCapital:_friendObj.lastname]];
+    }else if(_friendObj.lastname.length>0){
+        friendName=[NSString stringWithFormat:@"%@",[[Context contextSharedManager] setFirstLetterCapital:_friendObj.lastname]];
+    }else if(_friendObj.username.length>0){
+        friendName=[NSString stringWithFormat:@"%@",_friendObj.username];
+    }else if(_friendObj.emailAddress.length>0){
+        friendName=[NSString stringWithFormat:@"%@",_friendObj.emailAddress];
+    }
+    return friendName;
+}
 #pragma mark Clear UserDefaults
 
 -(void)clearNSUserDefaults
 {
+    AppDelegate *appDg=(AppDelegate*)[[UIApplication sharedApplication]delegate];
+    
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Car"];
+    NSBatchDeleteRequest *delete = [[NSBatchDeleteRequest alloc] initWithFetchRequest:request];
+    
+    NSError *deleteError = nil;
+    [appDg.persistentStoreCoordinator executeRequest:delete withContext:[appDg managedObjectContext] error:&deleteError];
 }
+
+
 
 @end

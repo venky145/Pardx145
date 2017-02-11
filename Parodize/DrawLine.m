@@ -35,16 +35,7 @@
 
 -(void)initialSetup
 {
-    
      self.bezierArray=[[NSMutableArray alloc]init];
-    
-    //self.backgroundColor=[UIColor whiteColor];
-//    bezierPath=[[UIBezierPath alloc]init];
-//    bezierPath.lineCapStyle=kCGLineCapRound;
-//    bezierPath.miterLimit=0;
-//    bezierPath.lineWidth=10;
-    //_brushColor=[UIColor redColor];
-
 }
 
 
@@ -52,6 +43,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    
     
     for (NSMutableDictionary *bPathDict in _bezierArray ) {
      
@@ -78,9 +70,9 @@
 #pragma mark - Touch Methods
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PencilDraw" object:nil];
     
     UITouch *mytouch=[[touches allObjects] objectAtIndex:0];
-    
     UIBezierPath *bezier=[[UIBezierPath alloc]init];
     bezier.lineCapStyle=kCGLineCapRound;
     bezier.miterLimit=0;

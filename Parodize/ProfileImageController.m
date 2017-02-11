@@ -7,6 +7,7 @@
 //
 
 #import "ProfileImageController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface ProfileImageController ()
 
@@ -20,25 +21,24 @@
     
     [self.profileImageView setImage:_profileData];
     
-    [UIView animateWithDuration:0.3f animations:^{
+    [UIView animateWithDuration:5.0f animations:^{
         self.view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0f, 1.0f);
     }];
+    
+//    self.scrollView.minimumZoomScale = 0.5;
+//    self.scrollView.maximumZoomScale = 6.0;
+//    self.scrollView.contentSize = self.profileImageView.frame.size;
+//    self.scrollView.delegate = self;
     
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.profileImageView;
 }
-*/
 
 - (IBAction)closeAction:(id)sender {
     [self dismissViewControllerAnimated:NO completion:nil];

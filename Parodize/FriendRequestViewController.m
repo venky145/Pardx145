@@ -9,7 +9,10 @@
 #import "FriendRequestViewController.h"
 #import "FriendRequestCell.h"
 
-@interface FriendRequestViewController ()
+@interface FriendRequestViewController (){
+    
+    int selectedtag;
+}
 
 @end
 
@@ -45,12 +48,14 @@
     
     NSString *thumbStr=[reqDict objectForKey:@"profilePicture"];
     
-    if (thumbStr.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:thumbStr];
-        cell.profileImage.image = [UIImage imageWithData:imageData];
-    }else{
-        cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
-    }
+//    if (thumbStr.length>0) {
+//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:thumbStr];
+//        cell.profileImage.image = [UIImage imageWithData:imageData];
+//    }else{
+//        cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
+//    }
+    
+    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:thumbStr] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
     
     [cell.acceptButton addTarget:self
                action:@selector(requestAction:)
@@ -68,6 +73,8 @@
 
 }
 -(void)requestAction:(UIButton *)button{
+    
+    selectedtag=button.tag;
     
     if ([button.titleLabel.text isEqualToString:@"Accept"]) {
         
@@ -101,7 +108,8 @@
     }
     else
     {
-        
+        [self.requestArray removeObjectAtIndex:selectedtag];
+        [self.requestsTableView reloadData];
     }
     
 }

@@ -37,6 +37,8 @@
     
     [mockImageView setImage:self.mockImage];
     
+//    [mockImageView setImage:[[Context contextSharedManager] imageWithImage:self.mockImage scaledToSize:mockImageView.frame.size]];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShown:)
                                                  name:UIKeyboardWillShowNotification
@@ -284,14 +286,13 @@
                  
              }else
              {
-                 [self doneWithSendingView];
+                 NSMutableDictionary *valueDict=[responseObject valueForKey:RESPONSE_SUCCESS];
                  
-                 //NSMutableArray *allViewControllers = [NSMutableArray arrayWithArray:[self.navigationController viewControllers]];
-                 //            for (UIViewController *aViewController in allViewControllers) {
-                 //                if ([aViewController isKindOfClass:[HomeViewController class]]) {
-                 //                    [self.navigationController popToViewController:aViewController animated:NO];
-                 //                }
-                 //            }
+                 [User_Profile updateValue:@"score" withValue:[[valueDict objectForKey:@"score"] intValue]];
+                 
+                  [[NSNotificationCenter defaultCenter] postNotificationName:PROFILE_UPDATE object:nil];
+                 
+                 [self doneWithSendingView];
                  
                              UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                              SWRevealViewController *tabView = [storyBoard instantiateViewControllerWithIdentifier:@"reveal"];

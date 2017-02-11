@@ -17,34 +17,20 @@
 
 @interface SignUpPageViewController ()
 {
-    NSArray *placeholderArray;
-    NSArray *cellImageArray;
-    
-    NSIndexPath *nextIndexPath;
+
 }
 
 @end
 
 @implementation SignUpPageViewController
 
-@synthesize signupTableView,signUpButton,textDict;
+@synthesize signUpButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    placeholderArray=[[NSMutableArray alloc]initWithObjects:@"Email",@"Password",@"Confirm Password", nil];
-    cellImageArray=[[NSMutableArray alloc]initWithObjects:@"email_signup",@"password_signup",@"password_signup", nil];
-
-    
-    self.view.backgroundColor = [[Context contextSharedManager]
-                                 setBackgroundForView:self.view withImageName:@"City-Blue.jpg"];
-    
-    
-    signupTableView.layer.cornerRadius=4.0f;
     signUpButton.layer.cornerRadius=4.0f;
-    
-    textDict=[[NSMutableDictionary alloc]init];
 
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -53,135 +39,60 @@
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    SignUpCustomCell *cell = [signupTableView cellForRowAtIndexPath:indexPath];
-    
-    [cell.textField becomeFirstResponder];
+
+    [self.emailTextField becomeFirstResponder];
     
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (indexPath.row==0) {
-//        return 154;
-//    }
-//    else
-//    {
-//        return 50;
-//    }
-//    
-//}
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 3;
-}
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    SignUpCustomCell *cell = (SignUpCustomCell*) [tableView dequeueReusableCellWithIdentifier:@"signUpCell"];
-    
-    if (cell==nil)
-    {
-        cell=[[SignUpCustomCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"signUpCell"];
-        
-    }
-    
-    cell.textField.placeholder=[placeholderArray objectAtIndex:indexPath.row];
-    if (indexPath.row==0) {
-        
-        cell.textField.secureTextEntry=NO;
-        cell.textField.returnKeyType=UIReturnKeyNext;
-    }
-    else if (indexPath.row==1)
-    {
-        cell.textField.secureTextEntry=YES;
-        cell.textField.returnKeyType=UIReturnKeyNext;
-        
-    }else if(indexPath.row==2) {
-        cell.textField.secureTextEntry=YES;
-        cell.textField.returnKeyType=UIReturnKeyDone;
-    }
-    
-    
-    cell.textField.tag=indexPath.row;
-    
-    [cell.logoImage setImage:[UIImage imageNamed:[cellImageArray objectAtIndex:indexPath.row]]];
-    
-    [textDict setObject:cell.textField forKey:[[placeholderArray objectAtIndex:indexPath.row] lowercaseString]];
-    
-    
-    return cell;
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+-(BOOL)textFieldShouldReturn:(UITextField*)textField
 {
     
-}
-
--(BOOL)validateAllTextFields
-{
-    for (NSString *key in placeholderArray) {
-        UITextField *dataText=[textDict objectForKey:[key lowercaseString]];
+    if (textField==self.emailTextField) {
         
-        if (dataText.text.length==0){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                            message:[NSString stringWithFormat:@"Please enter %@",key]
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
+        if ([[Context contextSharedManager] NSStringIsValidEmail:textField.text]) {
             
+            NSLog(@"right email format");
+            [textField resignFirstResponder];
+            [self.passwordTextField becomeFirstResponder];
+            
+        }else{
+            NSLog(@"Wrong email format");
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Please enter valid email address" preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:ok];
+            
+            [self presentViewController:alertController animated:YES completion:nil];
+        
             return NO;
-        }else if([[key lowercaseString] isEqualToString:@"email"]){
+        }
+    }else if (textField == self.passwordTextField) {
+        //[textField resignFirstResponder];
+        if (textField.text.length==0) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Password should not be empty" preferredStyle:UIAlertControllerStyleAlert];
             
-            NSString *emailReg = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:ok];
             
-            NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",emailReg];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }else{
+            [textField resignFirstResponder];
+            [self.confirmTextField becomeFirstResponder];
+        }
+    }else if (textField == self.confirmTextField) {
+        //[textField resignFirstResponder];
+        if (textField.text.length==0||![textField.text isEqualToString:self.passwordTextField.text]) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Password and confirm password doesn't match, Please check" preferredStyle:UIAlertControllerStyleAlert];
             
-            if ([emailTest evaluateWithObject:dataText.text] != YES) {
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                message:@"Please enter valid Email"
-                                                               delegate:self
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
-                
-                return NO;
-            }
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:ok];
             
+            [self presentViewController:alertController animated:YES completion:nil];
+        }else{
+            [textField resignFirstResponder];
+            [self signupAction:nil];
         }
     }
-    
-    return YES;
-}
-- (NSIndexPath *) nextIndexPath:(NSIndexPath *) indexPath {
-    int numOfSections = 1;
-    int nextSection = ((0 + 1) % numOfSections);
-    
-    if ((indexPath.row +1) == [self tableView:signupTableView numberOfRowsInSection:indexPath.section]) {
-        return [NSIndexPath indexPathForRow:0 inSection:nextSection];
-    } else {
-        return [NSIndexPath indexPathForRow:(indexPath.row + 1) inSection:indexPath.section];
-    }
-}
-
--(BOOL)textFieldShouldReturn:(UITextField*)textField;
-{
-    [textField resignFirstResponder];
-    
-    SignUpCustomCell *currentCell = (SignUpCustomCell *) textField.superview.superview;
-    NSIndexPath *currentIndexPath = [signupTableView indexPathForCell:currentCell];
-    
-    // NSIndexPath *currentIndexPath = [self.contactTableView indexPathForSelectedRow];
-    if (currentIndexPath.row!=2) {
-        
-        nextIndexPath = [self nextIndexPath:currentIndexPath];
-        SignUpCustomCell *nextCell = [signupTableView cellForRowAtIndexPath:nextIndexPath];
-        
-        [nextCell.textField becomeFirstResponder];
-    }
-    
     
     return YES;
     
@@ -192,54 +103,46 @@
 }
 - (IBAction)signupAction:(id)sender {
     
-    if ([self validateAllTextFields]) {
-        
-        
-        
-        UITextField *passtext=[textDict objectForKey:@"password"];
-        UITextField *confirmText=[textDict objectForKey:@"confirm password"];
-        UITextField *emailText=[textDict objectForKey:@"email"];
-        
-        if ([passtext.text isEqualToString:confirmText.text])
-        {
-            
-            [self showActivityInView:self.view.superview withMessage:@""];
-            
-           /* NSMutableDictionary* jsonDictionary=[[NSMutableDictionary alloc]init];
-            
-            //          [jsonDictionary setValue: @"shashank2" forKey:@"username"];
-            [jsonDictionary setValue:confirmText.text forKey:@"password"];
-            [jsonDictionary setValue:emailText.text forKey:@"email"];
-            
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-                                                                 error:nil];
-            NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[jsonData length]];
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-            [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",kBaseAPI,SIGN_UP_API]]];
-            [request setHTTPMethod:@"POST"];
-            [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            [request setHTTPBody:jsonData];
-            NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-            if(conn) {
-                NSLog(@"Connection Successful");
-            } else {
-                NSLog(@"Connection could not be made");
-            }
-            */
-            
-            NSDictionary* signupDict=[NSDictionary dictionaryWithObjectsAndKeys:emailText.text,@"email",confirmText.text,@"password", nil];
-            
-            [[DataManager sharedDataManager] registerEmailAccount:signupDict forSender:self];
-            
-        
-        }else
-        {
-                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Password and confirm password doesn't match, Please check" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+//    ProfileImageViewController * vc = [storyboard instantiateViewControllerWithIdentifier:@"profilePage"];
+//    [self.navigationController pushViewController:vc animated:YES];
+    
+    if (self.emailTextField.text.length>0&self.passwordTextField.text.length>0&self.confirmTextField.text.length>0){
+        if ([[Context contextSharedManager] NSStringIsValidEmail:self.emailTextField.text]) {
+            if ([self.passwordTextField.text isEqualToString:self.confirmTextField.text]) {
                 
-                [alert show];
+                [self showActivityInView:self.view.superview withMessage:@""];
+                NSDictionary* signupDict=[NSDictionary dictionaryWithObjectsAndKeys:self.emailTextField.text,@"email",self.confirmTextField.text,@"password", nil];
+                
+                [[DataManager sharedDataManager] registerEmailAccount:signupDict forSender:self];
+            }else{
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Password and confirm password doesn't match, Please check" preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:ok];
+                
+                [self presentViewController:alertController animated:YES completion:nil];
+            }
+            
+        }else{
+            NSLog(@"Wrong email format");
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Please enter valid email address" preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:ok];
+            
+            [self presentViewController:alertController animated:YES completion:nil];
         }
+    }else{
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Please check all fields should not be empty" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
     }
+     
+    
 }
 #pragma TWDataManagerDelegate  Methods
 
@@ -251,12 +154,12 @@
     
     if ([dataDictionaray objectForKey:RESPONSE_ERROR]) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionaray objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionaray objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
         
     }
     else
@@ -281,9 +184,6 @@
                 NSLog(@"Database storage error");
             }
         }];
-        
-        
-        
     }
 }
 -(void) requestDidFailWithRequest:(NSError *) error {
@@ -292,12 +192,12 @@
     
     [self hideActivity];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Server internal issue, unable to communicate "
-                                                   delegate:self
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Server internal issue, unable to communicate" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:ok];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 //- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData*)data{
 //    
@@ -342,9 +242,6 @@
 //    NSLog(@"Success");
 //}
 
-- (IBAction)cancelAction:(id)sender {
-     [self dismissViewControllerAnimated:YES completion:nil];
-}
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -360,7 +257,10 @@
     }
     
 }
-
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event  {
+    
+    [self.view endEditing:YES];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

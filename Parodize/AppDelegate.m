@@ -21,9 +21,7 @@
 #import "CommonParodize.h"
 #import "DataManager.h"
 
-
-
- 
+#import "AcceptViewController.h"
 
 @interface AppDelegate ()
 
@@ -31,7 +29,7 @@
 
 @implementation AppDelegate
 
-@synthesize getNewImage;
+@synthesize getNewImage,accpet_ID,acceptImage;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -41,15 +39,7 @@
     
     [[UITabBarItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor whiteColor] }
                                              forState:UIControlStateNormal];
-    
-    //Parse
-    
-    
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
-    //FB SDK
-    
-   // FBSDKAccessToken *accessToken=[FBSDKAccessToken currentAccessToken];
-   // PFUser *currentUser = [PFUser currentUser];
     
     UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
                                                     UIUserNotificationTypeBadge |
@@ -57,10 +47,6 @@
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
                                                                              categories:nil];
     [application registerUserNotificationSettings:settings];
-  //  [application registerForRemoteNotifications];
-    
-    
-    
     UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     
     if ([FBSDKAccessToken currentAccessToken]||[[Context contextSharedManager] getLoginUserStatusForKey:EMAIL_LOGIN])
@@ -175,60 +161,41 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    UIApplicationState state = [application applicationState];
-    
+ 
     NSLog(@"received notifications %@",userInfo);
     
     NSDictionary *notif_resp=[userInfo objectForKey:@"aps"];
+    notificationType requestType = (notificationType)[[notif_resp objectForKey:@"category"] intValue];
     
-    if ([notif_resp valueForKey:@"category"]!=nil){
+    if (application.applicationState != UIApplicationStateActive) {
+        if ([notif_resp valueForKey:@"category"]!=nil){
         
-//        NSNumber *num=[notif_resp valueForKey:@"category"];
-//        
-//        int *value=[[notif_resp valueForKey:@"category"] integerValue];
-        
-        notificationType requestType = (notificationType)[[notif_resp objectForKey:@"category"] intValue];
-        
-        switch (requestType) {
-            case new_Challenge:
-                
-                NSLog(@"New Chalenge Notification");
-                break;
-            case complete_Challenge:
-                
-                 NSLog(@"Complete challenge Notification");
-                break;
-            case friend_Request:
-                 NSLog(@"Friend Request Notification");
-                
-                break;
-            case Friend_Accept:
-                
-                 NSLog(@"Friend Accept Notification");
-                break;
-                
-            default:
-                break;
+            [self openViewcontrollerWithRequestType:requestType];
         }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pushNotification" object:[NSNumber numberWithLong:requestType] userInfo:nil];
-        
     }
+    if (requestType==profile_notify) {
+        [[Context contextSharedManager] requestProfileDetails];
+    }
+}
+-(void)openViewcontrollerWithRequestType:(int)requestType{
+    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     
-    if (state == UIApplicationStateActive) {
-        //app is in foreground
-        //the push is in your control
-    } else {
-//        app is in background:
-//        iOS is responsible for displaying push alerts, banner etc..
-        
-        
-        
-    }
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    
+    UIViewController *viewController;
+    viewController= [storyboard instantiateViewControllerWithIdentifier:@"reveal"];
+    
+    self.window.rootViewController=viewController;
+    [[Context contextSharedManager] setPushType:requestType];
+    [self.window makeKeyAndVisible];
+    
+    
     
 }
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
+    
     NSLog(@"Local notification received");
 }
 

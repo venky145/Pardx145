@@ -16,7 +16,7 @@
     
     NSString *nextReqStr;
     NSNumber *pendingCount;
-    
+    int reqCounter;
     BOOL isLastIndex;
 }
 
@@ -26,7 +26,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+//    reqCounter=3;
     
     completedArray=[[NSMutableArray alloc]init];
     
@@ -87,6 +88,7 @@
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    
     return 2;
 }
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -149,27 +151,24 @@
         cell.textDesc.text=[NSString stringWithFormat:@"%@ challenged you",[userDict objectForKey:@"firstname"]];
         cell.messagelabel.text=completeModel.message;
         
-//        if ([userDict objectForKey:@"thumbnail"]) {
-//            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:[userDict objectForKey:@"thumbnail"]];
+        [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:completeModel.responseImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+        
+        
+//        if (completeModel.responseThumbnail.length>0) {
+//            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.responseThumbnail];
+//            cell.mockImage.image = [UIImage imageWithData:imageData];
+//        }else{
+//            cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
+//        }
+        
+//        if (completeModel.challengeThumbnail.length>0) {
+//            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.challengeThumbnail];
 //            cell.profileImage.image = [UIImage imageWithData:imageData];
 //        }else{
-//            
 //            cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
 //        }
         
-        if (completeModel.responseThumbnail.length>0) {
-            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.responseThumbnail];
-            cell.mockImage.image = [UIImage imageWithData:imageData];
-        }else{
-            cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
-        }
-        
-        if (completeModel.challengeThumbnail.length>0) {
-            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.challengeThumbnail];
-            cell.profileImage.image = [UIImage imageWithData:imageData];
-        }else{
-            cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
-        }
+        [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:completeModel.challengeImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
         
         if (completeModel.message.length>0) {
             cell.messagelabel.text=completeModel.message;
@@ -189,7 +188,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section==1) {
-        return 240;
+        return 270;
     }else
         return 44;
     
@@ -209,21 +208,27 @@
 }
 
 - (void)tableView:(UITableView *)tableView
-  willDisplayCell:(UITableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath
+                                        willDisplayCell:(UITableViewCell *)cell
+                                            forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!isLastIndex&&indexPath.row==completedArray.count-1) {
+    
+    NSLog(@"%ld %lu",(long)indexPath.row,completedArray.count-1);
+    
+    if (indexPath.row==completedArray.count-1) {
         
-        isLastIndex=YES;
+        NSLog(@"Matched");
         
-        if (![nextReqStr isEqualToString:@"0"]) {
+        //isLastIndex=YES;
+        
+        if (![nextReqStr isEqualToString:@"0"]&&nextReqStr !=nil) {
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (reqCounter==2) {
                 
-                [self requestCompletedList];
-            });
-            
-            
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    reqCounter=0;
+                    [self requestCompletedList];
+                });
+            }
         }
         
     }
@@ -250,7 +255,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 -(void) didGetCompletedChallenges:(NSMutableDictionary *) dataDictionary {
     
-    NSLog(@"Yahooooo... \n %@",dataDictionary);
+    //NSLog(@"Yahooooo... \n %@",dataDictionary);
     
     [self.activityIndicator stopAnimating];
     
@@ -268,14 +273,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     }
     else
     {
-    
         NSDictionary *successDict=[dataDictionary objectForKey:@"success"];
         
         NSArray *compArray=[successDict objectForKey:@"challenge"];
         nextReqStr=[successDict objectForKey:@"next"];
-        if (nextReqStr == nil) {
-            nextReqStr=@"0";
-        }
+        NSLog(@"Next-------%@",nextReqStr);
+//        if (nextReqStr == nil) {
+//            nextReqStr=@"0";
+//        }
         pendingCount=[successDict objectForKey:@"pending_count"];
         
         if (compArray.count>0) {
@@ -289,7 +294,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                 
                 for (NSString *key in arrDict) {
                     
-                    NSLog(@"%@",[arrDict valueForKey:key]);
+                   // NSLog(@"%@",[arrDict valueForKey:key]);
                     
                     if ([comp respondsToSelector:NSSelectorFromString(key)]) {
                         
@@ -305,8 +310,18 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             
             [self.completedTableView reloadData];
             
-        }else
+            if (reqCounter<2&&nextReqStr!=nil) {
+                
+                [self requestCompletedList];
+                 reqCounter++;
+            }
+            
+        }else if ([pendingCount intValue]>0)
         {
+            self.statusLabel.hidden=YES;
+            self.completedTableView.hidden=NO;
+            [self.completedTableView reloadData];
+        }else{
             self.completedTableView.hidden=YES;
             self.statusLabel.hidden=NO;
             [self.statusLabel setText:@"No Challenges"];

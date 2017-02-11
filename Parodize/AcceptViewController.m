@@ -10,11 +10,13 @@
 #import "AcceptParodizeViewController.h"
 #import "AcceptModelClass.h"
 #import "AcceptCustomCell.h"
+#import "AppDelegate.h"
 
 @interface AcceptViewController (){
     
     BOOL isLastIndex;
     NSString *nextReqStr;
+    int reqCounter;
 }
 
 @end
@@ -30,8 +32,7 @@
     self.acceptTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     nextReqStr=@"0";
-    
-    
+
     [self findAllChallenges];
 }
 
@@ -43,6 +44,7 @@
 
 -(void)findAllChallenges
 {
+ 
     
     [self.activityIndicator startAnimating];
     
@@ -58,10 +60,11 @@
 
 -(void)requestAcceptedList{
     
-    NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:nextReqStr,@"next", nil];
-    
-    [[DataManager sharedDataManager] requestAcceptChallenges:dict forSender:self];
-    
+//    if (reqCounter<1) {
+        NSDictionary* dict=[NSDictionary dictionaryWithObjectsAndKeys:nextReqStr,@"next", nil];
+        
+        [[DataManager sharedDataManager] requestAcceptChallenges:dict forSender:self];
+//    }
 }
 
 #pragma mark UITableViewDataSource and Delegate
@@ -132,18 +135,11 @@
     }
     cell.detailLabel.text=acceptModel.message;
     
-    if ([emailDict objectForKey:@"thumbnail"] ){
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:[emailDict objectForKey:@"thumbnail"]];
-        cell.userPic.image = [UIImage imageWithData:imageData];
-    }else{
-        cell.userPic.image=[UIImage imageNamed:@"UserMale.png"];
-    }
-    if (acceptModel.thumbnail.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:acceptModel.thumbnail];
-        cell.mockImage.image = [UIImage imageWithData:imageData];
-    }else{
-        cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
-    }
+    [cell.userPic sd_setImageWithURL:[emailDict objectForKey:@"thumbnail"] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    
+    [[Context contextSharedManager] roundImageView:cell.userPic];
+
+    [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:acceptModel.thumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
     return cell;
 }
 
@@ -155,19 +151,24 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    AcceptCustomCell *cell=(AcceptCustomCell *)[tableView cellForRowAtIndexPath:indexPath];
+    //AcceptCustomCell *cell=(AcceptCustomCell *)[tableView cellForRowAtIndexPath:indexPath];
     
     AcceptModelClass *acceptModel=[self.challenges objectAtIndex:indexPath.row];
     
     UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     AcceptParodizeViewController *acceptView = [storyBoard instantiateViewControllerWithIdentifier:@"acceptParodize"];
     
-    acceptView.getTimeStr=cell.timeLabel.text;
-    acceptView.getmessageText=cell.detailLabel.text;
-    acceptView.getId=acceptModel.id;
+//    acceptView.getTimeStr=cell.timeLabel.text;
+//    acceptView.getmessageText=cell.detailLabel.text;
+//    acceptView.getId=acceptModel.id;
+    [acceptView setAcceptModel:acceptModel];
     
+    AppDelegate *appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    appDelegate.accpet_ID=acceptModel.id;
     if (acceptModel.thumbnail.length>0) {
-        acceptView.acceptImage=acceptModel.thumbnail;
+//        acceptView.acceptImage=acceptModel.thumbnail;
+        appDelegate.acceptImage=acceptModel.thumbnail;
     }
     
     // completeView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -179,14 +180,14 @@
   willDisplayCell:(UITableViewCell *)cell
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!isLastIndex&&indexPath.row==self.challenges.count-1) {
+    if (indexPath.row==self.challenges.count-1) {
         
-        isLastIndex=YES;
+       // isLastIndex=YES;
         
-        if (![nextReqStr isEqualToString:@"0"]) {
+        if (![nextReqStr isEqualToString:@"0"]&&nextReqStr !=nil) {
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
+                //reqCounter=0;
                 [self requestAcceptedList];
             });
         }
@@ -195,9 +196,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     // check if indexPath.row is last row
     // Perform operation to load new Cell's.
 }
-
-
-
 
 - (IBAction)backAction:(id)sender
 {
@@ -209,7 +207,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 -(void) didGetAcceptedChallenges:(NSMutableDictionary *) dataDictionary {
     
-    NSLog(@"Yahooooo... \n %@",dataDictionary);
+    //NSLog(@"Yahooooo... \n %@",dataDictionary);
     
 
     
@@ -234,6 +232,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
         NSArray *challengeArray=[successDict objectForKey:@"challenge"];
         
+        nextReqStr=[successDict objectForKey:@"next"];
+        
+        NSLog(@"Next ...........%@",[successDict objectForKey:@"next"]);
+        
         if (challengeArray.count>0) {
             self.statusLabel.hidden=YES;
              self.acceptTableView.hidden=NO;
@@ -244,7 +246,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                 
                 for (NSString *key in arrDict) {
                     
-                    NSLog(@"%@",[arrDict valueForKey:key]);
+                   // NSLog(@"%@",[arrDict valueForKey:key]);
                     
                     if ([accept respondsToSelector:NSSelectorFromString(key)]) {
                         
@@ -258,9 +260,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                 [self.challenges addObject:accept];
             }
 
+//            if (reqCounter<1&&nextReqStr!=nil) {
+//                
+//                [self requestAcceptedList];
+//                reqCounter++;
+//            }
+//            else{
+//                reqCounter=0;
+//            }
+
             [_acceptTableView reloadData];
-        }else
-        {
+        }else{
             self.acceptTableView.hidden=YES;
             self.statusLabel.hidden=NO;
             [self.statusLabel setText:@"No Challenges"];

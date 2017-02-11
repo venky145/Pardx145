@@ -31,16 +31,12 @@
 @property(strong,nonatomic) UIImage *snapImage;
 
 - (IBAction)backAction:(id)sender;
+@property(assign) BOOL isAccept;
 @property (strong, nonatomic) IBOutlet UIImageView *snapImageView;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
-@property (weak, nonatomic) IBOutlet UITextField *captionTextField;
-@property (weak, nonatomic) IBOutlet UITextField *tagsTextField;
-
-
-@property (weak, nonatomic) IBOutlet UIView *captionView;
 
 @property (nonatomic,retain) UIImage *getImage;
 
@@ -64,29 +60,29 @@
 
 @property (strong, nonatomic) IBOutlet UIScrollView *filterScrollView;
 
-- (IBAction)editAction:(id)sender;
+//- (IBAction)editAction:(id)sender;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *editButton;
+//@property (strong, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 //Sliders
 
 @property (strong, nonatomic) IBOutlet UISlider *brightSlider;
 - (IBAction)brightnessValue:(UISlider *)sender;
 
-@property (strong, nonatomic) IBOutlet UISlider *contrastSlider;
-- (IBAction)contrastValue:(UISlider *)sender;
-
-@property (strong, nonatomic) IBOutlet UISlider *saturationSlider;
-
-- (IBAction)staurationValue:(UISlider *)sender;
-
-@property (strong, nonatomic) IBOutlet UISlider *hueSlider;
-
-- (IBAction)hueValue:(UISlider *)sender;
-
-@property (strong, nonatomic) IBOutlet UISlider *sharpSlider;
-
-- (IBAction)sharpValue:(UISlider *)sender;
+//@property (strong, nonatomic) IBOutlet UISlider *contrastSlider;
+//- (IBAction)contrastValue:(UISlider *)sender;
+//
+//@property (strong, nonatomic) IBOutlet UISlider *saturationSlider;
+//
+//- (IBAction)staurationValue:(UISlider *)sender;
+//
+//@property (strong, nonatomic) IBOutlet UISlider *hueSlider;
+//
+//- (IBAction)hueValue:(UISlider *)sender;
+//
+//@property (strong, nonatomic) IBOutlet UISlider *sharpSlider;
+//
+//- (IBAction)sharpValue:(UISlider *)sender;
 
 @property (strong, nonatomic) IBOutlet UILabel *brightLabel;
 
@@ -103,5 +99,11 @@
 - (IBAction)hueAction:(id)sender;
 
 - (IBAction)saturationAction:(id)sender;
+
+
+//Test label
+
+@property (weak, nonatomic) IBOutlet UILabel *sliderTestLabel;
+
 
 @end

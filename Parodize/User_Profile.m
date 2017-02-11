@@ -110,6 +110,31 @@
     
     return nil;
 }
++(void)updateValue:(NSString *)key withValue:(int)score{
+    AppDelegate *appDg=(AppDelegate*)[[UIApplication sharedApplication]delegate];
+    NSManagedObjectContext *context = [appDg managedObjectContext];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"User_Profile" inManagedObjectContext:context]];
+    
+    NSError *error = nil;
+    NSArray *results = [context executeFetchRequest:request error:&error];
+    
+//     User_Profile *userProfile = [NSEntityDescription insertNewObjectForEntityForName:@"User_Profile" inManagedObjectContext:context];
+    
+    if (results>0) {
+        User_Profile* userProfile = [results objectAtIndex:0];
+    
+        userProfile.score=[NSNumber numberWithInt:score];
+    }
+
+    BOOL isSaved=[appDg.managedObjectContext save:&error];
+    
+    if (!isSaved) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+    
+}
 + (BOOL)coreDataHasEntriesForEntityName:(NSString *)entityName;
 {
     AppDelegate *appDg=(AppDelegate*)[[UIApplication sharedApplication]delegate];

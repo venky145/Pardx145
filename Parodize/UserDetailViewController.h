@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserDetailViewController : ActivityBaseViewController
+@interface UserDetailViewController : ActivityBaseViewController<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
 
 @property (nonatomic,retain) UIImage *savedImage;
+@property (nonatomic,retain) NSString *usernameStr;
 
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 @property (weak, nonatomic) IBOutlet UITextField *firstName;

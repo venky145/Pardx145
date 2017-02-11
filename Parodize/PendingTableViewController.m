@@ -16,15 +16,14 @@
     BOOL isLastIndex;
     NSString *nextReqStr;
     
+    int reqCounter;
 }
-
 @end
 
 @implementation PendingTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -37,7 +36,6 @@
     nextReqStr=@"0";
     
     [self requestPendingChallenges];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -101,9 +99,11 @@
         cell.messageText.text=@"No Message";
     
     
-    NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:modelClass.challengeThumbnail];
+//    NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:modelClass.challengeThumbnail];
+//    
+//    cell.mockImage.image = [UIImage imageWithData:imageData];
     
-    cell.mockImage.image = [UIImage imageWithData:imageData];
+    [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:modelClass.challengeThumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
     
     // Configure the cell...
     
@@ -113,16 +113,25 @@
   willDisplayCell:(UITableViewCell *)cell
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!isLastIndex&&indexPath.row==pendingArray.count-1) {
+    
+    NSLog(@"%ld %lu",(long)indexPath.row,pendingArray.count-1);
+
+    
+    if (indexPath.row==pendingArray.count-1) {
         
-        isLastIndex=YES;
+        //isLastIndex=YES;
         
-        if (![nextReqStr isEqualToString:@"0"]) {
+        if (![nextReqStr isEqualToString:@"0"]&&nextReqStr !=nil) {
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (reqCounter==2) {
                 
-                [self requestPendingList];
-            });
+                reqCounter=0;
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    [self requestPendingList];
+                });
+            }
+            
         }
         
     }
@@ -157,6 +166,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
         NSArray *resultArray=[successDict objectForKey:@"pending"];
         
+        nextReqStr=[successDict objectForKey:@"next"];
+        
         if (resultArray.count>0) {
             
             self.loadingLabel.hidden=YES;
@@ -183,6 +194,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             }
         
             [self.pendingTableView reloadData];
+            if (reqCounter<2&&nextReqStr!=nil) {
+                
+                [self requestPendingList];
+                reqCounter++;
+            }
             
         }else{
             self.pendingTableView.hidden=YES;

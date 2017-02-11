@@ -15,5 +15,6 @@
 
 - (IBAction)sendAction:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 
 @end

@@ -13,6 +13,7 @@
 @property(strong,nonatomic) NSString *caption;
 @property(strong,nonatomic) NSString *message;
 @property(strong,nonatomic) NSString *thumbnail;
+@property(strong,nonatomic) NSString *image;
 @property(strong,nonatomic) NSString *time;
 @property(strong,nonatomic) NSNumber *id;
 @property(strong,nonatomic) NSDictionary *from;

@@ -19,6 +19,8 @@
     UIVisualEffectView *bluredView;
     
     AFHTTPRequestOperation *afOperation;
+    
+    AppDelegate *appDelegate;
 }
 
 @end
@@ -30,15 +32,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"%@",getImage);
     if (getImage!=NULL)
     {
         [mockImage setImage:getImage];
     }
     
-    if (self.getMockImage!=NULL) {
-        [originalImage setImage:self.getMockImage];
+    if (appDelegate.acceptImage.length>0) {
+//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:appDelegate.acceptImage];
+//        originalImage.image= [UIImage imageWithData:imageData];
+        
+        [originalImage sd_setImageWithURL:[NSURL URLWithString:appDelegate.acceptImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
     }
     
     
@@ -275,6 +280,13 @@
                  
              }else
              {
+                 
+                 NSMutableDictionary *valueDict=[responseObject valueForKey:RESPONSE_SUCCESS];
+                 
+                 [User_Profile updateValue:@"score" withValue:[[valueDict objectForKey:@"score"] intValue]];
+                 
+                  [[NSNotificationCenter defaultCenter] postNotificationName:PROFILE_UPDATE object:nil];
+                
                  [self doneWithSendingView];
                  
                  UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Parodize/PendingTableViewController.m"
-            timestampString = "502998988.758845"
+            filePath = "Parodize/ServerRequest.m"
+            timestampString = "508271157.36378"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "-didGetPendingChallenges:"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "-fetchDataForURL:userInfo:postTypeMethod:headerAutherization:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,13 +25,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Parodize/AppDelegate.m"
-            timestampString = "503701484.520778"
+            filePath = "Parodize/DataManager.m"
+            timestampString = "508271191.655821"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
-            landmarkName = "-application:didReceiveLocalNotification:"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "-webEngine:sender:requestDidFailWithRequest:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SplashViewController.m"
+            timestampString = "508274620.819387"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "283"
+            endingLineNumber = "283"
+            landmarkName = "-didLoggedIn:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

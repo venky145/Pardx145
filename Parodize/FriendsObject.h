@@ -15,6 +15,7 @@
 @property (nonatomic) NSString *lastname;
 @property (nonatomic) NSString *thumbnail;
 @property (nonatomic) NSString *f_id;
-
+@property (nonatomic) NSString *score;
+@property (nonatomic) NSString *username;
 
 @end

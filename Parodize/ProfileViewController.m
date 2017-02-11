@@ -75,19 +75,6 @@
     
     [[Context contextSharedManager] roundImageView:self.profileImage];
     
-//    if ([sender isKindOfClass:[NSNotification class]])   {
-//        
-//        NSNotification *noitifyInfo=(NSNotification *)sender;
-//        
-//        userProfile=noitifyInfo.object;
-//    }
-//    else if ([sender isKindOfClass:[User_Profile class]])   {
-//        
-//        userProfile=(User_Profile *)sender;
-//        
-//        
-//    }
-    
     if (userProfile.firstname.length>0) {
         if (userProfile.lastname.length>0) {
             self.profileName.text=[NSString stringWithFormat:@"%@ %@",userProfile.firstname,userProfile.lastname];
@@ -111,12 +98,16 @@
         self.profileSubName.textColor=[UIColor lightGrayColor];
     }
     
-    if (userProfile.profilePicture.length>0) {
-        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:userProfile.profilePicture];
-        self.profileImage.image = [UIImage imageWithData:imageData];
-    }else{
-        self.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
-    }
+//    if (userProfile.profilePicture.length>0) {
+//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:userProfile.profilePicture];
+//        self.profileImage.image = [UIImage imageWithData:imageData];
+//    }else{
+//        self.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
+//    }
+    
+    [self.profileImage sd_setImageWithURL:[NSURL URLWithString:userProfile.profilePicture] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    
+    self.scoreLabel.text=[NSString stringWithFormat:@"%@",userProfile.score];
     
     
 }
@@ -345,6 +336,7 @@
 }
 
 - (IBAction)logoutAction:(id)sender {
+    AppDelegate *appDelegateTemp = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     NSArray *viewControlles = self.navigationController.viewControllers;
     
@@ -360,7 +352,7 @@
             return;
         }
     }
-    AppDelegate *appDelegateTemp = [[UIApplication sharedApplication]delegate];
+    
     appDelegateTemp.window.rootViewController = splachViewController;
     
     [[Context contextSharedManager] deleteCoredataForEntity:USER_PROFILE];
