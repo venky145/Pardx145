@@ -22,23 +22,14 @@
     self.twitterButton.layer.cornerRadius=25.0f;
     self.twitterButton.layer.masksToBounds=YES;
     
-    [self.originalImage sd_setImageWithURL:[NSURL URLWithString:self.completedModel.challengeImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    [self.originalImage sd_setImageWithURL:[NSURL URLWithString:self.completedModel.challengeImage] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
     
-//    if (self.completedModel.challengeThumbnail.length>0) {
-//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.completedModel.challengeThumbnail];
-//        self.originalImage.image = [UIImage imageWithData:imageData];
-//    }else{
-//        self.originalImage.image=[UIImage imageNamed:@"UserMale.png"];
-//    }
-//    
-//    if (self.completedModel.responseThumbnail.length>0) {
-//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:self.completedModel.responseThumbnail];
-//        self.mockImage.image = [UIImage imageWithData:imageData];
-//    }else{
-//        self.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
-//    }
+    [self.mockImage sd_setImageWithURL:[NSURL URLWithString:self.completedModel.responseImage] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
     
-    [self.mockImage sd_setImageWithURL:[NSURL URLWithString:self.completedModel.responseImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    [[Context contextSharedManager] cornerImageView:self.originalImage withValue:4];
+
+    [[Context contextSharedManager] cornerImageView:self.mockImage withValue:4];
+
     
     UITapGestureRecognizer *challengeTap =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(challengeTouched:)];
     [challengeTap setNumberOfTapsRequired:1];

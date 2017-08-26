@@ -16,10 +16,14 @@
 @property (nonatomic,retain) NSString *challengeImage;
 @property (nonatomic,retain) NSString *responseImage;
 @property (nonatomic,retain) NSString *message;
-@property (nonatomic,retain) NSString *caption;
+@property (nonatomic,retain) NSString *responseCaption;
+@property (nonatomic,retain) NSString *challengeCaption;
 @property (nonatomic,retain) NSString *time;
 @property (nonatomic,retain) NSString *id;
+@property (nonatomic,assign) int isVisible;
 
+//@property (nonatomic,retain) NSString *recipientsGif;
+//@property (nonatomic,retain) NSString *recipientsCollage;
 
 //'completed': [{'id':activity.ID,
 //    ​​​​​'from': {'email': sender.email,

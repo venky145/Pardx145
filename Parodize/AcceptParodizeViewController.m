@@ -49,6 +49,8 @@
     
     appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
     
+    self.acceptModel=appDelegate.acceptModel;
+    
     self.title=@"Parodize!";
     
     cameraButton.layer.cornerRadius = cameraButton.frame.size.width / 2.0f;
@@ -70,20 +72,52 @@
         [self requestAcceptParticular];
     }else{
         
-        [self.acceptImageView sd_setImageWithURL:[NSURL URLWithString:self.acceptModel.image] placeholderImage:[UIImage imageNamed:@"UserMale.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [self.acceptImageView sd_setImageWithURL:[NSURL URLWithString:self.acceptModel.image] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             [self.loadIndicator stopAnimating];
             mockImage=image;
         }];
     }
     
     
-     //Camera
+    [_doneButton setBackgroundColor:[[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR] colorWithAlphaComponent:0.8]];
+    
+    [_retakeButton setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:0.8]];
+    
+    [self makeCornersRound:_retakeButton withColor:[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR]];
+    [self makeCornersRound:_doneButton withColor:[UIColor whiteColor]];
+    
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photosLibrary:)];
+    singleTap.numberOfTapsRequired = 1;
+    singleTap.numberOfTouchesRequired = 1;
+    singleTap.delegate = self;
+    [self.cameraRoll addGestureRecognizer:singleTap];
+    
+    self.cameraRoll.clipsToBounds = YES;
+    //  self.cameraRoll.layer.cornerRadius = self.cameraRoll.frame.size.width / 2.0f;
+    self.cameraRoll.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.cameraRoll.layer.borderWidth = 2.0f;
+    self.cameraRoll.userInteractionEnabled = YES; //disabled by default
+    
+    
+}
+- (void)viewDidAppear:(BOOL)animated{
+    
+    if (!avSession) {
+        [self openCamera];
+    }
+    
+}
+-(void)openCamera{
+    //Camera
+    
+    [self setcameraButtonsStatus:YES];
     
     avSession=[[AVCaptureSession alloc]init];
     [avSession setSessionPreset:AVCaptureSessionPresetPhoto];
     
     captureDevice=[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-
+    
     NSError *error = nil;
     AVCaptureDeviceInput *deviceInput=[AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
     
@@ -96,11 +130,11 @@
     
     [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     
-    CALayer *layer=[[self view]layer];
+    CALayer *layer=[self.cameraView layer];
     
     layer.masksToBounds=YES;
     
-    CGRect cameraFrame=CGRectMake(0, 0, cameraView.frame.size.width, self.view.bounds.size.height);
+    CGRect cameraFrame=CGRectMake(0, 0, self.cameraView.frame.size.width, self.cameraView.frame.size.height);
     
     [previewLayer setFrame:cameraFrame];
     
@@ -108,7 +142,7 @@
     
     //[[cameraView layer] addSublayer:previewLayer];
     
-    [[cameraView layer] insertSublayer:previewLayer atIndex:0];
+//    [[cameraView layer] insertSublayer:previewLayer atIndex:0];
     
     if (captureDevice.position==AVCaptureDevicePositionFront) {
         
@@ -127,31 +161,11 @@
     
     [avSession startRunning];
     
-
+    
     [_tagsLabel setBackgroundColor:[[[Context contextSharedManager]colorWithRGBHex:PROFILE_COLOR ] colorWithAlphaComponent:0.6]];
     
     _pictureView.hidden=YES;
-    
-    [_doneButton setBackgroundColor:[[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR] colorWithAlphaComponent:0.8]];
-    
-    [_retakeButton setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:0.8]];
-    
-    [self makeCornersRound:_retakeButton withColor:[[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR]];
-    [self makeCornersRound:_doneButton withColor:[UIColor whiteColor]];
 
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photosLibrary:)];
-    singleTap.numberOfTapsRequired = 1;
-    singleTap.numberOfTouchesRequired = 1;
-    singleTap.delegate = self;
-    [self.cameraRoll addGestureRecognizer:singleTap];
-    
-    self.cameraRoll.clipsToBounds = YES;
-  //  self.cameraRoll.layer.cornerRadius = self.cameraRoll.frame.size.width / 2.0f;
-    self.cameraRoll.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.cameraRoll.layer.borderWidth = 2.0f;
-    self.cameraRoll.userInteractionEnabled = YES; //disabled by default
-    
     PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
     fetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
     PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:fetchOptions];
@@ -169,7 +183,10 @@
                                                 });
                                             }];
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    
+    self.navigationController.navigationBar.hidden=NO;
+}
 - (void)viewDidLayoutSubviews
 {
     
@@ -202,12 +219,7 @@
         
         [self.loadIndicator stopAnimating];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        [[Context contextSharedManager] showAlertView:self withMessage:[dataDictionary objectForKey:RESPONSE_ERROR] withAlertTitle:SERVER_ERROR];
         
     }
     else
@@ -221,7 +233,7 @@
         
 //        [self.acceptImageView sd_setImageWithURL:[successDict objectForKey:@"image"]];
         
-        [self.acceptImageView sd_setImageWithURL:[successDict objectForKey:@"image"] placeholderImage:[UIImage imageNamed:@"UserMale.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [self.acceptImageView sd_setImageWithURL:[successDict objectForKey:@"image"] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             
             [self.loadIndicator stopAnimating];
             mockImage=image;
@@ -235,15 +247,7 @@
     
      [self.loadIndicator stopAnimating];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Server internal issue, unable to communicate "
-                                                   delegate:self
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-    
-    
-    
+    [[Context contextSharedManager] showAlertView:self withMessage:SERVER_REQ_ERROR withAlertTitle:SERVER_ERROR];
 }
 #pragma mark Class Methods
 -(void)makeCornersRound:(UIButton *)sender withColor:(UIColor *)color{
@@ -271,13 +275,13 @@
 {
     NSLog(@"imageDone");
      self.navigationController.navigationBar.hidden=NO;
-    stillImage=info[UIImagePickerControllerOriginalImage];
+    stillImage=info[UIImagePickerControllerEditedImage];
     _pictureView.hidden=NO;
     cameraView.hidden=YES;
     
-//    _snapImageView.image=stillImage;
+    _snapImageView.image=stillImage;
     
-    [_snapImageView setImage:[[Context contextSharedManager] imageWithImage:stillImage scaledToSize:self.view.frame.size]];
+//    [_snapImageView setImage:[[Context contextSharedManager] imageWithImage:stillImage scaledToSize:_pictureView.frame.size]];
     
 //    if (isFullScreen) {
 //        
@@ -314,9 +318,17 @@
     
     return nil;
 }
-
+-(void)setcameraButtonsStatus:(BOOL)status{
+    cameraButton.enabled=status;
+    cameraSwitchBtn.enabled=status;
+    fullScreenBtn.enabled=status;
+    _cameraRoll.userInteractionEnabled=status;
+}
 - (IBAction)takePicture:(id)sender
 {
+    
+    [self setcameraButtonsStatus:NO];
+    
     AVCaptureConnection *videoConnection = nil;
     for (AVCaptureConnection *connection in stillImageOutput.connections) {
         for (AVCaptureInputPort *port in [connection inputPorts]) {
@@ -330,37 +342,27 @@
             
              self.navigationController.navigationBar.hidden=NO;
             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-            stillImage = [UIImage imageWithData:imageData];
             
+            
+            NSData *imgData = UIImageJPEGRepresentation([UIImage imageWithData:imageData], 0);
+            stillImage = [UIImage imageWithData:imgData];
             _pictureView.hidden=NO;
             cameraView.hidden=YES;
             
-//            _snapImageView.image=stillImage;
-            
-            [_snapImageView setImage:[[Context contextSharedManager] imageWithImage:stillImage scaledToSize:self.view.frame.size]];
+            [_snapImageView setImage:stillImage];
         
         }
     }];
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"acceptEdit"]) {
-        
-//        AcceptSendViewController *destViewController = segue.destinationViewController;
-//        destViewController.getImage = stillImage;
-//        destViewController.acceptID = self.getId;
-//        destViewController.getMockImage=self.acceptImageView.image;
-//        destViewController.isAccept = YES;
     
+        [self hideActivity];
         ImageEditingViewController *tabView = segue.destinationViewController;
         tabView.isAccept=YES;
     
     }
-//    else
-//        if ([segue.identifier isEqualToString:@"acceptCompare"]) {
-//    
-////        AcceptCompareController *compareView = segue.destinationViewController;
-//        //compareView.getMockImage=stillImage;
-//    }
+
 }
 - (IBAction)switchCamera:(id)sender{
     NSArray * inputs =avSession.inputs;
@@ -542,11 +544,13 @@
     
     _pictureView.hidden=YES;
     cameraView.hidden=NO;
+    [self setcameraButtonsStatus:YES];
     
 }
 
 - (IBAction)doneAction:(id)sender {
     
+    [self showActivityWithMessage:nil];
     appDelegate.getNewImage=stillImage;
     
     self.navigationController.navigationBar.hidden=NO;
@@ -581,4 +585,8 @@
     
 }
 
+- (IBAction)backAction:(id)sender {
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

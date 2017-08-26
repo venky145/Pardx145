@@ -7,8 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface NewDoneViewController : UIViewController
+
+@property(assign) BOOL isPlayGround;
+@property (assign) BOOL isPGResponse;
+@property (assign) BOOL isFriend;
 
 @property(nonatomic,retain) NSArray *recipientIds;
 
@@ -34,5 +39,6 @@
 
 @property (nonatomic,retain) UIImage *mockImage;
 
+@property (weak, nonatomic) IBOutlet UIView *messageTextView;
 
 @end

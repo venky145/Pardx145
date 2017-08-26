@@ -93,17 +93,17 @@
     
     CompletedModelClass *modelClass=[pendingArray objectAtIndex:indexPath.row];
     
-    if (modelClass.message.length>0) {
-        cell.messageText.text=modelClass.message;
-    }else
-        cell.messageText.text=@"No Message";
+//    if (modelClass.message.length>0) {
+//        cell.messageText.text=modelClass.message;
+//    }else
+//        cell.messageText.text=@"No Message";
     
     
 //    NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:modelClass.challengeThumbnail];
 //    
 //    cell.mockImage.image = [UIImage imageWithData:imageData];
     
-    [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:modelClass.challengeThumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:modelClass.challengeThumbnail] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
     
     // Configure the cell...
     

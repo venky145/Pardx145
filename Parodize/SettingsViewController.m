@@ -9,6 +9,8 @@
 #import "SettingsViewController.h"
 #import "SettingsCell.h"
 #import "SettingsDeleteCell.h"
+#import "NotificationObject.h"
+#import "SettingsObject.h"
 
 
 @interface SettingsViewController ()
@@ -24,15 +26,91 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    settingsArray=[[NSMutableArray alloc]initWithObjects:@"Location",@"Notifications",@"Linked Accounts",@"Block", nil];
+    
+
+    settingsArray=[[NSMutableArray alloc]initWithObjects:@"Location",@"Notifications",@"Account",@"Support",@"About", nil];
     
     self.title=@"Settings";
+    
+    self.sObj = [[SettingsObject alloc]init];
+    
+    [[Context contextSharedManager] makeClearNavigationBar:self.navigationController];
+    
+    [self fetchSettings];
+}
+-(void)fetchSettings
+{
+    
+    [self showActivityWithMessage:nil];
+    
+    NSUserDefaults *sharedUserDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@",kBaseAPI,SETTINGS];
+    NSDictionary *dict=[NSDictionary dictionaryWithObjectsAndKeys:@"",@"",nil];
+    
+    NSDictionary *userInfo = @{
+                               @"postdata": dict
+                               };
+    
+    [[Context contextSharedManager] pgfetchDataForURL:urlStr userInfo:userInfo postTypeMethod:eGET headerAutherization:YES withCompletionHandler:^(NSDictionary *data, NSError *error) {
+        
+        if ([data objectForKey:RESPONSE_ERROR]) {
+            
+            [self hideActivity];
+            
+            [[Context contextSharedManager] showAlertView:self withMessage:[data objectForKey:RESPONSE_ERROR] withAlertTitle:SERVER_ERROR];
+        }
+        else{
+            
+            NSDictionary *successDict=[data objectForKey:@"success"];
+            
+            [sharedUserDefaults setValue:successDict forKey:SETTINGS_DEFAULT];
+            [sharedUserDefaults synchronize];
+        
+            for (NSString *key in successDict) {
+                if ([self.sObj respondsToSelector:NSSelectorFromString(key)]) {
+                    
+                    if ([successDict valueForKey:key] != NULL) {
+                        
+                        if ([key isEqualToString:@"notifications"]) {
+                            NSDictionary *notifDict = [successDict valueForKey:key];
+                            NotificationObject *nObj = [[NotificationObject alloc]init];
+                            for (NSString *key in notifDict) {
+                                if ([nObj respondsToSelector:NSSelectorFromString(key)]) {
+                                    
+                                    if ([notifDict valueForKey:key] != NULL) {
+                                        [nObj setValue:[notifDict valueForKey:key] forKey:key];
+                                    }else{
+                                         [nObj setValue:@"" forKey:key];
+                                    }
+                                }
+                            }
+                            [self.sObj setValue:nObj forKey:key];
+                        }else{
+                            [self.sObj setValue:[successDict valueForKey:key] forKey:key];
+                        }
+                    }
+                    else
+                        [self.sObj setValue:@"" forKey:key];
+                }
+            }
+            
+            NSLog(@"%@",self.sObj);
+            
+            [self hideActivity];
+            
+        }
+    }];
+}
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.topItem.title = @"";
+    self.navigationController.navigationBar.backItem.title = @"";
 }
 #pragma mark UITableViewDataSource and Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -42,8 +120,10 @@
     }else if(section==1){
         
         return 1;
-    }else{
+    }else if(section==2){
         
+        return 1;
+    }else{
         return 1;
     }
 }
@@ -103,6 +183,19 @@
 //        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
         return cell;
     }else if(indexPath.section==2){
+        NSString* deleteIdentifier=@"LogoutCell";
+        
+        UITableViewCell *cell=(UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:deleteIdentifier];
+        
+        if (cell==nil)
+        {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:deleteIdentifier];
+            
+        }
+        
+        //cell.textLabel.text=DELETE_ACCOUNT;
+        return cell;
+    }else if(indexPath.section==3){
         NSString* deleteIdentifier=@"DeleteCell";
         
         UITableViewCell *cell=(SettingsDeleteCell *)[tableView dequeueReusableCellWithIdentifier:deleteIdentifier];
@@ -121,7 +214,12 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section==1) {
+    if (indexPath.section==0) {
+        if (indexPath.row==1) {
+            [self performSegueWithIdentifier:@"notificationSegue" sender:self];
+        }
+        
+    }else if (indexPath.section==1) {
         
         if (indexPath.row==0) {
             
@@ -158,8 +256,6 @@
 }
 -(void)turnOffLocation:(UISwitch *)locationSwitch{
     
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -167,14 +263,20 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
+    if ([segue.identifier isEqualToString:@"notificationSegue"]) {
+        //[self.picker dismissViewControllerAnimated:NO completion:nil];
+        
+        NotificationViewController *notificationViewController = segue.destinationViewController;
+        notificationViewController.notifications = self.sObj.notifications;
+        notificationViewController.settingObj = self.sObj;
+    }
+    
 }
-*/
+
 
 @end

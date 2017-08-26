@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "DistanceViewController.h"
+#import "ActivityBaseViewController.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface PlayGroudViewController : UIViewController<UIGestureRecognizerDelegate,UICollectionViewDataSource,UICollectionViewDelegate>
+@interface PlayGroudViewController : ActivityBaseViewController<UIGestureRecognizerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *distanceButton;
 
@@ -17,14 +19,15 @@
 @property (weak, nonatomic) IBOutlet UIButton *challengeButton;
 - (IBAction)challengeAction:(id)sender;
 
-@property (weak, nonatomic) IBOutlet UIImageView *profileImage;
+@property (weak, nonatomic) IBOutlet UICollectionView *pdCollectionView;
+- (IBAction)searchAction:(id)sender;
 
-@property (weak, nonatomic) IBOutlet UILabel *messageLabel;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UIButton *allButton;
+@property (weak, nonatomic) IBOutlet UIButton *selfButton;
+- (IBAction)allAction:(id)sender;
+- (IBAction)selfAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *navView;
 
-- (IBAction)upScrollAction:(id)sender;
-
-- (IBAction)downScrollAction:(id)sender;
 
 @end
 

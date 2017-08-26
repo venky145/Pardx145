@@ -28,7 +28,7 @@
 
 #pragma mark Server-API's
 
-#define kBaseAPI   @"http://parodizeserverapi.com/parodize/version_one/"
+#define kBaseAPI   @"https://parodizeserverapi.com/parodize/version_one/"
 //https://parodizeserverapi.com/parodize/version_one/user/reset/password
 
 #define DELETE_ACCOUNT @"Delete Account"
@@ -43,10 +43,15 @@
 #define USER_NAME              @"user/username/add"
 //#define FRIENDS_LIST           @"user/friends/list"
 #define FRIENDS_LIST           @"user/friends/list/lazy"
+#define FRIENDS_CHALLENGES     @"user/friends/timeline/challenges"
+#define FRIENDS_RESPONSES     @"user/friends/timeline/responses"
+#define VISIBILITY              @"completed/visibility"
+
 #define NEW_CHALLENGE          @"challenge/new"
 #define ACCEPT_PARTICULAR      @"challenge/accept"
 #define ACCEPT_CHALLENGE       @"challenge/accept/lazy"
 #define ACCEPT_RESPONSE        @"challenge/accept/response"
+#define ACCEPT_IGNORE          @"challenge/accept/ignore"
 //#define COMPLETED_RESPONSE     @"completed"
 #define COMPLETED_RESPONSE     @"completed/lazy"
 #define PENDING_REQUEST        @"pending/lazy"
@@ -54,6 +59,25 @@
 #define ACCEPT_FRIEND          @"user/friendrequest/accept"
 #define NEW_FRIEND_REQUEST     @"user/friendrequest/new"
 
+//Play ground API
+#define pgBASE_API             @"https://parodizeserverapi.com/parodize/version_one/playground/"
+#define PG_NEW                 @"challenge/new"
+#define PG_SCAN                @"challenge/scan"
+#define PG_RESPONSE            @"response"
+#define PG_STARS               @"response/stars_increment"
+#define PG_SUGGEST             @"tag/suggest"
+#define PG_RELATED             @"tag/related"
+#define PG_RESPONSES_LOAD      @"challenge/responses"
+#define PG_MYPOSTS             @"challenge/my_posts"
+
+//Share API
+#define SHARE_REQUEST          @"completed/shared"
+#define COMBINE_IMAGE          @"combined/url"
+
+#define SETTINGS               @"user/settings"
+#define DEACTIVATE_ACCOUNT     @"user/deactivate"
+
+//= https://parodizeserverapi.com/parodize/version_one/playground/challenge/my_posts
 
 //user/friendrequest/accept
 
@@ -112,6 +136,10 @@ typedef enum _HttpMethod {
 #define RESPONSE_SUCCESS @"success"
 #define RESPONSE_ERROR @"error"
 
+#define SERVER_ERROR  @"Error"
+
+#define SERVER_REQ_ERROR @"Server internal issue, unable to communicate"
+
 //CoreData Constants
 
 #define USER_PROFILE @"User_Profile"
@@ -122,7 +150,15 @@ typedef enum _HttpMethod {
 
 #define PROFILE_UPDATE  @"ProfileUpdated"
 
+#define RESPONSE_UPDATE  @"ResponseUpdate"
+
 #define DEVICE_TOKEN   @"deviceToken"
+
+#define CAPTION_STR @"No Caption"
+
+#define DEFAULT_IMAGE @"imageBackground"
+
+#define SETTINGS_DEFAULT @"Settings"
 
 //#define macro
 

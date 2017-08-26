@@ -27,9 +27,7 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     CGPoint        offset;
     CGFloat animatedDistance;
     NSIndexPath *nextIndexPath;
-    
     UITextField *previousTextField;
-    
     //
     UIImage *selectedImage;
     UIImagePickerController *cameraPicker;
@@ -50,7 +48,8 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     // Do any additional setup after loading the view.
     
     textFieldsDict=[[NSMutableDictionary alloc]init];
-    placeholderArray=[NSArray arrayWithObjects:@"FirstName",@"LastName",@"About",@"Phone",@"Gender",nil];
+    
+    editUserProfile = [User_Profile fetchDetailsFromDatabase:@"User_Profile"];
 
     genderArray=[NSArray arrayWithObjects:@"Male",@"Female", nil];
     
@@ -79,6 +78,10 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
     if (genderStr.length>0) {
         copyGender=genderStr;
     }
+    
+    placeholderArray=[NSArray arrayWithObjects:@"FirstName",@"LastName",@"About",@"Phone",@"Gender",nil];
+    
+    [_editTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -108,7 +111,13 @@ static const CGFloat CONTENT_HEIGHT_iPhone4 = 200;
 }
 -(void)viewDidLayoutSubviews
 {
-    [[Context contextSharedManager] roundImageView:self.profileImage];
+//    [[Context contextSharedManager] roundImageView:self.profileImage withValue:self.profileImage.frame.size.height/2];
+    
+    self.profileImage.layer.cornerRadius=self.profileImage.frame.size.height/4;
+    self.profileImage.layer.borderColor=[UIColor whiteColor].CGColor;
+    self.profileImage.layer.borderWidth=5.0f;
+    self.profileImage.layer.masksToBounds=YES;
+    self.profileImage.clipsToBounds=YES;
 }
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 //    

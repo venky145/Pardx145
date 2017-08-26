@@ -29,10 +29,10 @@
     dragSlider=[[UISlider alloc]initWithFrame:CGRectMake(50, 0, 350, 350)];
     
     dragSlider.minimumValue=0;
-    dragSlider.maximumValue=10;
-    dragSlider.value=10;
+    dragSlider.maximumValue=10000;
+//    dragSlider.value=10000;
     
-    [dragSlider setMaximumTrackTintColor:[UIColor blueColor]];
+    [dragSlider setMaximumTrackTintColor:[UIColor whiteColor]];
     [dragSlider setMinimumTrackTintColor:[UIColor darkGrayColor]];
     
     [dragSlider.layer setAnchorPoint:CGPointMake(0.0f, 0.0f)];
@@ -46,6 +46,7 @@
         forControlEvents:(UIControlEventTouchUpInside | UIControlEventTouchUpOutside)];
     
     [dragSlider setThumbImage:[UIImage imageNamed:@"Drag_Marker.png"] forState:UIControlStateNormal];
+    distanceLabel.text= [NSString stringWithFormat:@"10000 miles"];
     
     [self.view addSubview:dragSlider];
     
@@ -68,7 +69,7 @@
     
     yourLabel.center = CGPointMake(thumbRect.origin.x + mapSlider.frame.origin.x,  mapSlider.frame.origin.y - 20);
 
-    int value=10-(int)roundf(mapSlider.value);
+    int value=10000-(int)roundf(mapSlider.value);
     
     distanceLabel.text= [NSString stringWithFormat:@"%d miles",value];
     
@@ -79,13 +80,11 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"Disappear %hhd",animated);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationRevealedEvent" object:(id)kCFBooleanTrue];
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
-    NSLog(@"Dissapear %hhd",animated);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationRevealedEvent" object:(id)kCFBooleanFalse];
 }
 - (void)didReceiveMemoryWarning {

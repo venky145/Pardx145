@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "SWRevealViewController.h"
 #import "User_Profile.h"
+#import "AnimateCheckView.h"
 
 @interface NewDoneViewController ()
 {
@@ -17,6 +18,9 @@
     UIVisualEffectView *bluredView;
     
     AFHTTPRequestOperation *afOperation;
+    
+    float latitudeValue;
+    float longitudeValue;
 }
 
 @end
@@ -49,12 +53,34 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(moveToHome:)
+                                                 name:@"checkAnimation"
+                                               object:nil];
+    
     sendingLabel.hidden=YES;
     progressStatus.hidden=YES;
     prgCancelButton.hidden=YES;
+    if (_isPlayGround) {
+        CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+        locationManager.distanceFilter = kCLDistanceFilterNone;
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+        [locationManager startUpdatingLocation];
+        latitudeValue = locationManager.location.coordinate.latitude;
+        longitudeValue = locationManager.location.coordinate.longitude;
+    }
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [self.navigationController.navigationBar setHidden:NO];
+    self.navigationController.navigationBar.barTintColor = [[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
+    
+    messageText.layer.cornerRadius=4.0f;
+    messageText.layer.masksToBounds=YES;
     
 }
-
+-(void)viewDidAppear:(BOOL)animated{
+    [messageText becomeFirstResponder];
+}
 
 - (IBAction)doneAction:(id)sender {
     
@@ -80,7 +106,12 @@
     
     [self.view bringSubviewToFront:sendingLabel];
     
-    [self postNewChallenge];
+    if (_isPlayGround||_isPGResponse) {
+        [self postPlayGroundChallenge];
+    }else{
+         [self postNewChallenge];
+    }
+   
     
     
 //       [pfImages saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -113,23 +144,31 @@
 //     
 //     ];
 }
+-(void)moveToHome:(NSNotification *)notificationCenter{
+    [bluredView removeFromSuperview];
+    bluredView=nil;
+     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    SWRevealViewController *tabView = [storyBoard instantiateViewControllerWithIdentifier:@"reveal"];
+    //            tabView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentViewController:tabView animated:YES completion:nil];
+}
+-(void)showCheckMarkView{
+    AnimateCheckView *animateView = [[AnimateCheckView alloc]initWithFrame:CGRectMake(self.view.center.x-25, self.view.center.y-25, 50, 50)];
+    
+    [self.view addSubview:animateView];
+    [animateView setNeedsDisplay];
+}
 
 -(void)doneWithSendingView
 {
     [progressStatus setProgress:0];
-    
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-    
     sendingLabel.hidden=YES;
     progressStatus.hidden=YES;
     prgCancelButton.hidden=YES;
-    
-    [bluredView removeFromSuperview];
-    
-    bluredView=nil;
-    
     sendingLabel.text=@"Sending . . .";
     
+    [self showCheckMarkView];
 }
 
 - (IBAction)progressCancelAction:(id)sender {
@@ -148,51 +187,55 @@
 
 - (void)keyboardWillShown:(NSNotification *)notification
 {
+    NSDictionary *info = [notification userInfo];
+    NSNumber *number = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    double duration = [number doubleValue];
     
     // Get the size of the keyboard.
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     //Given size may not account for screen rotation
     int height = MIN(keyboardSize.height,keyboardSize.width);
-    //    int width = MAX(keyboardSize.height,keyboardSize.width);
-    
-    //your other code here..........
-    
-    
-    //    const int movementDistance = 260; // tweak as needed
-    const float movementDuration = 0.30f; // tweak as needed
-    
-    //int movement = (up ? -height : height);
-    
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.view.frame = CGRectOffset(self.view.frame, 0, -height);
-    [UIView commitAnimations];
+
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options: UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                        self.messageTextView.frame=CGRectMake(self.messageTextView.frame.origin.x, self.messageTextView.frame.origin.y-height, self.messageTextView.frame.size.width, self.messageTextView.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
 }
 - (void)keyboardWillHide:(NSNotification *)notification
 {
+
+    NSDictionary *info = [notification userInfo];
+    NSNumber *number = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    double duration = [number doubleValue];
     
-    // Get the size of the keyboard.
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
-    //Given size may not account for screen rotation
     int height = MIN(keyboardSize.height,keyboardSize.width);
-    //    int width = MAX(keyboardSize.height,keyboardSize.width);
     
-    //your other code here..........
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options: UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.messageTextView.frame=CGRectMake(self.messageTextView.frame.origin.x, self.messageTextView.frame.origin.y+height, self.messageTextView.frame.size.width, self.messageTextView.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+}
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    // Prevent crashing undo bug – see note below.
+    if(range.length + range.location > textField.text.length)
+    {
+        return NO;
+    }
     
-    
-    //    const int movementDistance = 260; // tweak as needed
-    const float movementDuration = 0.2f; // tweak as needed
-    
-    //int movement = (up ? -height : height);
-    
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.view.frame = CGRectOffset(self.view.frame, 0, height);
-    [UIView commitAnimations];
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    return newLength <= 80;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -200,32 +243,34 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)postNewChallenge
-{
-
+-(void)postPlayGroundChallenge{
+    
     NSData *imageData = UIImageJPEGRepresentation(_mockImage, 1.0);
     NSString *encodedString =  [imageData base64EncodedStringWithOptions:0];
+    NSMutableDictionary *detailDictV=[[NSMutableDictionary alloc]init];
     
-    NSString *capString=tagsStr;
+    [detailDictV setValue:encodedString forKey:@"image"];
+    [detailDictV setValue:messageText.text forKey:@"caption"];
     
-    NSString *requestMethod = @"POST";
-    
-    
-    
-     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,NEW_CHALLENGE];
+    NSString *requestURL;
+    if (_isPlayGround) {
+        [detailDictV setValue:[NSString stringWithFormat:@"%f",latitudeValue] forKey:@"latitude"];
+        
+        [detailDictV setValue:[NSString stringWithFormat:@"%f",longitudeValue] forKey:@"longitude"];
+        requestURL = [NSString stringWithFormat:@"%@%@", pgBASE_API,PG_NEW];
+    }else if(_isPGResponse){
+        [detailDictV setValue:appDelegate.pgrespObj.id forKey:@"id"];
+        requestURL = [NSString stringWithFormat:@"%@%@", pgBASE_API,PG_RESPONSE];
+    }
 
     
-    NSError *error;
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    
-    
-    __block NSMutableURLRequest *request = [manager.requestSerializer
-                                            multipartFormRequestWithMethod:requestMethod
-                                            URLString:requestURL
-                                            parameters:nil
-                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                            } error:&error];
-    
+    [self sendRequest:detailDictV withApi:requestURL];
+}
+
+-(void)postNewChallenge
+{
+    NSData *imageData = UIImageJPEGRepresentation(_mockImage, 1.0);
+    NSString *encodedString =  [imageData base64EncodedStringWithOptions:0];
     NSMutableDictionary *detailDictV=[[NSMutableDictionary alloc]init];
     
     [detailDictV setValue:encodedString forKey:@"image"];
@@ -234,21 +279,35 @@
     
     [detailDictV setValue:messageText.text forKey:@"caption"];
     
-//    [detailDictV setValue:[NSArray arrayWithObject:@"12345"] forKey:@"recipients"];
+    //    [detailDictV setValue:[NSArray arrayWithObject:@"12345"] forKey:@"recipients"];
+    if (_isFriend) {
+        [detailDictV setValue:[NSArray arrayWithObject:appDelegate.friendId] forKey:@"recipients"];
+
+    }else{
+        [detailDictV setValue:recipientIds forKey:@"recipients"];
+    }
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,NEW_CHALLENGE];
+    [self sendRequest:detailDictV withApi:requestURL];
+}
+-(void)sendRequest:(NSDictionary *)dataDictionary withApi:(NSString *)apiStr{
+    NSString *requestMethod = @"POST";
+    NSError *error;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
-    [detailDictV setValue:recipientIds forKey:@"recipients"];
     
-    //    [NSDictionary dictionaryWithObjectsAndKeys:encodedString,@"image",capString,@"caption",messageText.text,@"message",recipientIds,@"recipients", nil];
+    __block NSMutableURLRequest *request = [manager.requestSerializer
+                                            multipartFormRequestWithMethod:requestMethod
+                                            URLString:apiStr
+                                            parameters:nil
+                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                            } error:&error];
     
     NSDictionary *jsonDict = @{
-                               @"postdata": detailDictV
+                               @"postdata": dataDictionary
                                };
     
     request.userInfo = jsonDict;
     request.timeoutInterval = 60.0;
-    
-    
-    
 
     if ([jsonDict objectForKey:@"postdata"] != nil)
     {
@@ -258,10 +317,10 @@
     }
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-
-        NSLog(@" Autherization Header required");
-        NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
-        [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
+    
+    NSLog(@" Autherization Header required");
+    NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
+    [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
     
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
@@ -276,28 +335,26 @@
          {
              NSLog(@"%@",responseObject);
              
-             if ([responseObject objectForKey:@"error"]) {
+             if ([responseObject objectForKey:RESPONSE_ERROR]) {
                  
-                 [self doneWithSendingView];
-                 
-                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-                 
-                 [alert show];
+                 [[Context contextSharedManager] showAlertView:self withMessage:[responseObject objectForKey:RESPONSE_ERROR] withAlertTitle:SERVER_ERROR];
                  
              }else
              {
                  NSMutableDictionary *valueDict=[responseObject valueForKey:RESPONSE_SUCCESS];
+                  [User_Profile updateValue:@"score" withValue:[[valueDict objectForKey:@"score"] intValue]];
                  
-                 [User_Profile updateValue:@"score" withValue:[[valueDict objectForKey:@"score"] intValue]];
+                 [[NSNotificationCenter defaultCenter] postNotificationName:PROFILE_UPDATE object:nil];
                  
-                  [[NSNotificationCenter defaultCenter] postNotificationName:PROFILE_UPDATE object:nil];
                  
-                 [self doneWithSendingView];
+                 if (_isPlayGround||_isPGResponse) {
+                     [[NSNotificationCenter defaultCenter] postNotificationName:RESPONSE_UPDATE object:valueDict];
+                     [self dismissViewControllerAnimated:YES completion:nil];
+                 }else{
+                      [self doneWithSendingView];
+                 }
                  
-                             UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                             SWRevealViewController *tabView = [storyBoard instantiateViewControllerWithIdentifier:@"reveal"];
-                 //            tabView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-                             [self presentViewController:tabView animated:YES completion:nil];
+                 
              }
          }
          
@@ -305,9 +362,7 @@
      {
          NSLog(@"Request failed");
          
-         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-         
-         [alert show];
+         [[Context contextSharedManager] showAlertView:self withMessage:SERVER_REQ_ERROR withAlertTitle:SERVER_ERROR];
          
      }];
     
@@ -318,8 +373,18 @@
     [operation setUploadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         progressStatus.progress = (float)totalBytesRead / totalBytesExpectedToRead;
     }];
+}
+- (void)viewDidDisappear:(BOOL)animated{
     
+    [self deregisterForKeyboardNotifications];
 }
 
+- (void)deregisterForKeyboardNotifications {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [center removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [center removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [center removeObserver:self name:@"" object:nil];
+}
 
 @end

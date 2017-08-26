@@ -170,19 +170,15 @@
         [self addChildViewController:self.picker];
         [self.picker didMoveToParentViewController:self];
         [self.view addSubview:self.picker.view];
-        
-        
     }
     else
     {
-        
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Camera not found" message:nil preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
             [alertController addAction:ok];
             
             [self presentViewController:alertController animated:YES completion:nil];
-        
     }
 }
 -(UIColor*)colorWithHexString:(NSString*)hex

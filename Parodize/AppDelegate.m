@@ -29,7 +29,7 @@
 
 @implementation AppDelegate
 
-@synthesize getNewImage,accpet_ID,acceptImage;
+@synthesize getNewImage,accpet_ID,acceptImage,isImagePicker,acceptModel,pgrespObj,friendId;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -172,6 +172,8 @@
         
             [self openViewcontrollerWithRequestType:requestType];
         }
+    }else{
+        NSLog(@"silent notification recieved");
     }
     if (requestType==profile_notify) {
         [[Context contextSharedManager] requestProfileDetails];
@@ -279,20 +281,10 @@
     }
 }
 
-
-//
-
 -(void) didPostDeviceToken:(NSMutableDictionary *) dataDictionary
 {
     if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionary objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-        
+         [[Context contextSharedManager] showAlertView:self.window.rootViewController withMessage:[dataDictionary objectForKey:RESPONSE_ERROR] withAlertTitle:SERVER_ERROR];
     }
     else
     {

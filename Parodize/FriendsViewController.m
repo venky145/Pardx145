@@ -33,6 +33,8 @@
     
     AFHTTPRequestOperation *afOperation;
     
+    UIRefreshControl *refreshControl;
+    
     //NSArray *fbFriendsArray;
 }
 
@@ -51,11 +53,9 @@
     fbFriendsArray=[[NSMutableArray alloc]init];
     searchFriendsArray=[[NSMutableArray alloc]init];
     requestsArray=[[NSMutableArray alloc]init];
-    
-   // https://graph.facebook.com/%@/picture?type=large
-    
     searchBarTop=[[UISearchBar alloc]init];
     searchBarTop.showsCancelButton=YES;
+    searchBarTop.placeholder=@"Search friends";
     searchBarTop.delegate=self;
     searchBarTop.tintColor=[UIColor whiteColor];
     
@@ -69,24 +69,63 @@
     
     searchBarItem.tintColor=[UIColor whiteColor];
     self.navigationItem.rightBarButtonItem = searchBarItem;
-    
-//    requestBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(requestsList:)];
-//    requestBarItem.tintColor=[UIColor whiteColor];
-//    
-//    NSArray *barButtons=[NSArray arrayWithObjects:searchBarItem,requestBarItem, nil];
-//    
-//    self.navigationItem.rightBarButtonItems=barButtons;
-    
+
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    
-
-}
--(void)viewWillAppear:(BOOL)animated{
+    refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(requestsList)
+             forControlEvents:UIControlEventValueChanged];
+    [self.friendsTableView setRefreshControl:refreshControl];
     
     [self requestsList];
 }
+-(void)viewWillAppear:(BOOL)animated{
+    
+    
+}
 -(void)inviteFriends:(id)sender{
+    
+    if ([FBSDKAccessToken currentAccessToken]) {
+         [self inviteInFacebook];
+    }else{
+        NSArray *permissionsArray = @[ @"user_about_me",@"email", @"user_relationships", @"user_birthday", @"user_location",@"user_hometown",@"public_profile",@"user_friends"];
+        
+        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+        [login
+         logInWithReadPermissions: permissionsArray
+         fromViewController:self
+         handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+             if (error) {
+                 NSLog(@"Process error");
+                 [self hideActivity];
+             } else if (result.isCancelled) {
+                 NSLog(@"Cancelled");
+                 
+                 [self hideActivity];
+             } else {
+                 [self inviteInFacebook];
+             }
+         }];
+    }
+    
+}
+
+-(void)inviteInFacebook{
+    FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
+    content.appLinkURL = [NSURL URLWithString:@"https://parodize.com"];
+    //optionally set previewImageURL
+    content.appInvitePreviewImageURL = [NSURL URLWithString:@"https://www.parodize.com"];
+    
+    // Present the dialog. Assumes self is a view controller
+    // which implements the protocol `FBSDKAppInviteDialogDelegate`.
+    [FBSDKAppInviteDialog showFromViewController:self
+                                     withContent:content
+                                        delegate:self];
+}
+- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults:(NSDictionary *)results{
+    
+}
+- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error{
     
 }
 -(void)requestsList{
@@ -101,13 +140,11 @@
 #pragma DataManagerDelegate  Methods
 
 -(void)didGetFriendRequests:(NSMutableDictionary *) dataDictionary{
-    
-    NSLog(@"Yahooooo... \n %@",dataDictionary);
 
     
     if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
         
-        [self.processIndicator stopAnimating];
+//        [self.processIndicator stopAnimating];
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:[dataDictionary objectForKey:RESPONSE_ERROR] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
         [alertController addAction:ok];
@@ -131,7 +168,6 @@
         [self getFriendDetails:dict];
         
     }
-    
 }
 
 -(void) didGetFriendsList:(NSMutableDictionary *) dataDictionary{
@@ -139,6 +175,8 @@
     NSLog(@"Yahooooo... \n %@",dataDictionary);
     
     [self.processIndicator stopAnimating];
+    
+    [refreshControl endRefreshing];
     
     if ([dataDictionary objectForKey:RESPONSE_ERROR]) {
         
@@ -172,7 +210,7 @@
     
     NSLog(@"Error");
     
-    [self.processIndicator stopAnimating];
+//    [self.processIndicator stopAnimating];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Server internal issue, unable to communicate " preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
     [alertController addAction:ok];
@@ -218,42 +256,6 @@
     NSMutableDictionary *searchDict=[[NSMutableDictionary alloc]init];
     [searchDict setValue:searchStr forKey:@"string"];
 
-    /*NSString *requestMethod = @"POST";
-    
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,SEARCH_FRIEND];
-    
-    
-    NSError *error;
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    
-    
-    __block NSMutableURLRequest *request = [manager.requestSerializer
-                                            multipartFormRequestWithMethod:requestMethod
-                                            URLString:requestURL
-                                            parameters:nil
-                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                            } error:&error];
-    
-    NSDictionary *jsonDict = @{
-                               @"postdata": searchDict
-                               };
-    
-    request.userInfo = jsonDict;
-    request.timeoutInterval = 60.0;
-
-    if ([jsonDict objectForKey:@"postdata"] != nil)
-    {
-        NSError *error = nil;
-        NSData *data = [NSJSONSerialization dataWithJSONObject:[jsonDict objectForKey:@"postdata"] options:NSUTF8StringEncoding error:&error];
-        [request setHTTPBody:(NSMutableData *)data];
-    }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    NSLog(@" Autherization Header required");
-    NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
-    [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
-     */
     NSString *requestMethod = @"POST";
     
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,SEARCH_FRIEND];
@@ -276,10 +278,6 @@
                                };
     
     request.userInfo = jsonDict;
-   // request.timeoutInterval = 60.0;
-    
-    
-    
     
     if ([jsonDict objectForKey:@"postdata"] != nil)
     {
@@ -443,7 +441,6 @@
                 
                 if (cell==nil)
                 {
-                    //NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PendingCell" owner:self options:nil];
                     cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
                 }
                 

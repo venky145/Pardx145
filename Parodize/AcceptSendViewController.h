@@ -25,6 +25,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
 
 @property (nonatomic,strong) NSNumber *acceptID;
+@property (nonatomic,strong) NSString *captionName;
+@property (weak, nonatomic) IBOutlet UITextView *mockCaption;
+@property (weak, nonatomic) IBOutlet UITextView *currentCaption;
 
 - (IBAction)sendAction:(id)sender;
 

@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "User_Profile.h"
 #import "SWRevealViewController.h"
+#import "AcceptModelClass.h"
 
 @interface AcceptSendViewController ()
 
@@ -34,16 +35,12 @@
     // Do any additional setup after loading the view.
     appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"%@",getImage);
-    if (getImage!=NULL)
-    {
-        [mockImage setImage:getImage];
-    }
+    [mockImage setImage:_getMockImage];
+
     
     if (appDelegate.acceptImage.length>0) {
-//        NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:appDelegate.acceptImage];
-//        originalImage.image= [UIImage imageWithData:imageData];
         
-        [originalImage sd_setImageWithURL:[NSURL URLWithString:appDelegate.acceptImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+        [originalImage sd_setImageWithURL:[NSURL URLWithString:appDelegate.acceptImage] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
     }
     
     
@@ -59,23 +56,31 @@
 
     self.sendButton.layer.cornerRadius=5.0f;
     self.sendButton.layer.masksToBounds=YES;
-    
-//    if (isAccept)
-//    {
-//        sendView.hidden=NO;
-//        self.title=@"Send";
-//    }
-//    else
-//    {
-//        sendView.hidden=YES;
-//        self.title=@"Completed";
-//    }
-    
+
     self.progressStatus.hidden=YES;
     self.cancelButton.hidden=YES;
     self.sendLabel.hidden=YES;
     
+    AcceptModelClass *modelClass = appDelegate.acceptModel;
+    if (modelClass.caption.length==0) {
+        self.mockCaption.text=@"No Caption";
+    }else{
+        self.mockCaption.text=modelClass.caption;
+    }
+    
+    if (_captionName.length==0) {
+        self.currentCaption.text=@"No Caption";
+        
+    }else{
+        self.currentCaption.text=_captionName;
+    }
 }
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.navigationController.navigationBar setHidden:NO];
+    self.navigationController.navigationBar.barTintColor = [[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
+}
+
 #pragma mark UITextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -190,7 +195,7 @@
 
     NSMutableDictionary *acceptDict=[[NSMutableDictionary alloc]init];
     
-    NSData *imageData = UIImageJPEGRepresentation(getImage, 1.0);
+    NSData *imageData = UIImageJPEGRepresentation(_getMockImage, 1.0);
     NSString *encodedString =  [imageData base64EncodedStringWithOptions:0];
 
     
@@ -198,7 +203,12 @@
     
     [acceptDict setValue:encodedString forKey:@"image"];
     
-    [acceptDict setValue:@"caption_test" forKey:@"caption"];
+    if (_captionName.length>0) {
+        [acceptDict setValue:_captionName forKey:@"caption"];
+    }else{
+        [acceptDict setValue:@"" forKey:@"caption"];
+    }
+    
     
     [acceptDict setValue:@"message_test" forKey:@"message"];
     
@@ -270,13 +280,11 @@
          {
              NSLog(@"%@",responseObject);
              
-             if ([responseObject objectForKey:@"error"]) {
+             if ([responseObject objectForKey:RESPONSE_ERROR]) {
                  
                  [self doneWithSendingView];
                  
-                 UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-                 
-                 [alert show];
+                 [[Context contextSharedManager] showAlertView:self withMessage:[responseObject objectForKey:RESPONSE_ERROR] withAlertTitle:SERVER_ERROR];
                  
              }else
              {
@@ -301,9 +309,7 @@
      {
          NSLog(@"Request failed");
          
-         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Server request failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil,nil];
-         
-         [alert show];
+        [[Context contextSharedManager] showAlertView:self withMessage:SERVER_REQ_ERROR withAlertTitle:SERVER_ERROR];
          
      }];
 

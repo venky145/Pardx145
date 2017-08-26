@@ -8,14 +8,39 @@
 
 #import <UIKit/UIKit.h>
 #import "PECropViewController.h"
+#import "GPUImage.h"
+#import "DrawLine.h"
 
 // OpenGL
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+typedef enum {
+    RGB_FILTER,
+    WHITE_BALANCE_FILTER,
+    MONOCHROME_FILTER,
+    AMATORKA_FILTER,
+    ETIKA_FILTER,
+    ELEGANCE_FILTER,
+    INVERT_FILTER,
+    THRESHOLD_FILTER,
+    SOBEL_FILTER,
+    TOON_FILTER,
+    TILT_FILTER,
+    POSTERIZE_FILTER,
+    EMBOSS_FILTER,
+    KUWAHARA_FILTER,
+    CUSTOM_FILTER,
+    UI_ELEMENT_FILTER,
+    GRAYSCALE_FILTER,
+    SEPIA_FILTER,
+    SKETCH_FILTER,
+    GAUSSIAN_FILTER,
+    POLKA_FILTER
+} ShowcaseFilterType;
 
-@interface ImageEditingViewController : ActivityBaseViewController <UITextFieldDelegate,PECropViewControllerDelegate>
+@interface ImageEditingViewController : ActivityBaseViewController <UITextFieldDelegate,PECropViewControllerDelegate,UIScrollViewDelegate>
 {
     // The pixel dimensions of the backbuffer
     GLint backingWidth;
@@ -30,67 +55,52 @@
 
 @property(strong,nonatomic) UIImage *snapImage;
 
-- (IBAction)backAction:(id)sender;
 @property(assign) BOOL isAccept;
+@property(assign) BOOL isImagePicker;
+@property(assign) BOOL isPlayGround;
+@property (assign) BOOL isPGResponse;
+@property (assign) BOOL isFriend;;
+
 @property (strong, nonatomic) IBOutlet UIImageView *snapImageView;
+
+@property (strong, nonatomic) IBOutlet UIView *colorContainer;
+@property (weak, nonatomic) IBOutlet DrawLine *drawLineView;
+@property (weak, nonatomic) IBOutlet UIView *penColorView;
+@property (weak, nonatomic) IBOutlet UIView *mainContainerView;
+
+@property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *filterButton;
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *colorButton;
+
 @property (nonatomic,retain) UIImage *getImage;
+
+//Sliders
+
+@property (strong, nonatomic) IBOutlet UISlider *brightSlider;
+
+//filter buttons
+
+@property (weak, nonatomic) IBOutlet UIButton *brightButton;
+@property (weak, nonatomic) IBOutlet UIButton *contrastButton;
+@property (weak, nonatomic) IBOutlet UIButton *hueButton;
+@property (weak, nonatomic) IBOutlet UIButton *saturationButton;
+@property (weak, nonatomic) IBOutlet UIButton *undoButton;
 
 - (IBAction)cacelAction:(id)sender;
 
 - (IBAction)doneAction:(id)sender;
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *cropButton;
-
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *filterButton;
-
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *colorButton;
-
-- (IBAction)cropAction:(UIBarButtonItem *)button;
-
 - (IBAction)filterAction:(UIBarButtonItem *)button;
 
 - (IBAction)colorAction:(UIBarButtonItem *)button;
 
-@property (strong, nonatomic) IBOutlet UIView *colorContainer;
-
-@property (strong, nonatomic) IBOutlet UIScrollView *filterScrollView;
-
-//- (IBAction)editAction:(id)sender;
-@property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
-//@property (strong, nonatomic) IBOutlet UIBarButtonItem *editButton;
-
-//Sliders
-
-@property (strong, nonatomic) IBOutlet UISlider *brightSlider;
 - (IBAction)brightnessValue:(UISlider *)sender;
-
-//@property (strong, nonatomic) IBOutlet UISlider *contrastSlider;
-//- (IBAction)contrastValue:(UISlider *)sender;
-//
-//@property (strong, nonatomic) IBOutlet UISlider *saturationSlider;
-//
-//- (IBAction)staurationValue:(UISlider *)sender;
-//
-//@property (strong, nonatomic) IBOutlet UISlider *hueSlider;
-//
-//- (IBAction)hueValue:(UISlider *)sender;
-//
-//@property (strong, nonatomic) IBOutlet UISlider *sharpSlider;
-//
-//- (IBAction)sharpValue:(UISlider *)sender;
-
-@property (strong, nonatomic) IBOutlet UILabel *brightLabel;
-
-@property (strong, nonatomic) IBOutlet UILabel *contrastLabel;
-//
-@property (strong, nonatomic) IBOutlet UILabel *hueLabel;
-
-@property (strong, nonatomic) IBOutlet UILabel *saturationLabel;
 
 - (IBAction)brightnessAction:(id)sender;
 
@@ -100,10 +110,17 @@
 
 - (IBAction)saturationAction:(id)sender;
 
+- (IBAction)deleteAction:(id)sender;
+- (IBAction)penToolAction:(id)sender;
+- (IBAction)undoAction:(id)sender;
+
 
 //Test label
-
 @property (weak, nonatomic) IBOutlet UILabel *sliderTestLabel;
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *penButton;
+
+@property (weak, nonatomic) IBOutlet UICollectionView *filterCollectionView;
 
 
 @end

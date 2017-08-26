@@ -10,10 +10,10 @@
 
 @interface PendingCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet UILabel *pendingLabel;
+@property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *mockImage;
 
-@property (strong, nonatomic) IBOutlet UILabel *messageText;
+@property (strong, nonatomic) IBOutlet UIButton *notifyButton;
 
 
 @end

@@ -109,10 +109,8 @@
     
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", kBaseAPI,USER_NAME];
     
-    
     NSError *error;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    
     
     __block NSMutableURLRequest *request = [manager.requestSerializer
                                             multipartFormRequestWithMethod:requestMethod

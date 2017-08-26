@@ -10,12 +10,12 @@
 
 @interface FriendsObject : NSObject
 
-@property (nonatomic) NSString *emailAddress;
-@property (nonatomic) NSString *firstname;
-@property (nonatomic) NSString *lastname;
-@property (nonatomic) NSString *thumbnail;
-@property (nonatomic) NSString *f_id;
-@property (nonatomic) NSString *score;
-@property (nonatomic) NSString *username;
+@property (nonatomic,retain) NSString *emailAddress;
+@property (nonatomic,retain) NSString *firstname;
+@property (nonatomic,retain) NSString *lastname;
+@property (nonatomic,retain) NSString *thumbnail;
+@property (nonatomic,retain) NSString *f_id;
+@property (nonatomic,retain) NSString *score;
+@property (nonatomic,retain) NSString *username;
 
 @end

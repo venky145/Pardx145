@@ -76,48 +76,149 @@
 #pragma mark UITableViewDataSource and Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section==0)
-    {
-       return 1;
+    if ((pendingCount>0)&&(completedArray.count>0)) {
+        if (section==0)
+        {
+            return 1;
+        }
+        else if(section==1)
+        {
+            return completedArray.count;
+        }
+
+    }else if(pendingCount>0){
+        return 1;
     }
-    else if(section==1)
-    {
+    else if(completedArray.count>0){
         return completedArray.count;
     }
     return 0;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
-    return 2;
+    if ((pendingCount>0)&&(completedArray.count>0)) {
+        return 2;
+    }else if(pendingCount>0){
+        return 1;
+    }
+    else if(completedArray.count>0){
+        return 1;
+    }
+    return 0;
 }
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if(section == 1)
-    {
-        if (completedArray.count>0) {
-            
+    if ((pendingCount>0)&&(completedArray.count>0)) {
+        if(section==1)
+        {
             return @"Completed";
-        }else
+        }
+        
+    }else if(pendingCount>0){
+        
+    }
+    else if(completedArray.count>0){
+       
+        if(section==1)
         {
             return @"No Completed Challenges";
         }
-
     }
     return nil;
 
 }
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    NSString *cellIdentifier;
+//    
+//    CompletedModelClass *completeModel=nil;
+//    
+//    if (indexPath.section==0)
+//    {
+//        cellIdentifier=@"pendingCell";
+//        
+//        UITableViewCell *cell=(UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//        
+//        if (cell==nil)
+//        {
+//            //NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PendingCell" owner:self options:nil];
+//            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+//        }
+//        
+//        cell.detailTextLabel.text=[NSString stringWithFormat:@"%@",pendingCount];
+//        
+//        return cell;
+//        
+//    }
+//    else if (indexPath.section==1)
+//    {
+//        cellIdentifier=@"completedCell";
+//        
+//        completeModel=[completedArray objectAtIndex:indexPath.row];
+//        
+//        CompletedCell *cell=(CompletedCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//        
+//        if (cell==nil)
+//        {
+//            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CompletedCell" owner:self options:nil];
+//            cell = [nib objectAtIndex:0];
+//        }
+//         NSDictionary *userDict=completeModel.from;
+//        
+//        cell.textDesc.text=[NSString stringWithFormat:@"%@ challenged you",[userDict objectForKey:@"firstname"]];
+//        cell.messagelabel.text=completeModel.message;
+//        
+//        [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:completeModel.responseImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+//    
+//        [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:completeModel.challengeImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+//        
+//        if (completeModel.message.length>0) {
+//            cell.messagelabel.text=completeModel.message;
+//        }else
+//        {
+//            cell.messagelabel.text=@"No message";
+//        }
+//        
+//        cell.timeLabel.text=[[Context contextSharedManager] setDateInterval:completeModel.time];
+//        
+//        return cell;
+//    }
+//
+//    return nil;
+//}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier;
     
-    CompletedModelClass *completeModel=nil;
+    if ((pendingCount>0)&&(completedArray.count>0)) {
+        
+        if (indexPath.section==0)
+        {
+            return [self customTableView:tableView withAtIndexPath:indexPath withIdentifier:@"pendingCell"];
+            
+        }
+        else if (indexPath.section==1)
+        {
+            return [self customTableView:tableView withAtIndexPath:indexPath withIdentifier:@"completedCell"];
+        }
+
+        
+    }else if(pendingCount>0){
+        return [self customTableView:tableView withAtIndexPath:indexPath withIdentifier:@"pendingCell"];
+    }
+    else if(completedArray.count>0){
+        return [self customTableView:tableView withAtIndexPath:indexPath withIdentifier:@"completedCell"];
+    }
+
     
-    if (indexPath.section==0)
-    {
+    return nil;
+}
+
+-(UITableViewCell *)customTableView:(UITableView *)customTable withAtIndexPath:(NSIndexPath *)indexPath withIdentifier:(NSString *)cellIdentifier{
+    
+    if ([cellIdentifier isEqualToString:@"pendingCell"]) {
         cellIdentifier=@"pendingCell";
         
-        UITableViewCell *cell=(UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        UITableViewCell *cell=(UITableViewCell *)[customTable dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell==nil)
         {
@@ -128,47 +229,31 @@
         cell.detailTextLabel.text=[NSString stringWithFormat:@"%@",pendingCount];
         
         return cell;
+    }else if ([cellIdentifier isEqualToString:@"completedCell"]){
+        //                cellIdentifier=@"completedCell";
         
-    }
-    else if (indexPath.section==1)
-    {
-        cellIdentifier=@"completedCell";
+        CompletedModelClass *completeModel=[completedArray objectAtIndex:indexPath.row];
         
-        completeModel=[completedArray objectAtIndex:indexPath.row];
-        
-        CompletedCell *cell=(CompletedCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        CompletedCell *cell=(CompletedCell *)[customTable dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell==nil)
         {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CompletedCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        
-//        cell.profileImage
-        
-         NSDictionary *userDict=completeModel.from;
+        NSDictionary *userDict=completeModel.from;
         
         cell.textDesc.text=[NSString stringWithFormat:@"%@ challenged you",[userDict objectForKey:@"firstname"]];
         cell.messagelabel.text=completeModel.message;
         
-        [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:completeModel.responseImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+        [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:completeModel.responseImage] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
         
+        [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:completeModel.challengeImage] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
         
-//        if (completeModel.responseThumbnail.length>0) {
-//            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.responseThumbnail];
-//            cell.mockImage.image = [UIImage imageWithData:imageData];
-//        }else{
-//            cell.mockImage.image=[UIImage imageNamed:@"UserMale.png"];
-//        }
+        [[Context contextSharedManager] cornerImageView:cell.mockImage withValue:4];
         
-//        if (completeModel.challengeThumbnail.length>0) {
-//            NSData *imageData = [[Context contextSharedManager] dataFromBase64EncodedString:completeModel.challengeThumbnail];
-//            cell.profileImage.image = [UIImage imageWithData:imageData];
-//        }else{
-//            cell.profileImage.image=[UIImage imageNamed:@"UserMale.png"];
-//        }
+        [[Context contextSharedManager] cornerImageView:cell.profileImage withValue:4];
         
-        [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:completeModel.challengeImage] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
         
         if (completeModel.message.length>0) {
             cell.messagelabel.text=completeModel.message;
@@ -181,10 +266,19 @@
         
         return cell;
     }
-
+    
+//    UITableViewCell *cell=(UITableViewCell *)[customTable dequeueReusableCellWithIdentifier:cellIdentifier];
+//
+//    if (cell==nil)
+//    {
+//        //NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PendingCell" owner:self options:nil];
+//        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+//    }
+//    
+//    cell.detailTextLabel.text=[NSString stringWithFormat:@"%@",pendingCount];
+    
     return nil;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section==1) {
@@ -255,7 +349,7 @@
 
 -(void) didGetCompletedChallenges:(NSMutableDictionary *) dataDictionary {
     
-    //NSLog(@"Yahooooo... \n %@",dataDictionary);
+    NSLog(@"Yahooooo... \n %@",dataDictionary);
     
     [self.activityIndicator stopAnimating];
     

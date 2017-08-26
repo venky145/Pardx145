@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "AcceptModelClass.h"
+#import "PlayGroundObject.h"
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
@@ -22,9 +24,17 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (nonatomic,strong) PlayGroundObject *pgrespObj;
+
 @property (nonatomic, retain) UIImage *getNewImage;
 
 @property (nonatomic, retain) NSString *acceptImage;
+
+@property (nonatomic, retain) NSString *friendId;
+
+@property(assign) BOOL isImagePicker;
+
+@property(nonatomic,strong) AcceptModelClass *acceptModel;
 
 -(void)sendDeviceToken;
 

@@ -37,9 +37,18 @@
     selectedIndexes=[[NSMutableArray alloc]init];
     
     self.recipientsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    
+//    UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 320)];
+//    imageview.image=_getImage;
+//    imageview.backgroundColor=[UIColor redColor];
+//    [self.view addSubview:imageview];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self.navigationController.navigationBar setHidden:NO];
+    self.navigationController.navigationBar.barTintColor = [[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
+    
     if (friendsArray.count==0)
     {
         [self getFriendDetails];
@@ -66,12 +75,7 @@
     
     if ([dataDictionaray objectForKey:RESPONSE_ERROR]) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[dataDictionaray objectForKey:RESPONSE_ERROR]
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        [[Context contextSharedManager] showAlertView:self withMessage:[dataDictionaray objectForKey:RESPONSE_ERROR] withAlertTitle:SERVER_ERROR];
         
     }
     else
@@ -108,12 +112,7 @@
     
     [self.loadingIndicator stopAnimating];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Server internal issue, unable to communicate "
-                                                   delegate:self
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+     [[Context contextSharedManager] showAlertView:self withMessage:SERVER_REQ_ERROR withAlertTitle:SERVER_ERROR];
     
     
     
@@ -243,7 +242,7 @@
 
     cell.profileName.text=[[Context contextSharedManager]assignFriendName:fbObj];
     
-     [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:fbObj.thumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+     [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:fbObj.thumbnail] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
 
     
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -272,18 +271,12 @@
         }
     }
     else
-    {
-//        NSDictionary *detailDict=[friendsArray objectAtIndex:0];
-//        [friendsIds addObject:[detailDict objectForKey:@"name"]];
-        
+    {        
         [selectedIndexes addObject:indexPath];
         
         [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
     }
-    
 }
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

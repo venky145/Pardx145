@@ -476,6 +476,8 @@ static const CGFloat MarginLeft = 20.0f;
         
         [self layoutCropRectViewWithCropRect:cropRect];
     } completion:NULL];
+    
+     [self layoutCropRectViewWithCropRect:cropRect];
 }
 
 - (void)zoomToCropRect:(CGRect)toRect

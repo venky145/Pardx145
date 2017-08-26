@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKShareKit/FBSDKShareKit.h>
 
-@interface FriendsViewController : ActivityBaseViewController<UISearchBarDelegate,UIAlertViewDelegate>
+@interface FriendsViewController : ActivityBaseViewController<UISearchBarDelegate,UIAlertViewDelegate,FBSDKAppInviteDialogDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 

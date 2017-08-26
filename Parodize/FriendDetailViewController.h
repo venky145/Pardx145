@@ -9,17 +9,27 @@
 #import <UIKit/UIKit.h>
 #import "FriendsObject.h"
 
-@interface FriendDetailViewController : UIViewController
+@interface FriendDetailViewController : ActivityBaseViewController
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *friendName;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
-@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UIView *challengeView;
-@property (weak, nonatomic) IBOutlet UIView *addView;
+@property (weak, nonatomic) IBOutlet UIImageView *backImageView;
+@property (weak, nonatomic) IBOutlet UIButton *followButton;
+@property (weak, nonatomic) IBOutlet UIButton *challengeButton;
+@property (weak, nonatomic) IBOutlet UIButton *scoreButton;
+
+
 @property (weak, nonatomic) FriendsObject *friendObj;
+
 - (IBAction)followAction:(id)sender;
 - (IBAction)challengeAction:(id)sender;
 - (IBAction)addFriendAction:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
+@property (weak, nonatomic) IBOutlet UIView *profileView;
+@property (weak, nonatomic) IBOutlet UICollectionView *challengeCollection;
+
+@property (weak, nonatomic) IBOutlet UILabel *noLabel;
+
+
 @end

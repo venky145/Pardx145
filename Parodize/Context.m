@@ -60,6 +60,13 @@ static Context *contextManager_instance = nil;
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
 }
 
+-(void)makeNormalNavigationBar:(UINavigationController *)navController{
+    [navController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [navController.navigationBar setShadowImage:nil];
+    navController.navigationBar.barTintColor = [[Context contextSharedManager] colorWithRGBHex:PROFILE_COLOR];
+    [navController.navigationBar setTintColor:[UIColor whiteColor]];
+}
+
 -(void)addIndicatorView:(UIView *)presentView
 {
     activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -76,7 +83,6 @@ static Context *contextManager_instance = nil;
 }
 - (UIColor *)colorWithRGBHex:(UInt32)hex
 {
-    
     int r = (hex >> 16) & 0xFF;
     int g = (hex >> 8) & 0xFF;
     int b = (hex) & 0xFF;
@@ -88,7 +94,6 @@ static Context *contextManager_instance = nil;
 }
 -(NSData *)dataFromBase64EncodedString:(NSString *)string{
     if (string.length > 0) {
-        
         //the iPhone has base 64 decoding built in but not obviously. The trick is to
         //create a data url that's base 64 encoded and ask an NSData to load it.
         NSString *data64URLString = [NSString stringWithFormat:@"data:;base64,%@", string];
@@ -97,13 +102,20 @@ static Context *contextManager_instance = nil;
     }
     return nil;
 }
--(void)roundImageView:(UIImageView *)imgView
+-(void)roundImageView:(UIImageView *)imgView withValue:(double)value
 {
-    imgView.layer.cornerRadius=imgView.frame.size.height/2;
-   
+    imgView.layer.cornerRadius=value/2;
     imgView.layer.borderColor=[self colorWithRGBHex:UPPER_COLOR].CGColor;
-    imgView.layer.borderWidth=5.0f;
-     imgView.layer.masksToBounds=YES;
+    imgView.layer.borderWidth=2.0f;
+    imgView.layer.masksToBounds=YES;
+    imgView.clipsToBounds=YES;
+}
+-(void)cornerImageView:(UIImageView *)imgView withValue:(double)value{
+    imgView.layer.cornerRadius=value;
+    
+    imgView.layer.borderColor=[UIColor whiteColor].CGColor;
+   imgView.layer.borderWidth=0.5f;
+    imgView.layer.masksToBounds=YES;
     imgView.clipsToBounds=YES;
 }
 
@@ -202,48 +214,106 @@ static Context *contextManager_instance = nil;
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc]init];
     [dateFormat setDateFormat:@"EEE MM dd HH:mm:ss yyyy"];
     [dateFormat setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:unixValue];
+    NSDate *postDate = [NSDate dateWithTimeIntervalSince1970:unixValue];
+    
+    NSDate *someDateInUTC = [NSDate dateWithTimeIntervalSince1970:unixValue];
+    NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
+//    NSDate *dateInLocalTimezone = [someDateInUTC dateByAddingTimeInterval:timeZoneSeconds];
+    
+    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc]init];
+    timeFormatter.dateFormat = @"hh:mm a";
+    NSString *timeString = [timeFormatter stringFromDate: postDate];
+    
+//    NSLog(@".....%@",dateInLocalTimezone);
     
     // Convert date object to desired output format
     [dateFormat setDateFormat:@"EEE MMM d, YYYY"];
-    NSString* dateStr = [dateFormat stringFromDate:date];
+    NSString* dateStr = [dateFormat stringFromDate:postDate];
     
-    NSDate *currentDate=[NSDate date];
+//    NSDate *currentDate=[NSDate date];
     
-    NSTimeInterval interval = [currentDate timeIntervalSinceDate:date];
+//    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:postDate];
+//    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
+//    
+//    
+//    NSTimeInterval interval = [currentDate timeIntervalSinceDate:postDate];
+//    
+//    long seconds = lroundf(interval); // Modulo (%) operator below needs int or long
+//    
+////    int hour = (seconds/3600);
+////    int mins = (seconds/60)/60;
+//    int secs = seconds%60;
+//    
+//    int mins = (seconds/60) % 60;
+//    int hour = (seconds/3600) % 60;
+//    
+//    if (hour==0)
+//    {
+//        if (mins==0)
+//        {
+//            formatDate=[NSString stringWithFormat:@"%d Seconds ago",secs];
+//        }
+//        else
+//        {
+//            formatDate=[NSString stringWithFormat:@"%d minutes ago",mins];
+//        }
+//    }
+//    else if(hour<=24)
+//    {
+//        formatDate=[NSString stringWithFormat:@"Today %@",dateString];
+//    }
+//    else if(hour<=48)
+//    {
+//        formatDate=[NSString stringWithFormat:@"Yesterday %@",dateString];
+//    }
+//    else
+//    {
+//        formatDate=dateStr;
+//    }
     
-    long seconds = lroundf(interval); // Modulo (%) operator below needs int or long
+    NSString *checkStr=[self relativeDateStringForDate:postDate withDateString:timeString];
     
-    int hour = (seconds%3600);
-    int mins = (seconds%3600)/60;
-    int secs = seconds%60;
     
-    if (hour==0)
-    {
-        if (mins==0)
-        {
-            formatDate=[NSString stringWithFormat:@"%d Seconds ago",secs];
-        }
-        else
-        {
-            formatDate=[NSString stringWithFormat:@"%d minutes ago",mins];
-        }
-    }
-    else if(hour<=24)
-    {
-        formatDate=[NSString stringWithFormat:@"Today"];
-    }
-    else if(hour<=48)
-    {
-        formatDate=[NSString stringWithFormat:@"Yesterday"];
-    }
-    else
-    {
+    
+    if (checkStr.length==0) {
         formatDate=dateStr;
+    }else{
+        formatDate = checkStr;
     }
-    
+//    NSLog(@".......format : %@",formatDate);
     return formatDate;
 }
+
+- (NSString *)relativeDateStringForDate:(NSDate *)date withDateString:(NSString *)dateStr
+{
+    NSCalendarUnit units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour |NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitWeekOfYear |
+    NSCalendarUnitMonth | NSCalendarUnitYear;
+    
+    // if `date` is before "now" (i.e. in the past) then the components will be positive
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:units
+                                                                   fromDate:date
+                                                                     toDate:[NSDate date]
+                                                                    options:0];
+    
+        if (components.year > 0) {
+            return [NSString stringWithFormat:@"%ld years ago", (long)components.year];
+        } else if (components.month > 0) {
+            return [NSString stringWithFormat:@"%ld months ago", (long)components.month];
+        } else if (components.weekOfYear > 0) {
+            return [NSString stringWithFormat:@"%ld weeks ago", (long)components.weekOfYear];
+        } else if (components.day > 0) {
+        if (components.day > 1) {
+            return [NSString stringWithFormat:@"%ld days ago", (long)components.day];
+        } else {
+            return [NSString stringWithFormat:@"Yesterday %@",dateStr];
+        }
+    } else {
+        return [NSString stringWithFormat:@"Today %@",dateStr];
+    }
+    return @"";
+}
+
+
 -(NSString *)setFirstLetterCapital:(NSString *)string{
     
     NSString *firstStr=[[string substringToIndex:1] capitalizedString];
@@ -252,6 +322,7 @@ static Context *contextManager_instance = nil;
     
     return cappedString;
 }
+
 
 //Check for email format
 -(BOOL) NSStringIsValidEmail:(NSString *)checkString
@@ -332,6 +403,92 @@ static Context *contextManager_instance = nil;
         friendName=[NSString stringWithFormat:@"%@",_friendObj.emailAddress];
     }
     return friendName;
+}
+
+//Alert
+-(void)showAlertView:(UIViewController *)controller withMessage:(NSString *)alertString withAlertTitle:(NSString *)alertTitle{
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertString preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:ok];
+    
+    [controller presentViewController:alertController animated:YES completion:nil];
+}
+//
+//- (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+//    //UIGraphicsBeginImageContext(newSize);
+//    // In next line, pass 0.0 to use the current device's pixel scaling factor (and thus account for Retina resolution).
+//    // Pass 1.0 to force exact pixel size.
+//    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+//    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return newImage;
+//}
+- (void) pgfetchDataForURL:(NSString *) url userInfo:(NSDictionary *) userInfo postTypeMethod:(int)methodType headerAutherization:(BOOL)iSheadReqAuth withCompletionHandler:(void (^)(NSDictionary *data, NSError *error))handler{
+    
+    if (_afOperation) {
+        [_afOperation cancel];
+    }
+    NSString *requestMethod;
+    NSString *userInfoKey;
+    if(methodType == ePOST){
+        requestMethod = @"POST";
+        userInfoKey=@"postdata";
+    }
+    else if (methodType == eGET){
+        requestMethod = @"GET";
+        userInfoKey=@"parameters";
+    }
+    else if (methodType == ePUT)
+        requestMethod = @"PUT";
+    else if (methodType == eDeLETE)
+        requestMethod = @"DELETE";
+    
+    NSError *error;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    
+    __block NSMutableURLRequest *request = [manager.requestSerializer
+                                            multipartFormRequestWithMethod:requestMethod
+                                            URLString:url
+                                            parameters:nil
+                                            constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                            } error:&error];
+    
+    request.userInfo = userInfo;
+    request.timeoutInterval = 60.0;
+    
+    if ([userInfo objectForKey:userInfoKey] != nil)
+    {
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:[userInfo objectForKey:userInfoKey] options:NSUTF8StringEncoding error:&error];
+        [request setHTTPBody:(NSMutableData *)data];
+    }
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    if(iSheadReqAuth) {
+        NSLog(@" Autherization Header required");
+        NSLog(@"Authorization Value = %@", [User_Profile getParameter:AUTH_VALUE]);
+        [request setValue:[User_Profile getParameter:AUTH_VALUE] forHTTPHeaderField:@"Authorization" ];
+    }
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    _afOperation=operation;
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if(responseObject)
+         {
+             handler(responseObject,nil);
+         }
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"Request failed");
+         handler(nil,error);
+     }];
+    [manager.operationQueue addOperation:operation];
 }
 #pragma mark Clear UserDefaults
 

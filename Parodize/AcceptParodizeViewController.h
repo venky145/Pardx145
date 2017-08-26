@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AcceptModelClass.h"
+#import "ActivityBaseViewController.h"
 
-@interface AcceptParodizeViewController : UIViewController<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIGestureRecognizerDelegate>
+@interface AcceptParodizeViewController : ActivityBaseViewController<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIGestureRecognizerDelegate>
 
 @property(assign)BOOL isNotification;
 
@@ -53,5 +54,6 @@
 - (IBAction)cameraGesture:(id)sender;
 - (IBAction)mockGesture:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadIndicator;
+- (IBAction)backAction:(id)sender;
 
 @end

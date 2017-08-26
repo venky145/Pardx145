@@ -135,11 +135,11 @@
     }
     cell.detailLabel.text=acceptModel.message;
     
-    [cell.userPic sd_setImageWithURL:[emailDict objectForKey:@"thumbnail"] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    [cell.userPic sd_setImageWithURL:[emailDict objectForKey:@"thumbnail"] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
     
-    [[Context contextSharedManager] roundImageView:cell.userPic];
+    [[Context contextSharedManager] roundImageView:cell.userPic withValue:cell.userPic.frame.size.height/2];
 
-    [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:acceptModel.thumbnail] placeholderImage:[UIImage imageNamed:@"UserMale.png"]];
+    [cell.mockImage sd_setImageWithURL:[NSURL URLWithString:acceptModel.thumbnail] placeholderImage:[UIImage imageNamed:DEFAULT_IMAGE]];
     return cell;
 }
 

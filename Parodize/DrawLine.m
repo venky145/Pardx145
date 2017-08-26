@@ -36,8 +36,26 @@
 -(void)initialSetup
 {
      self.bezierArray=[[NSMutableArray alloc]init];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"pentoolUndo" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(removeLastDraw:)
+                                                 name:@"pentoolUndo"
+                                               object:nil];
+
 }
 
+-(void)removeLastDraw:(NSNotification *)notification{
+    if (_bezierArray.count>0) {
+        
+        NSLog(@"%@",[_bezierArray objectAtIndex:_bezierArray.count-1]);
+        [_bezierArray removeObjectAtIndex:_bezierArray.count-1];
+        bezierPath=nil;
+        bezierPath=[UIBezierPath bezierPath];
+        [self setNeedsDisplay];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PencilDraw" object:[NSNumber numberWithInt:(int)_bezierArray.count]];
+    }
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -70,13 +88,13 @@
 #pragma mark - Touch Methods
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PencilDraw" object:nil];
+    
     
     UITouch *mytouch=[[touches allObjects] objectAtIndex:0];
-    UIBezierPath *bezier=[[UIBezierPath alloc]init];
-    bezier.lineCapStyle=kCGLineCapRound;
+    UIBezierPath *bezier=[UIBezierPath bezierPath];
+    bezier.lineCapStyle=kCGLineCapButt;
     bezier.miterLimit=0;
-    bezier.lineWidth=10;
+    bezier.lineWidth=2;
 
     [bezier moveToPoint:[mytouch locationInView:self]];
     NSMutableDictionary *dict=[[NSMutableDictionary alloc]init]; //locally created
@@ -100,7 +118,8 @@
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-        
+    NSLog(@"Ended");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PencilDraw" object:[NSNumber numberWithInt:(int)_bezierArray.count]];
 }
 -(UIImage *)getImageFromDrawView{
     

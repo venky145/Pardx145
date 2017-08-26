@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ActivityBaseViewController.h"
+#import "NotificationViewController.h"
+#import "SettingsObject.h"
 
-@interface SettingsViewController : UIViewController
+
+@interface SettingsViewController : ActivityBaseViewController
+
+@property (nonatomic,retain) SettingsObject *sObj;
 
 @end

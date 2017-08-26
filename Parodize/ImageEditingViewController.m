@@ -17,11 +17,12 @@
 #import "GPUImage.h"
 #import "PECropViewController.h"
 #import "PenViewController.h"
-#import "AcceptSendViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import "GPUImageGrayscaleFilterOne.h"
+#import "AcceptCaptionViewController.h"
 #import "Imaging.h"
+#import "NewDoneViewController.h"
 #import <math.h>
 
 #define DEG2RAD (M_PI/180.0f)
@@ -50,6 +51,8 @@ typedef enum _EditChoice {
     
     BOOL isColor;
     BOOL isFilter;
+    BOOL isPen;
+    
     BOOL isEdited;
     BOOL isFiltered;
     
@@ -66,24 +69,52 @@ typedef enum _EditChoice {
     CGRect prevFrame;
     
     NSMutableDictionary *sliderValuesDict;
+    
+    GPUImageBrightnessFilter *brightnessFilter;
+    GPUImageContrastFilter *contrastFilter;
+    GPUImageHueFilter *hueFilter;
+    GPUImageSaturationFilter *saturationFilter;
+    
+    GPUImageFilter *finalFilter;
+    
+    UIImage *modifiedImage;
+    
+    GPUImagePicture *gpuImage;
+
+    GPUImageView *gpuImageView;
+    
+    NSArray *colorsArray;
+    
+    UICollectionViewCell *prevCell;
+    
+    //
+    NSArray<Class>* instagramFilters;
+    NSInteger _filterIndex;
+    GPUImagePicture* stillImageSource;
+    
+    GPUImageRGBFilter *rgbfilter;
+    GPUImageWhiteBalanceFilter *whilteFilter;
 }
+
 @end
 
 @implementation ImageEditingViewController
 
-@synthesize snapImage,snapImageView,doneButton,cancelButton,getImage,colorButton,filterButton,cropButton;
+@synthesize snapImage,snapImageView,doneButton,cancelButton,getImage,colorButton,filterButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     appDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-    //  self.hidesBottomBarWhenPushed = YES;
+
     self.toolBar.clipsToBounds = YES;
-    
-    // self.toolBar.hidden=YES;
-    self.filterScrollView.hidden=YES;
+    self.filterCollectionView.hidden=YES;
     self.colorContainer.hidden=YES;
+    self.penColorView.hidden=YES;
+    self.drawLineView.userInteractionEnabled=NO;
+    self.undoButton.hidden=YES;
+    
+    colorsArray=[[NSArray alloc]initWithObjects:[UIColor whiteColor],[UIColor blackColor],[UIColor darkGrayColor],[UIColor lightGrayColor],[UIColor grayColor],[UIColor redColor],[UIColor greenColor],[UIColor blueColor],[UIColor cyanColor],[UIColor yellowColor],[UIColor magentaColor],[UIColor orangeColor],[UIColor purpleColor],[UIColor brownColor], nil];
     
     sliderValuesDict=[[NSMutableDictionary alloc]init];
 
@@ -96,55 +127,97 @@ typedef enum _EditChoice {
     doubleTap.numberOfTapsRequired = 2;
     [self.brightSlider addGestureRecognizer:doubleTap];
     
-//    self.brightSlider.layer.cornerRadius=1.0f;
-//    self.brightSlider.layer.borderColor=[UIColor whiteColor].CGColor;
-//    self.brightSlider.layer.borderWidth=1.0f;
-//    self.brightSlider.layer.masksToBounds=YES;
-    
     tempImage=appDelegate.getNewImage;
     
     originalImage=appDelegate.getNewImage;
     
     [snapImageView setImage:tempImage];
     
-//     [snapImageView setImage:[[Context contextSharedManager] imageWithImage:tempImage scaledToSize:self.view.frame.size]];
-    
     filtersArray=[[NSMutableArray alloc]init];
+    [filtersArray addObject:[GPUImageRGBFilter class]];
+    [filtersArray addObject:[GPUImageWhiteBalanceFilter class]];
+    [filtersArray addObject:[GPUImageMonochromeFilter class]];
+    [filtersArray addObject:[GPUImageAmatorkaFilter class]];
     [filtersArray addObject:[GPUImageGrayscaleFilter class]];
-    [filtersArray addObject:[GPUImageGrayscaleFilterOne class]];
     [filtersArray addObject:[GPUImageSepiaFilter class]];
     [filtersArray addObject:[GPUImageSketchFilter class]];
     [filtersArray addObject:[GPUImageGaussianSelectiveBlurFilter class]];
     [filtersArray addObject:[GPUImagePolkaDotFilter class]];
     [filtersArray addObject:[GPUImageEmbossFilter class]];
-    [filtersArray addObject:[GPUImageToneCurveFilter class]];
-
-  //  getImage=[tempImage scaleToSize:CGSizeMake(100, 100)];
-    
     [self loadFilterImages];
-    
-    [self.colorContainer setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:0.5]];
-    
-//    [self.brightSlider setThumbImage:[UIImage imageNamed:@"slider_image"] forState:UIControlStateNormal];
-    
+
     [self.brightSlider addTarget:self
-                          action:@selector(sliderDidEndSliding:)
-                forControlEvents:(UIControlEventTouchUpInside | UIControlEventTouchUpOutside)];
-//    [self cropAction:nil];
+                          action:@selector(sliderEnds:)
+            forControlEvents:(UIControlEventTouchUpInside | UIControlEventTouchUpOutside)];
+    brightnessFilter = [[GPUImageBrightnessFilter alloc] init];
+    contrastFilter = [[GPUImageContrastFilter alloc] init];
+    hueFilter = [[GPUImageHueFilter alloc] init];
+    saturationFilter = [[GPUImageSaturationFilter alloc] init];
+    finalFilter=[[GPUImageFilter alloc]init];
+    rgbfilter = [[GPUImageRGBFilter alloc] init];
+    whilteFilter = [[GPUImageWhiteBalanceFilter alloc]init];
+    
+//    stillImageSource = [[GPUImagePicture alloc] init];
+
+    [self cropAction];
+    
+//    [self colorAction:colorButton];
+
+}
+-(void)gpuImageSetUp{
+    gpuImage=nil;
+    gpuImageView=nil;
+    gpuImageView = [[GPUImageView alloc] init];
+    gpuImageView.fillMode=kGPUImageFillModePreserveAspectRatioAndFill;
+//    if (!_isImagePicker) {
+//        if (_isCameraFront) {
+//            [gpuImageView setInputRotation:kGPUImageRotateRightFlipVertical atIndex:0];
+//        }else{
+//            [gpuImageView setInputRotation:kGPUImageRotateRight atIndex:0];
+//        }
+//        
+//    }
+    gpuImage = [[GPUImagePicture alloc] initWithImage:tempImage];
+    [gpuImage addTarget:finalFilter];
+    [finalFilter addTarget:brightnessFilter];
+    [brightnessFilter addTarget:contrastFilter];
+    [contrastFilter addTarget:hueFilter];
+    [hueFilter addTarget:saturationFilter];
+//    [saturationFilter addTarget:gpuImageView];
+    [saturationFilter addTarget:rgbfilter];
+    [rgbfilter addTarget:whilteFilter];
+    [whilteFilter addTarget:gpuImageView];
+    
+    hueFilter.hue = 0.0;
+    finalFilter=hueFilter;
+    
+    [gpuImage processImage];
+
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    
+    gpuImageView.frame=snapImageView.frame;
+    [self.mainContainerView addSubview:gpuImageView];
+    [self.mainContainerView bringSubviewToFront:self.drawLineView];
+}
+-(void)viewWillAppear:(BOOL)animated{
+     [self.navigationController.navigationBar setHidden:YES];
+    
 }
 -(void)loadFilterImages{
     
-    getImage=[tempImage scaleToSize:CGSizeMake(100, 100)];
+    getImage=tempImage;
     
     __block UIImage *backImage;
     
     for (int i = 0; i < [filtersArray count]; i++)
     {
-        CGFloat xOrigin = (i*100)+10;
+        CGFloat xOrigin = (i*(105))+10;
         
         UIImageView *imageView = [[UIImageView alloc]init];
         
-        [imageView setFrame:CGRectMake(xOrigin, 30,80,80)];
+        [imageView setFrame:CGRectMake(xOrigin, 0,100,100)];
         
         UITapGestureRecognizer *singleTap =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(filterImageTouched:)];
         [singleTap setNumberOfTapsRequired:1];
@@ -157,17 +230,105 @@ typedef enum _EditChoice {
         backImage=[self getFilterImage:[filtersArray objectAtIndex:i] forImage:getImage];
         [imageView setImage:backImage];
         [imageView setContentMode:UIViewContentModeScaleAspectFill];
+        imageView.clipsToBounds=YES;
+        imageView.layer.cornerRadius=imageView.frame.size.height/2;
+        imageView.layer.borderColor=[[Context contextSharedManager] colorWithRGBHex:UPPER_COLOR].CGColor;
+        imageView.layer.borderWidth=2.0f;
+        imageView.layer.masksToBounds=YES;
         
-        imageView.alpha=1;
+//        imageView.alpha;
         
-        [self.filterScrollView addSubview:imageView];
+//        GPUImageView  *gpuView =[[GPUImageView alloc]initWithFrame:imageView.frame];
+//        GPUImagePicture *pictureView=[[GPUImagePicture alloc]initWithImage:getImage];
+//        
+//        GPUImageHSBFilter *rgb=[[GPUImageHSBFilter alloc]init];
+//        [rgb adjustBrightness:0.111111];
+//        [rgb adjustSaturation:1.673203];
+//        [rgb rotateHue:5.294117];
+//        
+//        
+//        [pictureView addTarget:rgb];
+//        [rgb addTarget:gpuView];
         
-        imageView=nil;
+//        [self.filterScrollView addSubview:imageView];
+        
+      imageView=nil;
+   
+      /*     Brightness: 0.111111
+         Contrast: 1.790850
+         Hue : -5.294117
+         Saturation: 1.673203
+         
+         Second:
+         
+         Brightness : 0.183007
+         Contrast : 2.000000
+         Hue : -0.588235
+         Saturation : 1.382353
+         
+         Third :
+         
+         Brightness : 0.741830
+         Contrast : 1.176471
+         Hue : 1.696078
+         Saturation : -0.058824
+         
+         Fourth :
+         
+         Brightness : -0.062092
+         Contrast : 1.248366
+         Hue : -1.764706
+         Saturation : 1.656863
+    */
     }
     
-    [self.filterScrollView setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:0.5]];
+//    [self.filterScrollView setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:0.5]];
     
-    [self.filterScrollView setContentSize:CGSizeMake(100 * [filtersArray count], self.filterScrollView.frame.size.height)];
+//    [self.filterScrollView setContentSize:CGSizeMake(120 * [filtersArray count], self.filterScrollView.frame.size.height)];
+    
+ /*   stillImageSource = nil;
+    stillImageSource=[[GPUImagePicture alloc]initWithImage:getImage];
+   
+    
+   
+    
+//    _filterIndex = 0;
+    instagramFilters = [IFImageFilter allFilterClasses];
+    
+//    NSInteger filterIndex = (_filterIndex++ % instagramFilters.count);
+    
+    [stillImageSource removeAllTargets];
+    
+    
+    
+    for (int i = 0; i < 3; i++)
+    {
+        CGFloat xOrigin = (i*(105))+10;
+        
+         gpuImageView = [[GPUImageView alloc] initWithFrame:CGRectMake(xOrigin, 0, 100, 100)];
+        
+        UITapGestureRecognizer *singleTap =  [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(filterImageTouched:)];
+        [singleTap setNumberOfTapsRequired:1];
+        
+        [gpuImageView addGestureRecognizer:singleTap];
+        
+        gpuImageView.tag=i;
+        
+        gpuImageView.userInteractionEnabled=YES;
+        
+        IFImageFilter *imageFilter = [[[instagramFilters objectAtIndex:i] alloc] init];
+        [imageFilter addTarget:gpuImageView];
+        
+        [stillImageSource addTarget:imageFilter];
+        
+        [imageFilter useNextFrameForImageCapture];
+        [stillImageSource processImage];
+        
+        [imageFilter imageFromCurrentFramebuffer];
+        
+        [self.filterScrollView addSubview:gpuImageView];
+    }
+  */
     
 }
 
@@ -202,12 +363,6 @@ typedef enum _EditChoice {
         isEdited=YES;
     }
 }
-
--(void)viewWillAppear:(BOOL)animated
-{
-    self.navigationController.navigationBar.hidden=NO;
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -215,77 +370,9 @@ typedef enum _EditChoice {
     
 }
 
--(void)animateWhileEdit:(BOOL)isEdit {
-    
-    //    [UIView beginAnimations:nil context:NULL];
-    //    [UIView setAnimationDuration:0.2];
-    //    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-    //    [UIView setAnimationBeginsFromCurrentState:YES];
-    //    [UIView setAnimationDelegate:self];
-    //
-    //
-    //
-    //    CGRect frame = snapImageView.frame;
-    //    if (isEdit) {
-    //
-    //        [UIView setAnimationDidStopSelector:@selector(editCallback:)];
-    //
-    //        self.editButton.enabled=NO;
-    //        prevFrame=snapImageView.frame;
-    //         tagsTextField.hidden=YES;
-    //
-    //        frame.size=CGSizeMake(snapImageView.frame.size.width, self.filterScrollView.frame.origin.y);
-    //
-    //    }else
-    //    {
-    //        [UIView setAnimationDidStopSelector:@selector(editCancelCallback:)];
-    //
-    //
-    //        self.editButton.enabled=YES;
-    //        self.filterScrollView.hidden=YES;
-    //        self.toolBar.hidden=YES;
-    //
-    //        frame.size=CGSizeMake(prevFrame.size.width, prevFrame.size.height);
-    //    }
-    //
-    //    snapImageView.frame = frame;
-    //
-    //
-    //    [UIView commitAnimations];
-    
-    if (isEdit) {
-        cancelButton.enabled=YES;
-        
-        [self.cropButton setTintColor: nil];
-        
-        [self.filterButton setTintColor: nil];
-        
-        [self.colorButton setTintColor: nil];
-        
-        self.cropButton.enabled=YES;
-        self.filterButton.enabled=YES;
-        self.colorButton.enabled=YES;
-
-        
-    }else{
-
-        cancelButton.enabled=NO;
-        
-        self.cropButton.enabled=NO;
-        [self.cropButton setTintColor: [UIColor clearColor]];
-        
-        self.filterButton.enabled=NO;
-        [self.filterButton setTintColor: [UIColor clearColor]];
-        
-        self.colorButton.enabled=NO;
-        [self.colorButton setTintColor: [UIColor clearColor]];
-    }
-    
-}
-
 -(void)editCallback:(id)sender{
     
-    self.filterScrollView.hidden=NO;
+    self.filterCollectionView.hidden=NO;
     self.toolBar.hidden=NO;
     
 }
@@ -318,7 +405,7 @@ typedef enum _EditChoice {
 
 - (IBAction)cacelAction:(id)sender
 {
-    if (isEdited) {
+   /* if (isEdited) {
         isEdited=NO;
         
         UIAlertController *alert = [[UIAlertController alloc] init];
@@ -342,10 +429,71 @@ typedef enum _EditChoice {
     {
         [self cancellingEdit];
     }
-    
+ */
+    [self.navigationController  popViewControllerAnimated:YES];
 }
 -(void)cancellingEdit
 {
+    
+//    brightnessFilter.brightness = 0;
+//    finalFilter=brightnessFilter;
+//    [gpuImage processImage];
+//    [sliderValuesDict setValue:[NSNumber numberWithFloat:0] forKey:BRIGHTNESS_VALUE];
+//    
+//    contrastFilter.contrast = 1;
+//    finalFilter=contrastFilter;
+//    [gpuImage processImage];
+//    [sliderValuesDict setValue:[NSNumber numberWithFloat:1] forKey:CONTRAST_VALUE];
+//    
+//    hueFilter.hue = 0;
+//    finalFilter=hueFilter;
+//    [gpuImage processImage];
+//    [sliderValuesDict setValue:[NSNumber numberWithFloat:0] forKey:HUE_VALUE];
+//    
+//    saturationFilter.saturation = 1;
+//    finalFilter=saturationFilter;
+//    [gpuImage processImage];
+//    [sliderValuesDict setValue:[NSNumber numberWithFloat:1] forKey:HUE_VALUE];
+    
+    
+    for (int i=0; i<=3; i++) {
+        if (i==4) {
+            [self brightnessAction:_brightButton];
+        }else{
+            
+            eventChoice = [NSNumber numberWithInt:i];
+            [self doDoubleTap:nil];
+
+        }
+    }
+    
+//        int choice=[eventChoice intValue];
+//        
+//        switch (choice) {
+//            case editBrightness:
+//                resultValue=0;
+//                break;
+//            case editContrast:
+//                resultValue=1;
+//                break;
+//            case editHue:
+//                resultValue=0;
+//                break;
+//            case editSaturation:
+//                resultValue=1;
+//                break;
+//            default:
+//                break;
+//        }
+//        self.sliderTestLabel.text=[NSString stringWithFormat:@"%f",_brightSlider.value];
+//        [_brightSlider setValue:resultValue animated:YES];
+//        [self brightnessValue:_brightSlider];
+//        }
+//    }
+    
+
+    
+   /*
     //[self openOptionsView:NO];
     self.snapImageView.image=nil;
     self.snapImageView.image=originalImage;
@@ -368,69 +516,52 @@ typedef enum _EditChoice {
     //remove scroll view selected image border
     prevImageView.layer.borderColor=[UIColor clearColor].CGColor;
     prevImageView.layer.masksToBounds=YES;
+    */
 }
-
+//-(UIImage *)mergePenTool{
+//    
+//    UIGraphicsBeginImageContext(firstImage.size);
+//    [firstImage drawAtPoint:CGPointMake(0,0)];
+//    [secondImage drawAtPoint:CGPointMake(0,0)];
+//    
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    
+//    resultImage = UIGraphicsGetImageFromCurrentImageContext(); //taking the merged result from context, in a new Image. This is your required image.
+//    
+//    UIGraphicsEndImageContext();
+//}
 - (IBAction)doneAction:(id)sender {
-    
     
     [self.view endEditing:YES];
 
     if (_isAccept) {
-        [self performSegueWithIdentifier:@"acceptSendSegue" sender:self];
-    }else
+        [self performSegueWithIdentifier:@"acceptSuccess" sender:self];
+    }else if(_isPlayGround||_isPGResponse){
+        NSLog(@"PlayGround");
+         [self performSegueWithIdentifier:@"pgDoneSegue" sender:self];
+        
+    }else if(_isFriend){
+        [self performSegueWithIdentifier:@"pgDoneSegue" sender:self];
+        
+    }else{
         [self performSegueWithIdentifier:@"doneSegue" sender:self];
-    
-//    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Tags"
-//                                                                              message: @"Please add tags to this mock"
-//                                                                       preferredStyle:UIAlertControllerStyleAlert];
-//    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-//        textField.placeholder = @"Tags saperated by comma";
-//        textField.textColor = [UIColor blackColor];
-//        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-//        //  textField.borderStyle = UITextBorderStyleRoundedRect;
-//    }];
-//    
-//    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-//        NSArray * textfields = alertController.textFields;
-//        UITextField * namefield = textfields[0];
-//        NSLog(@"%@",namefield.text);
-//        
-//        [self doneWithMocking:namefield.text];
-//        
-//    }]];
-//    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-    
-//        [self doneWithMocking:nil];
-    
-//    }]];
-    
-//    [self presentViewController:alertController animated:YES completion:nil];
-    
-    ///////
-    
-    
+    }
 }
 
-
-//-(void)doneWithMocking:(NSString *)tagsString
-//{
-//    [self.view endEditing:YES];
-//    
-//    tagsStr=tagsString;
-//    if (_isAccept) {
-//        [self performSegueWithIdentifier:@"acceptSendSegue" sender:self];
-//    }else
-//        [self performSegueWithIdentifier:@"doneSegue" sender:self];
-//}
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    [finalFilter useNextFrameForImageCapture];
+    [gpuImage processImage];
+    UIImage *filteredImage=[finalFilter imageFromCurrentFramebuffer];
+    
     if ([segue.identifier isEqualToString:@"doneSegue"])
     {
         
         ChooseRecipientViewController *destViewController = segue.destinationViewController;
-        
-        destViewController.getImage=self.snapImageView.image;
-        
+//        destViewController.getImage=filteredImage;
+
+        destViewController.getImage=[self contextCurrentImage];
         destViewController.tagsList = tagsStr;
     }else if ([segue.identifier isEqualToString:@"penSegue"]){
         
@@ -439,21 +570,40 @@ typedef enum _EditChoice {
                                                      name:@"DrawImage"
                                                    object:nil];
 
-        
         PenViewController *destViewController = segue.destinationViewController;
         
         [destViewController setGetImage:snapImageView.image];
         
-    }else if ([segue.identifier isEqualToString:@"acceptSendSegue"]){
+    }else if ([segue.identifier isEqualToString:@"acceptSuccess"]){
+        AcceptCaptionViewController *destViewController = segue.destinationViewController;
+        destViewController.mockImage=filteredImage;
+    }else if ([segue.identifier isEqualToString:@"pgDoneSegue"])
+    {
         
-                AcceptSendViewController *destViewController = segue.destinationViewController;
-                destViewController.getImage = self.snapImageView.image;
-                destViewController.acceptID = appDelegate.accpet_ID;
-              //  destViewController.getMockImage=self.acceptImageView.image;
-                destViewController.isAccept = YES;
+        NewDoneViewController *destViewController = segue.destinationViewController;
+        if (_isPlayGround) {
+            destViewController.isPlayGround=YES;
+            destViewController.isPGResponse=NO;
+        }else if(_isFriend){
+            destViewController.isPGResponse=NO;
+            destViewController.isPlayGround=NO;
+            destViewController.isFriend=YES;
+        }
+        else{
+            destViewController.isPGResponse=YES;
+            destViewController.isPlayGround=NO;
+        }
+        destViewController.mockImage=filteredImage;
     }
-
+}
+-(UIImage *)contextCurrentImage{
+    UIGraphicsBeginImageContextWithOptions(self.mainContainerView.frame.size, NO, 0.0);
     
+    [self.mainContainerView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *answer = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return answer;
 }
 -(void)getDrawImage:(NSNotification *) notification{
     
@@ -461,17 +611,6 @@ typedef enum _EditChoice {
     isEdited=NO;
     
     UIImage *editImage=notification.object;
-    
-//    UIImageView *topLayer=[[UIImageView alloc]initWithImage:editImage];
-//    topLayer.frame=self.snapImageView.frame;
-//    
-//    [snapImageView addSubview: topLayer];
-//    
-//    UIGraphicsBeginImageContextWithOptions(topLayer.frame.size, NO, 0.0); //retina res
-//    [snapImageView.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    [topLayer.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
     snapImageView.image=editImage;
     tempImage=editImage;
     if (isFilter) {
@@ -479,19 +618,6 @@ typedef enum _EditChoice {
     }
     
 }
-//-(UIImage*)PixellateFilter:(UIImage*)theImage withPixellateFilter:(GPUImagePixellateFilter *) pixellateFilter andStaticPicture:(GPUImagePicture *)staticPicture{
-//    [staticPicture removeAllTargets];
-//    UIImage __block *imageToReturn;
-//    [staticPicture addTarget:pixellateFilter];
-//    [staticPicture processImageWithCompletionHandler:^{
-//        [pixellateFilter prepareForImageCapture];
-//        imageToReturn = [pixellateFilter imageFromCurrentlyProcessedOutput];
-//        [pixellateFilter removeAllTargets];
-//        pixellateFilter = nil;
-//    }];
-//    return imageToReturn;
-//}
-
 -(UIImage *)getFilterImage:(id)imageFilter forImage:(UIImage *)image
 {
     GPUImageFilter *filter=[[imageFilter alloc]init];
@@ -507,8 +633,6 @@ typedef enum _EditChoice {
 {
     NSLog(@"%@",self.snapImageView);
     
-    isEdited=YES;
-    
     [controller dismissViewControllerAnimated:YES completion:NULL];
     
     // [self keepMySnapImageConstant];
@@ -517,6 +641,8 @@ typedef enum _EditChoice {
     
     snapImageView.image = tempImage;
     
+    [self gpuImageSetUp];
+    [self colorAction:colorButton];
     
 }
 
@@ -531,11 +657,11 @@ typedef enum _EditChoice {
 }
 
 
-- (IBAction)cropAction:(UIBarButtonItem *)button {
+- (void)cropAction{
     
     PECropViewController *controller = [[PECropViewController alloc] init];
     controller.delegate = self;
-    controller.image = snapImageView.image;
+    controller.image = originalImage;
     controller.title=@"Crop";
     
     UIImage *image = snapImageView.image;
@@ -569,11 +695,11 @@ typedef enum _EditChoice {
         
         prevFrame=snapImageView.frame;
         
-        frame.size=CGSizeMake(snapImageView.frame.size.width, self.filterScrollView.frame.origin.y);
+        frame.size=CGSizeMake(snapImageView.frame.size.width, self.filterCollectionView.frame.origin.y);
         
     }else
     {
-        self.filterScrollView.hidden=YES;
+        self.filterCollectionView.hidden=YES;
         self.colorContainer.hidden=YES;
         [self.filterButton setImage:[UIImage imageNamed:@"multicolor_filled"]];
         [self.colorButton setImage:[UIImage imageNamed:@"brightness_filled"]];
@@ -594,31 +720,29 @@ typedef enum _EditChoice {
         isFilter=YES;
         [self loadFilterImages];
         isColor=NO;
-        [button setTintColor: nil];
-        self.filterScrollView.hidden=NO;
-        [colorButton setTintColor: [UIColor whiteColor]];
+        isPen=NO;
+        [button setTintColor: [UIColor whiteColor]];
+        self.filterCollectionView.hidden=NO;
         self.colorContainer.hidden=YES;
+        self.penColorView.hidden=YES;
+        [button setImage:[UIImage imageNamed:@"filter_selected"]];
+        [colorButton setImage:[UIImage imageNamed:@"brightness_tool"]];
+        [_penButton setImage:[UIImage imageNamed:@"pentool_icon"]];
     }else{
-        //[self openOptionsView:NO];
         isFilter=NO;
-        // [button setImage:[UIImage imageNamed:@"multicolor_filled"]];
+         [button setImage:[UIImage imageNamed:@"filter_icon"]];
         
-        self.filterScrollView.hidden=YES;
+        self.filterCollectionView.hidden=YES;
         [button setTintColor: [UIColor whiteColor]];
     }
 }
 
 - (IBAction)colorAction:(UIBarButtonItem *)button {
-  
+    
     if (!isColor) {
-        
-        //        if (filterImage) {
-        //            tempImage=filterImage;
-        //        }
         if (!eventChoice) {
-            
             eventChoice=editBrightness;
-            [self brightnessAction:nil];
+            [self brightnessAction:_brightButton];
         }
         if (isFiltered) {
             tempImage=snapImageView.image;
@@ -627,23 +751,19 @@ typedef enum _EditChoice {
         
         isColor=YES;
         isFilter=NO;
-        //        [button setImage:[UIImage imageNamed:@"Brightness_square"]];
-        //        [filterButton setImage:[UIImage imageNamed:@"multicolor_filled"]];
-        //        [cropButton setImage:[UIImage imageNamed:@"crop_image_filled"]];
-        
-        [button setTintColor: nil];
-        
-        //[cropButton setTintColor: nil];
-        
+        isPen=NO;
+        [button setImage:[UIImage imageNamed:@"brightness_tool_selected"]];
+        [filterButton setImage:[UIImage imageNamed:@"filter_icon"]];
+        [_penButton setImage:[UIImage imageNamed:@"pentool_icon"]];
         [filterButton setTintColor: [UIColor whiteColor]];
         
         self.colorContainer.hidden=NO;
-        self.filterScrollView.hidden=YES;
+        self.filterCollectionView.hidden=YES;
+        self.penColorView.hidden=YES;
+        
     }else{
         isColor=NO;
-        //[button setImage:[UIImage imageNamed:@"brightness_filled"]];
-        [button setTintColor: [UIColor whiteColor]];
-        
+        [button setImage:[UIImage imageNamed:@"brightness_tool"]];
         self.colorContainer.hidden=YES;
     }
 }
@@ -659,118 +779,71 @@ typedef enum _EditChoice {
     NSLog(@"%f",sender.value);
     
     self.sliderTestLabel.text=[NSString stringWithFormat:@"%f",sender.value];
-    
+
+    UIImage *currentFilteredVideoFrame;
     
     switch (choice) {
         case editBrightness :
-            
             @autoreleasepool {
-
-//                isEdited=YES;
-                GPUImagePicture *fx_image;
-                fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-                GPUImageBrightnessFilter *brightnessFilter = [[GPUImageBrightnessFilter alloc] init];
-                [brightnessFilter setBrightness:sender.value];
-                [fx_image addTarget:brightnessFilter];
-                [brightnessFilter useNextFrameForImageCapture];
-                [fx_image processImage];
-                final_image=nil;
-                final_image = [brightnessFilter imageFromCurrentFramebuffer];
-                final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-                self.snapImageView.image = final_image;
-                brightnessFilter=nil;
-                fx_image=nil;
-                NSLog(@"%f",[[sliderValuesDict objectForKey:BRIGHTNESS_VALUE] floatValue]);
+                brightnessFilter.brightness = sender.value;
+//                [brightnessFilter useNextFrameForImageCapture];
+                finalFilter=brightnessFilter;
+                [gpuImage processImage];
+//                currentFilteredVideoFrame = [brightnessFilter imageFromCurrentFramebuffer];
+                
                 [sliderValuesDict setValue:[NSNumber numberWithFloat:sender.value] forKey:BRIGHTNESS_VALUE];
             }
             break;
         case editContrast :
             @autoreleasepool {
                 
-//                isEdited=YES;
-                GPUImagePicture *fx_image;
-                fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-                
-                GPUImageContrastFilter *contrastFilter = [[GPUImageContrastFilter alloc] init];
-                float hueValue = 0.0;
+                float contrastValue = 0.0;
                 
                 if (sender.value>1) {
-                    
-//                    hueValue=sender.value*2;
-                    hueValue = pow(sender.value, (log(sender.value*2)/log(2)));
-                    NSLog(@"power....%f",hueValue);
+                    contrastValue = pow(sender.value, (log(sender.value*2)/log(2)));
+                    NSLog(@"power....%f",contrastValue);
                 }else{
-                    hueValue=sender.value;
+                    contrastValue=sender.value;
                 }
-                [contrastFilter setContrast:sender.value];
-                [fx_image addTarget:contrastFilter];
-                [contrastFilter useNextFrameForImageCapture];
-                [fx_image processImage];
-                final_image=nil;
-                final_image = [contrastFilter imageFromCurrentFramebuffer];
-                final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-                self.snapImageView.image = final_image;
-                contrastFilter=nil;
-                fx_image=nil;
-                NSLog(@"%f",[[sliderValuesDict objectForKey:CONTRAST_VALUE] floatValue]);
+                
+                contrastFilter.contrast = contrastValue;
+//               [contrastFilter useNextFrameForImageCapture];
+                finalFilter=contrastFilter;
+                [gpuImage processImage];
+//                currentFilteredVideoFrame = [contrastFilter imageFromCurrentFramebuffer];
+                
                 [sliderValuesDict setValue:[NSNumber numberWithFloat:sender.value] forKey:CONTRAST_VALUE];
             }
-            
             break;
         case editHue :
             @autoreleasepool {
                 
-//                isEdited=YES;
-                GPUImagePicture *fx_image;
-                fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-                
-                GPUImageHueFilter *hueFilter = [[GPUImageHueFilter alloc] init];
-                
-                // CGFloat degree=sender.value*(RAD2DEG);
-                
                 float hueValue = 0.0;
-                
                 if (sender.value<0) {
+                    hueValue=360.0f+sender.value;
+                    NSLog(@".....%f",hueValue);
                     
-                    hueValue=360.0f-sender.value;
                 }else{
                     hueValue=sender.value;
                 }
+                hueFilter.hue = hueValue;
+                finalFilter=hueFilter;
+//                [hueFilter useNextFrameForImageCapture];
+                [gpuImage processImage];
+//                currentFilteredVideoFrame = [hueFilter imageFromCurrentFramebuffer];
                 
-                [hueFilter setHue:hueValue];
-                [fx_image addTarget:hueFilter];
-                [hueFilter useNextFrameForImageCapture];
-                [fx_image processImage];
-                final_image=nil;
-                final_image = [hueFilter imageFromCurrentFramebuffer];
-                final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-                self.snapImageView.image = final_image;
-                hueFilter=nil;
-                fx_image=nil;
-                NSLog(@"%f",[[sliderValuesDict objectForKey:HUE_VALUE] floatValue]);
                 [sliderValuesDict setValue:[NSNumber numberWithFloat:sender.value] forKey:HUE_VALUE];
             }
             break;
         case editSaturation :
             @autoreleasepool {
                 
-//                isEdited=YES;
-                GPUImagePicture *fx_image;
-                fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
+                saturationFilter.saturation = sender.value;
+                finalFilter=saturationFilter;
+//                [saturationFilter useNextFrameForImageCapture];
+                [gpuImage processImage];
+//                currentFilteredVideoFrame = [saturationFilter imageFromCurrentFramebuffer];
                 
-                GPUImageSaturationFilter *saturationFilter = [[GPUImageSaturationFilter alloc] init];
-                
-                [saturationFilter setSaturation:sender.value];
-                [fx_image addTarget:saturationFilter];
-                [saturationFilter useNextFrameForImageCapture];
-                [fx_image processImage];
-                final_image=nil;
-                final_image = [saturationFilter imageFromCurrentFramebuffer];
-                final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-                self.snapImageView.image = final_image;
-                saturationFilter=nil;
-                fx_image=nil;
-                NSLog(@"%f",[[sliderValuesDict objectForKey:SATURATION_VALUE] floatValue]);
                 [sliderValuesDict setValue:[NSNumber numberWithFloat:sender.value] forKey:SATURATION_VALUE];
             }
             break;
@@ -779,109 +852,18 @@ typedef enum _EditChoice {
             break;
     }
     
+//    snapImageView.image=currentFilteredVideoFrame;
+    
 }
--(void)sliderDidEndSliding:(id)sender
+-(void)sliderEnds:(id)sender
 {
     NSLog(@"Bright slider released");
-
     if (!isEdited) {
         isEdited=YES;
     }
     
 }
-//- (IBAction)contrastValue:(UISlider *)sender {
-//    @autoreleasepool {
-//        
-//       // isEdited=YES;
-//        GPUImagePicture *fx_image;
-//        fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-//        
-//        GPUImageContrastFilter *contrastFilter = [[GPUImageContrastFilter alloc] init];
-//        
-//        [contrastFilter setContrast:sender.value];
-//        [fx_image addTarget:contrastFilter];
-//        [contrastFilter useNextFrameForImageCapture];
-//        [fx_image processImage];
-//        final_image=nil;
-//        final_image = [contrastFilter imageFromCurrentFramebuffer];
-//        final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-//        self.snapImageView.image = final_image;
-//        
-//        contrastFilter=nil;
-//        fx_image=nil;
-//    }
-//    
-//}
-//- (IBAction)staurationValue:(UISlider *)sender {
-//    @autoreleasepool {
-//       // isEdited=YES;
-//        GPUImagePicture *fx_image;
-//        fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-//        
-//        GPUImageSaturationFilter *saturationFilter = [[GPUImageSaturationFilter alloc] init];
-//        
-//        [saturationFilter setSaturation:sender.value];
-//        [fx_image addTarget:saturationFilter];
-//        [saturationFilter useNextFrameForImageCapture];
-//        [fx_image processImage];
-//        final_image=nil;
-//        final_image = [saturationFilter imageFromCurrentFramebuffer];
-//        final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-//        self.snapImageView.image = final_image;
-//        
-//        saturationFilter=nil;
-//        fx_image=nil;
-//    }
-//}
-//- (IBAction)hueValue:(UISlider *)sender {
-//    @autoreleasepool {
-//        //isEdited=YES;
-//        GPUImagePicture *fx_image;
-//        fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-//        
-//        GPUImageHueFilter *hueFilter = [[GPUImageHueFilter alloc] init];
-//        
-//        // CGFloat degree=sender.value*(RAD2DEG);
-//        
-//        [hueFilter setHue:sender.value];
-//        [fx_image addTarget:hueFilter];
-//        [hueFilter useNextFrameForImageCapture];
-//        [fx_image processImage];
-//        final_image=nil;
-//        final_image = [hueFilter imageFromCurrentFramebuffer];
-//        final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-//        self.snapImageView.image = final_image;
-//        
-//        hueFilter=nil;
-//        fx_image=nil;
-//    }
-//    
-//}
-//- (IBAction)sharpValue:(UISlider *)sender {
-//    
-//    [self getEditedImage];
-//    
-//    @autoreleasepool {
-//        //isEdited=YES;
-//        GPUImagePicture *fx_image;
-//        fx_image = [[GPUImagePicture alloc] initWithImage:tempImage];
-//        
-//        GPUImageSharpenFilter *sharpFilter = [[GPUImageSharpenFilter alloc] init];
-//        
-//        [sharpFilter setSharpness:sender.value];
-//        [fx_image addTarget:sharpFilter];
-//        [sharpFilter useNextFrameForImageCapture];
-//        [fx_image processImage];
-//        final_image=nil;
-//        final_image = [sharpFilter imageFromCurrentFramebuffer];
-//        final_image = [UIImage imageWithCGImage:[final_image CGImage] scale:1.0 orientation:tempImage.imageOrientation];
-//        self.snapImageView.image = final_image;
-//        
-//        sharpFilter=nil;
-//        fx_image=nil;
-//    }
-//    
-//}
+
 
 -(void)getEditedImage{
     if (isEdited) {
@@ -893,64 +875,68 @@ typedef enum _EditChoice {
     }
 }
 
-- (IBAction)brightnessAction:(id)sender {
+- (IBAction)brightnessAction:(UIButton *)sender {
      [self getEditedImage];
     eventChoice=[NSNumber numberWithInt:editBrightness];
+   
+    [sender setSelected:YES];
     
-    self.brightSlider.minimumValue = -1.0f;
-    self.brightSlider.maximumValue = 1.0f;
+    self.brightSlider.minimumValue = -0.3f;
+    self.brightSlider.maximumValue = 0.3f;
     
     NSLog(@"%f",[[sliderValuesDict objectForKey:BRIGHTNESS_VALUE] floatValue]);
     self.brightSlider.value=[[sliderValuesDict objectForKey:BRIGHTNESS_VALUE] floatValue];
     
-    self.brightLabel.hidden=NO;
-    self.contrastLabel.hidden=YES;
-    self.hueLabel.hidden=YES;
-    self.saturationLabel.hidden=YES;
-    
     self.sliderTestLabel.text=[NSString stringWithFormat:@"%f",_brightSlider.value];
+    
+    [_contrastButton setSelected:NO];
+    [_hueButton setSelected:NO];
+    [_saturationButton setSelected:NO];
+
 }
 
-- (IBAction)contrastAction:(id)sender {
+- (IBAction)contrastAction:(UIButton *)sender {
      [self getEditedImage];
     eventChoice=[NSNumber numberWithInt:editContrast];
+    [sender setSelected:YES];
     
-    self.brightSlider.minimumValue = 0.0f;
+    self.brightSlider.minimumValue = 0.5f;
     self.brightSlider.maximumValue = 2.0f;
     
     NSLog(@"%f",[[sliderValuesDict objectForKey:CONTRAST_VALUE] floatValue]);
     
     self.brightSlider.value=[[sliderValuesDict objectForKey:CONTRAST_VALUE] floatValue];
     
-    self.brightLabel.hidden=YES;
-    self.contrastLabel.hidden=NO;
-    self.hueLabel.hidden=YES;
-    self.saturationLabel.hidden=YES;
-    
     self.sliderTestLabel.text=[NSString stringWithFormat:@"%f",_brightSlider.value];
+    
+    [_saturationButton setSelected:NO];
+    [_hueButton setSelected:NO];
+    [_brightButton setSelected:NO];
+    
 }
 
-- (IBAction)hueAction:(id)sender {
+- (IBAction)hueAction:(UIButton *)sender {
      [self getEditedImage];
     eventChoice=[NSNumber numberWithInt:editHue];
+    [sender setSelected:YES];
     
-    self.brightSlider.minimumValue = -180.0f;
-    self.brightSlider.maximumValue = 180.0f;
+    self.brightSlider.minimumValue = -30.0f;
+    self.brightSlider.maximumValue = 30.0f;
     
     NSLog(@"%f",[[sliderValuesDict objectForKey:HUE_VALUE] floatValue]);
     
     self.brightSlider.value=[[sliderValuesDict objectForKey:HUE_VALUE] floatValue];
     
-    self.brightLabel.hidden=YES;
-    self.contrastLabel.hidden=YES;
-    self.hueLabel.hidden=NO;
-    self.saturationLabel.hidden=YES;
-    
     self.sliderTestLabel.text=[NSString stringWithFormat:@"%f",_brightSlider.value];
+    
+    [_contrastButton setSelected:NO];
+    [_brightButton setSelected:NO];
+    [_saturationButton setSelected:NO];
 }
 
-- (IBAction)saturationAction:(id)sender {
+- (IBAction)saturationAction:(UIButton *)sender {
      [self getEditedImage];
+    [sender setSelected:YES];
     
     eventChoice=[NSNumber numberWithInt:editSaturation];
     
@@ -961,18 +947,44 @@ typedef enum _EditChoice {
     
     self.brightSlider.value=[[sliderValuesDict objectForKey:SATURATION_VALUE] floatValue];
     
-    self.brightLabel.hidden=YES;
-    self.contrastLabel.hidden=YES;
-    self.hueLabel.hidden=YES;
-    self.saturationLabel.hidden=NO;
-    
     self.sliderTestLabel.text=[NSString stringWithFormat:@"%f",_brightSlider.value];
+    
+    [_contrastButton setSelected:NO];
+    [_hueButton setSelected:NO];
+    [_brightButton setSelected:NO];
+
+}
+
+- (IBAction)deleteAction:(id)sender {
+    if (isEdited) {
+        isEdited=NO;
+        
+        UIAlertController *alert = [[UIAlertController alloc] init];
+        //UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"More" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        UIAlertAction *discardAction = [UIAlertAction actionWithTitle:@"Discard changes" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self.view endEditing:YES];
+            
+            [self cancellingEdit];
+            
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        [alert addAction:discardAction];
+        [alert addAction:cancelAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+//        [self cancellingEdit];
+    }
 }
 -(void)doDoubleTap:(id)sender
 {
     NSLog(@"Double tap resetting value");
     float resultValue=0.0f;
-//    float maxValue=_brightSlider.maximumValue;
     int choice=[eventChoice intValue];
     
     switch (choice) {
@@ -988,7 +1000,6 @@ typedef enum _EditChoice {
         case editSaturation:
             resultValue=1;
             break;
-            
         default:
             break;
     }
@@ -996,9 +1007,217 @@ typedef enum _EditChoice {
     [_brightSlider setValue:resultValue animated:YES];
     [self brightnessValue:_brightSlider];
 }
--(void)eventChoiceLabelHide
+
+- (IBAction)penToolAction:(id)sender {
+    self.filterCollectionView.hidden=YES;
+    self.colorContainer.hidden=YES;
+    if (isPen) {
+        isPen=NO;
+        self.penColorView.hidden=YES;
+        self.drawLineView.userInteractionEnabled=NO;
+//        self.undoButton.hidden=YES;
+         [_penButton setImage:[UIImage imageNamed:@"pentool_icon"]];
+    }else{
+        
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"PencilDraw" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(isDrawn:)
+                                                     name:@"PencilDraw"
+                                                   object:nil];
+        
+        isPen=YES;
+        isFilter=NO;
+        isColor=NO;
+        self.drawLineView.userInteractionEnabled=YES;
+        self.drawLineView.brushColor=[UIColor whiteColor];
+        self.penColorView.hidden=NO;
+//        self.undoButton.hidden=NO;
+        [colorButton setImage:[UIImage imageNamed:@"brightness_tool"]];
+        [filterButton setImage:[UIImage imageNamed:@"filter_icon"]];
+        [_penButton setImage:[UIImage imageNamed:@"pentool_selected"]];
+    }
+}
+-(void)isDrawn:(NSNotification *)notification{
+    if ([notification.object isEqualToNumber:[NSNumber numberWithInt:0]]) {
+        _undoButton.hidden=YES;
+    }else{
+        _undoButton.hidden=NO;
+    }
+}
+- (IBAction)undoAction:(id)sender {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"pentoolUndo"
+     object:self];
+
+}
+
+#pragma mark UICollectionView Delegate
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    if (collectionView == self.filterCollectionView) {
+        return POLKA_FILTER;
+    }else{
+        return colorsArray.count;
+    }
     
 }
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView == self.filterCollectionView) {
+    UICollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"filterCell" forIndexPath:indexPath];
+        
+        UIImageView *recipeImageView = (UIImageView *)[cell viewWithTag:indexPath.row];
+        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"After.png"]];
+        
+        
+//        [(GPUImageRGBFilter *)filter setGreen:[(UISlider *)sender value]]
+        
+        [self.view addSubview:recipeImageView];
+        return cell;
+        
+        
+    }else{
+    UICollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"colorCell" forIndexPath:indexPath];
+    
+    cell.contentView.backgroundColor=[colorsArray objectAtIndex:indexPath.row];
+    cell.contentView.layer.cornerRadius=10;
+    cell .contentView.layer.masksToBounds=YES;
+    return cell;
+    }
+    return nil;
+}
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView == self.filterCollectionView) {
+        
+        NSInteger index = [indexPath row];
+        
+        /*
+         RGB_FILTER,
+         WHITE_BALANCE_FILTER,
+         MONOCHROME_FILTER,
+         AMATORKA_FILTER,
+         ETIKA_FILTER,
+         ELEGANCE_FILTER,
+         INVERT_FILTER,
+         THRESHOLD_FILTER,
+         SOBEL_FILTER,
+         TOON_FILTER,
+         TILT_FILTER,
+         POSTERIZE_FILTER,
+         EMBOSS_FILTER,
+         KUWAHARA_FILTER,
+         CUSTOM_FILTER,
+         UI_ELEMENT_FILTER,
+         GRAYSCALE_FILTER,
+         SEPIA_FILTER,
+         SKETCH_FILTER,
+         GAUSSIAN_FILTER,
+         POLKA_FILTER
+         */
+        
+        
+        switch (index)
+        {
+            case RGB_FILTER:
+                rgbfilter.green=0;
+                rgbfilter.red=0;
+                rgbfilter.blue=1;
+                finalFilter=rgbfilter;
+                [gpuImage processImage];
+
+                break;
+            case WHITE_BALANCE_FILTER:
+                
+                rgbfilter.green=1;
+                rgbfilter.red=0;
+                rgbfilter.blue=1;
+                finalFilter=rgbfilter;
+                [gpuImage processImage];
+                
+                break;
+            case MONOCHROME_FILTER:
+                rgbfilter.green=2;
+                rgbfilter.red=0;
+                rgbfilter.blue=2;
+                finalFilter=rgbfilter;
+                [gpuImage processImage];
+                break;
+            case AMATORKA_FILTER:
+                whilteFilter.temperature=1000;
+                whilteFilter.tint=2.0;
+                finalFilter=whilteFilter;
+                [gpuImage processImage];
+                break;
+            case ETIKA_FILTER:
+                whilteFilter.temperature=2000;
+                finalFilter=whilteFilter;
+                [gpuImage processImage];
+                break;
+            case ELEGANCE_FILTER:
+                whilteFilter.temperature=3000;
+                finalFilter=whilteFilter;
+                [gpuImage processImage];
+                break;
+            case INVERT_FILTER:
+                whilteFilter.temperature=4000;
+                finalFilter=whilteFilter;
+                [gpuImage processImage];
+                break;
+            case THRESHOLD_FILTER:
+                break;
+            case SOBEL_FILTER:
+                break;
+            case TOON_FILTER:
+                break;
+            case TILT_FILTER:
+                break;
+            case POSTERIZE_FILTER:
+                break;
+            case EMBOSS_FILTER:
+                break;
+            case KUWAHARA_FILTER:
+                break;
+            case CUSTOM_FILTER:
+                break;
+            case UI_ELEMENT_FILTER:
+                break;
+            case GRAYSCALE_FILTER:
+                break;
+            case SEPIA_FILTER:
+                break;
+            case SKETCH_FILTER:
+                break;
+            case GAUSSIAN_FILTER:
+                break;
+            case POLKA_FILTER:
+                break;
+                
+        }
+        
+    }else{
+        UICollectionViewCell *selectedCell=[collectionView cellForItemAtIndexPath:indexPath];
+        self.drawLineView.brushColor=[colorsArray objectAtIndex:indexPath.row];
+        if (prevCell) {
+            prevCell.layer.borderColor=[UIColor clearColor].CGColor;
+            prevCell.layer.masksToBounds=YES;
+        }
+        selectedCell.layer.borderColor=[UIColor blackColor].CGColor;
+        selectedCell.layer.borderWidth=2.0f;
+        selectedCell.layer.masksToBounds=YES;
+        prevCell=selectedCell;
+    }
+    
+}
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView == self.filterCollectionView) {
+        return CGSizeMake(100, 100);
+    }
+    return CGSizeMake(20, 20);
+}
+
 
 @end

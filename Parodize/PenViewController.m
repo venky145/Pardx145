@@ -27,10 +27,6 @@
     // Do any additional setup after loading the view.
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(isDrawn:)
-                                                 name:@"PencilDraw"
-                                               object:nil];
     
 //    DrawLine *drawScreen=[[DrawLine alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
 //    [self.view addSubview:drawScreen];

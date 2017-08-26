@@ -94,6 +94,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Access to camera</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Parodize would like to use your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Parodize would like to use your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to user photo library</string>
 	<key>UIBackgroundModes</key>
@@ -108,6 +112,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
 	<key>UIStatusBarTintParameters</key>
 	<dict>
 		<key>UINavigationBar</key>
@@ -122,5 +128,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

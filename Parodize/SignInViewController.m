@@ -229,7 +229,7 @@
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
      {
-         
+         [self hideActivity];
          [self.passForgotButton setEnabled:YES];
          
          if(responseObject)
@@ -260,6 +260,7 @@
      } failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
          NSLog(@"Request failed");
+         [self hideActivity];
          
          [self.passForgotButton setEnabled:YES];
          
